@@ -111,6 +111,6 @@ Data (brand scores and notes) is licensed under **CC BY-SA 4.0** — you can use
 ## Contact
 
 Marco Viglianti  
-GitHub: [@markoviglianti](https://github.com/markoviglianti)
+GitHub: (https://github.com/Vigi1993)
 
 *If you found a factual error, have a source to share, or simply want to say something — open an issue or write directly.*
