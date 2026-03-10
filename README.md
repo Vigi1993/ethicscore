@@ -71,7 +71,7 @@ All contributions are reviewed before being merged. No change enters the project
 
 ```bash
 # Clone the repository
-git clone https://github.com/markoviglianti/ethicprint.git
+git clone https://github.com/Vigi1993/ethicprint.git
 cd ethicprint
 
 # Frontend
