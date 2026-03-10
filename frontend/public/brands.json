@@ -1,0 +1,534 @@
+[
+  {
+    "id": 1,
+    "name": "Amazon",
+    "sector": "E-commerce",
+    "category": "E-commerce / Cloud",
+    "logo": "A",
+    "parent": "Amazon Inc.",
+    "scores": {
+      "armi": 55,
+      "ambiente": 38,
+      "diritti": 32,
+      "fisco": 20
+    },
+    "notes": {
+      "armi": "Contratti con Pentagono e forze armate USA (Project Nimbus, JEDI)",
+      "ambiente": "Obiettivo net-zero 2040, ma emissioni in crescita con espansione logistica",
+      "diritti": "Denunce diffuse per condizioni nei magazzini, sindacalizzazione ostacolata",
+      "fisco": "Strutture in Lussemburgo, pagamenti fiscali minimi in EU"
+    },
+    "alternatives": ["Etsy", "eBay (usato)", "negozi locali indipendenti"],
+    "sources": {
+      "armi": "https://www.theguardian.com/technology/2021/may/09/amazon-project-nimbus-military-contract-israel",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "https://knowthechain.org",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 2,
+    "name": "Google",
+    "sector": "Tech & Advertising",
+    "category": "Tech / Advertising",
+    "logo": "G",
+    "parent": "Alphabet Inc.",
+    "scores": {
+      "armi": 48,
+      "ambiente": 62,
+      "diritti": 45,
+      "fisco": 22
+    },
+    "notes": {
+      "armi": "Project Maven (droni militari), contratti DoD nonostante proteste interne",
+      "ambiente": "100% rinnovabili dal 2017, ma crescita datacenter ad alto impatto idrico",
+      "diritti": "Censura in Cina (Dragonfly), licenziamenti attivisti interni",
+      "fisco": "Double Irish, strutture offshore, sede EU in Irlanda"
+    },
+    "alternatives": ["DuckDuckGo (ricerca)", "Brave Search", "ProtonMail (email)", "Nextcloud (storage)"],
+    "sources": {
+      "armi": "https://www.nytimes.com/2018/04/04/technology/google-letter-ceo-pentagon-project-maven.html",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "https://www.amnesty.org",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 3,
+    "name": "Meta",
+    "sector": "Social Media",
+    "category": "Social Media",
+    "logo": "M",
+    "parent": "Meta Platforms Inc.",
+    "scores": {
+      "armi": 70,
+      "ambiente": 55,
+      "diritti": 28,
+      "fisco": 30
+    },
+    "notes": {
+      "armi": "Nessun contratto militare diretto noto",
+      "ambiente": "Net-zero claims, ma impronta carbonio datacenter significativa",
+      "diritti": "Ruolo documentato in violenza Myanmar, profilazione massiva, dipendenza psicologica minori",
+      "fisco": "Sede irlandese per ottimizzazione fiscale EU"
+    },
+    "alternatives": ["Mastodon (social)", "Signal (messaggistica)", "Pixelfed (foto)"],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "https://www.amnesty.org/en/latest/news/2022/09/myanmar-facebooks-systems-promoted-violence-against-rohingya/",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 4,
+    "name": "TikTok",
+    "sector": "Social Media",
+    "category": "Social Media",
+    "logo": "T",
+    "parent": "ByteDance Ltd.",
+    "scores": {
+      "armi": 45,
+      "ambiente": 40,
+      "diritti": 22,
+      "fisco": 35
+    },
+    "notes": {
+      "armi": "Casa madre cinese con obblighi verso governo PRC, potenziale dual-use dati",
+      "ambiente": "Datacenter ad alta intensità energetica, poca trasparenza",
+      "diritti": "Censura sistematica contenuti pro-Tibet, Xinjiang, Hong Kong; raccolta dati massiva su minori",
+      "fisco": "Struttura con sede Cayman Islands, ottimizzazione aggressiva"
+    },
+    "alternatives": ["Mastodon", "YouTube (relativamente migliore)", "PeerTube (open source)"],
+    "sources": {
+      "armi": "https://www.theguardian.com",
+      "ambiente": "",
+      "diritti": "https://www.amnesty.org",
+      "fisco": ""
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 5,
+    "name": "Netflix",
+    "sector": "Streaming Video",
+    "category": "Streaming",
+    "logo": "N",
+    "parent": "Netflix Inc.",
+    "scores": {
+      "armi": 82,
+      "ambiente": 60,
+      "diritti": 68,
+      "fisco": 45
+    },
+    "notes": {
+      "armi": "Nessun coinvolgimento diretto nell'industria degli armamenti",
+      "ambiente": "Impegni net-zero, produzioni cinematografiche con impatto residuo",
+      "diritti": "Politiche lavoro relativamente buone, contenuti diversificati",
+      "fisco": "Strutture in Olanda per riduzione fiscale EU"
+    },
+    "alternatives": [],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 6,
+    "name": "Disney+",
+    "sector": "Streaming Video",
+    "category": "Streaming",
+    "logo": "D",
+    "parent": "The Walt Disney Company",
+    "scores": {
+      "armi": 55,
+      "ambiente": 52,
+      "diritti": 45,
+      "fisco": 38
+    },
+    "notes": {
+      "armi": "Casa madre con partecipazioni in media legata a difesa USA",
+      "ambiente": "Impegni verdi dichiarati, parchi tematici ad alto consumo energetico",
+      "diritti": "Autocensura su temi LGBTQ+ in paesi con leggi repressive per motivi commerciali",
+      "fisco": "Strutture offshore, ottimizzazione fiscale aggressiva documentata"
+    },
+    "alternatives": ["Netflix", "MUBI (cinema d'autore)", "RaiPlay (gratuito)"],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "https://www.theguardian.com",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 7,
+    "name": "Spotify",
+    "sector": "Streaming Audio",
+    "category": "Streaming Audio",
+    "logo": "S",
+    "parent": "Spotify AB",
+    "scores": {
+      "armi": 85,
+      "ambiente": 65,
+      "diritti": 55,
+      "fisco": 50
+    },
+    "notes": {
+      "armi": "Nessun coinvolgimento con industria militare",
+      "ambiente": "Carbon neutral dal 2021, supply chain ancora da migliorare",
+      "diritti": "Royalties basse agli artisti, ma no scandali gravi su diritti umani",
+      "fisco": "Sede in Svezia, struttura fiscale relativamente trasparente"
+    },
+    "alternatives": [],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "",
+      "fisco": ""
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 8,
+    "name": "Apple",
+    "sector": "Tech & Hardware",
+    "category": "Tech / Hardware",
+    "logo": "A",
+    "parent": "Apple Inc.",
+    "scores": {
+      "armi": 60,
+      "ambiente": 70,
+      "diritti": 40,
+      "fisco": 25
+    },
+    "notes": {
+      "armi": "Contratti limitati con settore difesa, principalmente software",
+      "ambiente": "Obiettivo carbon neutral 2030, riciclaggio materiali in crescita",
+      "diritti": "Supply chain Foxconn con condizioni documentate di sfruttamento, censura in Cina",
+      "fisco": "Caso storico evasione Ireland, 13 miliardi recuperati da EU"
+    },
+    "alternatives": ["Fairphone (smartphone etico)", "Framework (laptop riparabile)"],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.apple.com/environment/",
+      "diritti": "https://www.amnesty.org",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 9,
+    "name": "Microsoft",
+    "sector": "Tech & Hardware",
+    "category": "Tech / Cloud",
+    "logo": "M",
+    "parent": "Microsoft Corp.",
+    "scores": {
+      "armi": 35,
+      "ambiente": 60,
+      "diritti": 55,
+      "fisco": 35
+    },
+    "notes": {
+      "armi": "Contratto IVAS con US Army per visori AR militari (480M$), Azure Government DoD",
+      "ambiente": "Carbon negative entro 2030, investimenti significativi in rinnovabili",
+      "diritti": "Migliorata su diversità, ma contratti con governi autoritari",
+      "fisco": "Strutture in Irlanda e Puerto Rico per ottimizzazione"
+    },
+    "alternatives": ["LibreOffice (suite office)", "Linux (OS)", "Nextcloud (cloud)"],
+    "sources": {
+      "armi": "https://www.theguardian.com/technology/2021/mar/22/microsoft-army-augmented-reality-headsets",
+      "ambiente": "https://blogs.microsoft.com/blog/2020/01/16/microsoft-will-be-carbon-negative-by-2030/",
+      "diritti": "https://www.amnesty.org",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 10,
+    "name": "Enel",
+    "sector": "Energia",
+    "category": "Energia",
+    "logo": "E",
+    "parent": "Enel SpA",
+    "scores": {
+      "armi": 75,
+      "ambiente": 52,
+      "diritti": 65,
+      "fisco": 70
+    },
+    "notes": {
+      "armi": "Nessun coinvolgimento diretto",
+      "ambiente": "Piano di transizione energetica avviato, ancora forte dipendenza da fossili",
+      "diritti": "Controversie in America Latina per impatti su comunità locali (dighe)",
+      "fisco": "Società italiana quotata, fiscalità relativamente trasparente"
+    },
+    "alternatives": ["Plenitude", "Illumia", "Dolomiti Energia (100% rinnovabile)"],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "https://www.amnesty.org",
+      "fisco": ""
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 11,
+    "name": "Eni",
+    "sector": "Energia",
+    "category": "Energia / Petrolio",
+    "logo": "E",
+    "parent": "Eni SpA",
+    "scores": {
+      "armi": 40,
+      "ambiente": 22,
+      "diritti": 35,
+      "fisco": 55
+    },
+    "notes": {
+      "armi": "Operazioni in paesi con conflitti attivi (Congo, Nigeria, Libia)",
+      "ambiente": "Tra i maggiori emettitori italiani, transizione lenta",
+      "diritti": "Denunce per impatto su comunità in Nigeria e Congo, cause pendenti",
+      "fisco": "Struttura multinazionale con sussidiarie in paesi a bassa tassazione"
+    },
+    "alternatives": ["Dolomiti Energia", "Iren Mercato", "Enercoop (cooperativa)"],
+    "sources": {
+      "armi": "https://www.amnesty.org",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "https://www.amnesty.org",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 12,
+    "name": "TIM",
+    "sector": "Telecomunicazioni",
+    "category": "Telecomunicazioni",
+    "logo": "T",
+    "parent": "Telecom Italia SpA",
+    "scores": {
+      "armi": 65,
+      "ambiente": 58,
+      "diritti": 62,
+      "fisco": 72
+    },
+    "notes": {
+      "armi": "Forniture infrastrutture a difesa nazionale, non export bellico",
+      "ambiente": "Piano green avviato, datacenter con consumo energetico elevato",
+      "diritti": "Ristrutturazioni con impatti occupazionali, nessun caso grave noto",
+      "fisco": "Società italiana, fiscalità prevalentemente nazionale"
+    },
+    "alternatives": ["Fastweb", "CoopVoce (Coop)"],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "",
+      "fisco": ""
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 13,
+    "name": "Vodafone",
+    "sector": "Telecomunicazioni",
+    "category": "Telecomunicazioni",
+    "logo": "V",
+    "parent": "Vodafone Group Plc",
+    "scores": {
+      "armi": 62,
+      "ambiente": 55,
+      "diritti": 58,
+      "fisco": 38
+    },
+    "notes": {
+      "armi": "Contratti con governi per intercettazioni, ceduto dati in paesi autoritari",
+      "ambiente": "Target net-zero 2040, transizione in corso",
+      "diritti": "Cooperazione con regimi autoritari per sorveglianza utenti (Egitto, Turchia)",
+      "fisco": "Struttura UK con ottimizzazioni fiscali aggressive documentate"
+    },
+    "alternatives": ["Fastweb", "CoopVoce (Coop)"],
+    "sources": {
+      "armi": "https://www.amnesty.org",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "https://www.amnesty.org",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 14,
+    "name": "Fastweb",
+    "sector": "Telecomunicazioni",
+    "category": "Telecomunicazioni",
+    "logo": "F",
+    "parent": "Swisscom AG",
+    "scores": {
+      "armi": 78,
+      "ambiente": 68,
+      "diritti": 72,
+      "fisco": 65
+    },
+    "notes": {
+      "armi": "Nessun coinvolgimento militare diretto noto",
+      "ambiente": "Impegni clima della casa madre svizzera, buone pratiche energetiche",
+      "diritti": "Nessun caso grave documentato, sede in paese con forti tutele",
+      "fisco": "Controllata svizzera, fiscalità mediamente trasparente"
+    },
+    "alternatives": [],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "",
+      "fisco": ""
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 15,
+    "name": "Leonardo",
+    "sector": "Difesa",
+    "category": "Difesa / Aerospazio",
+    "logo": "L",
+    "parent": "Leonardo SpA",
+    "scores": {
+      "armi": 5,
+      "ambiente": 35,
+      "diritti": 38,
+      "fisco": 60
+    },
+    "notes": {
+      "armi": "Principale produttore di armi italiano, export verso zone di conflitto (Arabia Saudita, Yemen)",
+      "ambiente": "Settore aerospazio ad alto impatto, limitati impegni verdi",
+      "diritti": "Export verso paesi con violazioni documentate dei diritti umani",
+      "fisco": "Società italiana quotata, parzialmente pubblica"
+    },
+    "alternatives": ["Non esiste alternativa diretta — valuta se il tuo rapporto con questa azienda è necessario"],
+    "sources": {
+      "armi": "https://www.sipri.org",
+      "ambiente": "",
+      "diritti": "https://www.amnesty.org",
+      "fisco": ""
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 16,
+    "name": "Airbnb",
+    "sector": "Travel & Hospitality",
+    "category": "Travel / Platform",
+    "logo": "A",
+    "parent": "Airbnb Inc.",
+    "scores": {
+      "armi": 80,
+      "ambiente": 50,
+      "diritti": 55,
+      "fisco": 42
+    },
+    "notes": {
+      "armi": "Nessun coinvolgimento militare",
+      "ambiente": "Impatto turismo difficile da misurare, iniziative verdi limitate",
+      "diritti": "Operazioni in insediamenti israeliani in Cisgiordania (poi rimosse dopo pressioni)",
+      "fisco": "Strutture irlandesi per ottimizzazione EU"
+    },
+    "alternatives": ["Fairbnb.coop (cooperativa)", "Booking.com (comparabile)", "hotel locali indipendenti"],
+    "sources": {
+      "armi": "",
+      "ambiente": "",
+      "diritti": "https://www.theguardian.com",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 17,
+    "name": "Volkswagen",
+    "sector": "Automotive",
+    "category": "Automotive",
+    "logo": "V",
+    "parent": "Volkswagen AG",
+    "scores": {
+      "armi": 45,
+      "ambiente": 35,
+      "diritti": 42,
+      "fisco": 50
+    },
+    "notes": {
+      "armi": "Legami storici con industria militare tedesca, forniture veicoli a forze armate",
+      "ambiente": "Dieselgate: frode sistematica sulle emissioni, transizione EV in corso",
+      "diritti": "Forniture da miniere cobalto Congo, supply chain problematica",
+      "fisco": "Struttura multinazionale con ottimizzazioni fiscali"
+    },
+    "alternatives": ["Peugeot (punteggio migliore)", "bicicletta / trasporto pubblico", "Citroën"],
+    "sources": {
+      "armi": "",
+      "ambiente": "https://www.theguardian.com/business/2015/sep/18/volkswagen-emissions-scandal-explained-diesel-dupe",
+      "diritti": "https://knowthechain.org",
+      "fisco": "https://www.oxfam.org"
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 18,
+    "name": "Intesa Sanpaolo",
+    "sector": "Banche & Finanza",
+    "category": "Banca",
+    "logo": "I",
+    "parent": "Intesa Sanpaolo SpA",
+    "scores": {
+      "armi": 42,
+      "ambiente": 48,
+      "diritti": 60,
+      "fisco": 65
+    },
+    "notes": {
+      "armi": "Finanziamenti documentati a produttori di armi controverse (bombe a grappolo)",
+      "ambiente": "Piano ESG avviato, ma ancora forti esposizioni a fossili",
+      "diritti": "Banca italiana, standard lavoro buoni internamente",
+      "fisco": "Società italiana quotata, fiscalità prevalentemente nazionale"
+    },
+    "alternatives": ["Banca Etica (100% etica)", "Crédit Cooperatif", "banche cooperative locali"],
+    "sources": {
+      "armi": "https://www.campagna-sra.it",
+      "ambiente": "https://www.cdp.net",
+      "diritti": "",
+      "fisco": ""
+    },
+    "last_updated": "2025-01-01"
+  },
+  {
+    "id": 19,
+    "name": "Banca Etica",
+    "sector": "Banche & Finanza",
+    "category": "Banca",
+    "logo": "B",
+    "parent": "Banca Popolare Etica",
+    "scores": {
+      "armi": 98,
+      "ambiente": 90,
+      "diritti": 95,
+      "fisco": 92
+    },
+    "notes": {
+      "armi": "Statuto vieta esplicitamente finanziamenti a industria bellica",
+      "ambiente": "100% finanza etica, solo progetti a impatto positivo",
+      "diritti": "Missione sociale esplicita, trasparenza totale su impieghi",
+      "fisco": "Cooperativa italiana, massima trasparenza fiscale"
+    },
+    "alternatives": [],
+    "sources": {
+      "armi": "https://www.bancaetica.it/statuto",
+      "ambiente": "https://www.bancaetica.it",
+      "diritti": "https://www.bancaetica.it",
+      "fisco": "https://www.bancaetica.it"
+    },
+    "last_updated": "2025-01-01"
+  }
+]
