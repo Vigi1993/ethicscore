@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-// Dati caricati da /brands.json (nella cartella public/) tramite fetch
-// Per aggiungere o aggiornare brand modifica solo quel file — zero codice
-
+const API = "https://web-production-14708.up.railway.app";
 
 const CATEGORIES = [
   { key: "armi", label: "Conflitti & Armi", icon: "⚔️", color: "#ef4444" },
@@ -60,15 +58,27 @@ function RadarChart({ scores }) {
 }
 
 function BrandCard({ brand, onClose }) {
+  const [fullBrand, setFullBrand] = useState(null);
   const total = getScore(brand); const verdict = getVerdict(total); const color = getColor(total);
+
+  // Carica dettagli completi con fonti dall'API
+  useEffect(() => {
+    fetch(`${API}/brands/${brand.id}`)
+      .then(r => r.json())
+      .then(data => setFullBrand(data))
+      .catch(() => setFullBrand(brand));
+  }, [brand.id]);
+
+  const b = fullBrand || brand;
+
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
       <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
           <div>
-            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, marginBottom: 4, letterSpacing: 2, textTransform: "uppercase" }}>{brand.sector} · {brand.category}</div>
-            <div style={{ fontSize: 26, fontWeight: 700, color: "#fff", fontFamily: "'Playfair Display', serif" }}>{brand.name}</div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Casa madre: {brand.parent}</div>
+            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, marginBottom: 4, letterSpacing: 2, textTransform: "uppercase" }}>{b.sector}</div>
+            <div style={{ fontSize: 26, fontWeight: 700, color: "#fff", fontFamily: "'Playfair Display', serif" }}>{b.name}</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>Casa madre: {b.parent}</div>
           </div>
           <div style={{ textAlign: "right" }}>
             <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>{total}</div>
@@ -77,57 +87,62 @@ function BrandCard({ brand, onClose }) {
           </div>
         </div>
         <div style={{ display: "flex", gap: 20, marginBottom: 28, alignItems: "center" }}>
-          <RadarChart scores={brand.scores} />
+          <RadarChart scores={b.scores} />
           <div style={{ flex: 1 }}>
             {CATEGORIES.map(cat => (
               <div key={cat.key} style={{ marginBottom: 12 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                   <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {cat.label}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: getColor(brand.scores[cat.key]) }}>{brand.scores[cat.key]}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: getColor(b.scores[cat.key]) }}>{b.scores[cat.key]}</span>
                 </div>
-                <ScoreBar value={brand.scores[cat.key]} color={getColor(brand.scores[cat.key])} />
+                <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key])} />
               </div>
             ))}
           </div>
         </div>
+
+        {/* Note & Fonti */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 10, letterSpacing: 1, textTransform: "uppercase" }}>Note & Fonti</div>
-          {CATEGORIES.map(cat => (
-            <div key={cat.key} style={{ marginBottom: 12 }}>
-              <div style={{ marginBottom: 4 }}>
-                <span style={{ fontSize: 11, color: cat.color }}>{cat.icon} </span>
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{brand.notes[cat.key]}</span>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 14, letterSpacing: 1, textTransform: "uppercase" }}>Note & Fonti</div>
+          {CATEGORIES.map(cat => {
+            const catSources = b.sources?.[cat.key] || [];
+            return (
+              <div key={cat.key} style={{ marginBottom: 16 }}>
+                <div style={{ marginBottom: 6 }}>
+                  <span style={{ fontSize: 11, color: cat.color }}>{cat.icon} </span>
+                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{b.notes?.[cat.key]}</span>
+                </div>
+                {catSources.length > 0 && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 16 }}>
+                    {catSources.map((src, i) => (
+                      <a key={i} href={src.url} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: 11, color: "rgba(99,202,183,0.6)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4, borderBottom: "1px solid rgba(99,202,183,0.15)", paddingBottom: 1, width: "fit-content", transition: "color 0.15s" }}
+                        onMouseOver={e => e.currentTarget.style.color = "#63cab7"}
+                        onMouseOut={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
+                      >
+                        ↗ {src.title || src.publisher || "Vedi fonte"}
+                        {src.publisher && src.title && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>— {src.publisher}</span>}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
-              {brand.sources && brand.sources[cat.key] && (
-                <a
-                  href={brand.sources[cat.key]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    fontSize: 11, color: "rgba(99,202,183,0.6)",
-                    textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4,
-                    borderBottom: "1px solid rgba(99,202,183,0.2)", paddingBottom: 1,
-                    transition: "color 0.15s"
-                  }}
-                  onMouseOver={e => e.currentTarget.style.color = "#63cab7"}
-                  onMouseOut={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
-                >
-                  ↗ Vedi fonte
-                </a>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
-        {brand.alternatives && brand.alternatives.length > 0 && (
+
+        {/* Alternative */}
+        {b.alternatives && b.alternatives.length > 0 && (
           <div style={{ marginTop: 20, background: "rgba(99,202,183,0.06)", border: "1px solid rgba(99,202,183,0.15)", borderRadius: 12, padding: 16 }}>
             <div style={{ fontSize: 11, color: "#63cab7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>✦ Alternative più etiche</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {brand.alternatives.map(alt => (
+              {b.alternatives.map(alt => (
                 <span key={alt} style={{ fontSize: 12, background: "rgba(99,202,183,0.1)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 99, padding: "4px 12px", color: "rgba(255,255,255,0.7)" }}>{alt}</span>
               ))}
             </div>
           </div>
         )}
+
         <button onClick={onClose} style={{ marginTop: 20, width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", padding: "10px", borderRadius: 10, cursor: "pointer", fontSize: 13 }}>Chiudi</button>
       </div>
     </div>
@@ -255,9 +270,9 @@ export default function App() {
   const [myBrands, setMyBrands] = useState([]);
   const inputRef = useRef(null);
 
-  // Carica brands.json dalla cartella public/
+  // Carica brands dall'API Railway
   useEffect(() => {
-    fetch("/brands.json")
+    fetch(`${API}/brands`)
       .then(r => r.json())
       .then(data => { setDb(data); setLoading(false); })
       .catch(err => { console.error("Errore caricamento brands:", err); setLoading(false); });
@@ -273,7 +288,7 @@ export default function App() {
   useEffect(() => {
     if (query.length < 2) { setResults([]); return; }
     const q = query.toLowerCase();
-    setResults(db.filter(b => b.name.toLowerCase().includes(q) || b.category.toLowerCase().includes(q) || b.sector.toLowerCase().includes(q)));
+    setResults(db.filter(b => b.name.toLowerCase().includes(q) || b.sector.toLowerCase().includes(q)));
   }, [query, db]);
 
   const addToList = (brand) => {
@@ -332,7 +347,7 @@ export default function App() {
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: `${getColor(score)}22`, border: `1px solid ${getColor(score)}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, color: getColor(score) }}>{brand.logo}</div>
                     <div style={{ flex: 1 }} onClick={() => setSelected(brand)}>
                       <div style={{ fontSize: 14, fontWeight: 600 }}>{brand.name}</div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{brand.sector} · {brand.category}</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{brand.sector}</div>
                     </div>
                     <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
                       <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score}</div>
