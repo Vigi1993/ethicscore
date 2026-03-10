@@ -131,8 +131,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const categories = useCategories();
   const [fullBrand, setFullBrand] = useState(null);
   const t = UI[lang] || UI.en;
-  // brand potrebbe essere un oggetto parziale (alternativa) — usiamo score diretto se scores non è disponibile
-  const total = brand.scores ? getScore(brand) : (brand.score || 0);
+  const total = fullBrand ? getScore(fullBrand) : 0;
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
 
@@ -144,7 +143,15 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
       .catch(() => setFullBrand(brand));
   }, [brand.id, lang]);
 
-  const b = fullBrand || brand;
+  if (!fullBrand) return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
+      <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 48, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={e => e.stopPropagation()}>
+        <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'DM Sans', sans-serif", letterSpacing: 2 }}>{t.loading}</div>
+      </div>
+    </div>
+  );
+
+  const b = fullBrand;
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
