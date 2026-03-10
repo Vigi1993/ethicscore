@@ -28,8 +28,8 @@ const UI = {
     loading: "Loading...",
     hint: "Add the brands you use with + to discover your personal ethical footprint.",
     hint_dismiss: "Got it",
-    confidence: { high: "High reliability", medium: "Limited data", low: "Few sources" },
-    confidence_tooltip: (n) => `Score based on ${n} source${n !== 1 ? "s" : ""}. More sources = higher reliability.`,
+    conf_label: { high: "●●●", medium: "●●○", low: "●○○" },
+    conf_tip: (n) => `${n} source${n !== 1 ? "s" : ""}`,
     show_less: "Less",
     show_more: (n) => `+${n} more`,
     score_verdicts: ["Strongly discouraged", "Problematic", "Improvable", "Fairly ethical"],
@@ -54,8 +54,8 @@ const UI = {
     loading: "Caricamento...",
     hint: "Aggiungi i brand che usi con + per scoprire la tua impronta etica personale.",
     hint_dismiss: "Capito",
-    confidence: { high: "Alta affidabilità", medium: "Dati limitati", low: "Poche fonti" },
-    confidence_tooltip: (n) => `Punteggio basato su ${n} fonte${n !== 1 ? "i" : ""}. Più fonti = maggiore affidabilità.`,
+    conf_label: { high: "●●●", medium: "●●○", low: "●○○" },
+    conf_tip: (n) => `${n} font${n !== 1 ? "i" : "e"}`,
     show_less: "Meno",
     show_more: (n) => `+${n} altri`,
     score_verdicts: ["Fortemente sconsigliato", "Problematico", "Migliorabile", "Abbastanza etico"],
@@ -181,34 +181,30 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
             <div style={{ fontSize: 40, fontWeight: 800, color, fontFamily: "monospace", lineHeight: 1 }}>{total}</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>/100</div>
             <div style={{ fontSize: 13, marginTop: 4 }}>{verdict.emoji} {verdict.label}</div>
-            {b.confidence && (
-              <div title={t.confidence_tooltip(b.source_count)} style={{
-                marginTop: 6, display: "inline-flex", alignItems: "center", gap: 5,
-                background: b.confidence === "high" ? "rgba(74,222,128,0.1)" : b.confidence === "medium" ? "rgba(250,204,21,0.1)" : "rgba(248,113,113,0.1)",
-                border: `1px solid ${b.confidence === "high" ? "rgba(74,222,128,0.25)" : b.confidence === "medium" ? "rgba(250,204,21,0.25)" : "rgba(248,113,113,0.25)"}`,
-                borderRadius: 99, padding: "3px 9px", cursor: "help"
-              }}>
-                <span style={{ fontSize: 9 }}>{b.confidence === "high" ? "●●●" : b.confidence === "medium" ? "●●○" : "●○○"}</span>
-                <span style={{ fontSize: 10, color: b.confidence === "high" ? "#4ade80" : b.confidence === "medium" ? "#facc15" : "#f87171" }}>
-                  {t.confidence[b.confidence]} · {b.source_count} {b.source_count === 1 ? (lang === "it" ? "fonte" : "source") : (lang === "it" ? "fonti" : "sources")}
-                </span>
-              </div>
-            )}
+
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 20, marginBottom: 28, alignItems: "center" }}>
           <RadarChart scores={b.scores} lang={lang} />
           <div style={{ flex: 1 }}>
-            {categories.map(cat => (
-              <div key={cat.key} style={{ marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: getColor(b.scores[cat.key]) }}>{b.scores[cat.key]}</span>
+            {categories.map(cat => {
+              const conf = b.confidence?.[cat.key] || "low";
+              const srcN = b.source_count?.[cat.key] || 0;
+              const confColor = conf === "high" ? "#4ade80" : conf === "medium" ? "#facc15" : "#f87171";
+              return (
+                <div key={cat.key} style={{ marginBottom: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span title={t.conf_tip(srcN)} style={{ fontSize: 8, color: confColor, letterSpacing: 1, cursor: "help" }}>{t.conf_label[conf]}</span>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: getColor(b.scores[cat.key]) }}>{b.scores[cat.key]}</span>
+                    </div>
+                  </div>
+                  <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key])} />
                 </div>
-                <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key])} />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
