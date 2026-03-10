@@ -210,15 +210,10 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                 </div>
                 {b.confidence?.[cat.key] && (() => {
                   const c = b.confidence[cat.key];
-                  const label = lang === "it" ? c.label_it : c.label_en;
-                  const confColor = c.level === "high" ? "#4ade80" : c.level === "medium" ? "#facc15" : c.level === "low" ? "#fb923c" : "#f87171";
-                  const srcWord = lang === "it" ? (c.count === 1 ? "fonte" : "fonti") : (c.count === 1 ? "source" : "sources");
+                  const srcWord = lang === "it" ? (c.count === 1 ? "fonte verificata" : "fonti verificate") : (c.count === 1 ? "verified source" : "verified sources");
                   return (
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 6, padding: "3px 9px" }}>
-                      <span style={{ fontSize: 10, color: confColor }}>◆</span>
-                      <span style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
-                        {c.count} {srcWord} — <span style={{ color: confColor }}>{label}</span>
-                      </span>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
+                      <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>◆ {c.count} {srcWord}</span>
                     </div>
                   );
                 })()}
