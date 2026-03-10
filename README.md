@@ -1,4 +1,4 @@
-# EthicScore
+# EthicPrint
 
 **Discover the ethical impact of the brands you use every day.**
 
@@ -16,11 +16,11 @@ That's why I decided to try to do something. Not to change the world. But at lea
 
 ---
 
-## What is EthicScore
+## What is EthicPrint
 
-EthicScore is a free, open source, community-driven tool that lets you measure the ethical impact of the brands, platforms, and services you use every day.
+EthicPrint is a free, open source, community-driven tool that lets you measure the ethical impact of the brands, platforms, and services you use every day.
 
-For each brand, EthicScore assigns a score across four dimensions:
+For each brand, EthicPrint assigns a score across four dimensions:
 
 | Dimension | What it measures |
 |---|---|
@@ -35,7 +35,7 @@ You can build your personal list of brands and get an aggregated ethical score â
 
 ## Principles
 
-- **No profit.** EthicScore will never be monetised. No ads, no paid placements, no sponsored scores.
+- **No profit.** EthicPrint will never be monetised. No ads, no paid placements, no sponsored scores.
 - **Radical transparency.** Every score is documented with sources. Every change is public, dated and signed.
 - **Community driven.** Anyone can propose new brands or corrections â€” but every change requires verified sources and is reviewed before being accepted.
 - **Methodological honesty.** We don't claim to have the definitive truth. Scores are based on the best available public information and are updated as new information emerges.
@@ -71,8 +71,8 @@ All contributions are reviewed before being merged. No change enters the project
 
 ```bash
 # Clone the repository
-git clone https://github.com/markoviglianti/ethicscore.git
-cd ethicscore
+git clone https://github.com/markoviglianti/ethicprint.git
+cd ethicprint
 
 # Frontend
 cd frontend
