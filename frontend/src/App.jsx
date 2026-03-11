@@ -12,7 +12,7 @@ const UI = {
     tagline: "Open Source · Community Driven",
     subtitle: "Discover the ethical impact of the brands you use every day.",
     search_placeholder: "Search brand, platform, service...",
-    db_info: (n, s) => `${n} brands in the database · ${s} sectors · open source · community-updated data`,
+    db_info: (n, s, src) => `${n} brands · ${s} sectors · ${src || "–"} sources · open source`,
     my_list_title: "Your ethical footprint",
     aggregated_score: "Aggregated score",
     clear_list: "Clear list",
@@ -40,7 +40,7 @@ const UI = {
     tagline: "Open Source · Community Driven",
     subtitle: "Scopri l'impatto etico dei brand che usi ogni giorno.",
     search_placeholder: "Cerca brand, piattaforma, fornitore...",
-    db_info: (n, s) => `${n} brand nel database · ${s} settori · open source · dati aggiornati dalla community`,
+    db_info: (n, s, src) => `${n} brand · ${s} settori · ${src || "–"} fonti · open source`,
     my_list_title: "La tua impronta etica",
     aggregated_score: "Score aggregato",
     clear_list: "Svuota lista",
@@ -458,6 +458,7 @@ export default function App() {
   const [myBrands, setMyBrands] = useState([]);
   const [lang, setLang] = useState("en");
   const [showHint, setShowHint] = useState(true);
+  const [sourcesCount, setSourcesCount] = useState(0);
   const inputRef = useRef(null);
   const t = UI[lang] || UI.en;
 
@@ -474,6 +475,13 @@ export default function App() {
       })
       .catch(err => { console.error("Error loading data:", err); setLoading(false); });
   }, [lang]);
+
+  useEffect(() => {
+    fetch(`${API}/sources/public`)
+      .then(r => r.json())
+      .then(data => setSourcesCount(data.total || 0))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -567,14 +575,24 @@ export default function App() {
           </div>
 
           {showHint && (
-            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(99,202,183,0.07)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, background: "rgba(99,202,183,0.07)", border: "1px solid rgba(99,202,183,0.2)", borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
               <span style={{ fontSize: 16 }}>👆</span>
               <span style={{ flex: 1, fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>{t.hint}</span>
               <button onClick={() => setShowHint(false)} style={{ background: "transparent", border: "1px solid rgba(99,202,183,0.3)", color: "#63cab7", padding: "4px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>{t.hint_dismiss}</button>
             </div>
           )}
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", marginBottom: 40, paddingLeft: 4 }}>
-            {t.db_info(db.length, sectors.length)}
+
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", marginBottom: 8, paddingLeft: 4 }}>
+            {t.db_info(db.length, sectors.length, sourcesCount)}
+          </div>
+
+          <div style={{ marginBottom: 40, paddingLeft: 4 }}>
+            <a href="/sources.html" style={{ fontSize: 12, color: "rgba(99,202,183,0.6)", textDecoration: "none", transition: "color .2s" }}
+              onMouseEnter={e => e.currentTarget.style.color = "#63CAB7"}
+              onMouseLeave={e => e.currentTarget.style.color = "rgba(99,202,183,0.6)"}
+            >
+              {lang === "en" ? "How do we score brands? →" : "Come calcoliamo i punteggi? →"}
+            </a>
           </div>
 
           <MyListPanel myBrands={myBrands} onRemove={(name) => setMyBrands(prev => prev.filter(b => b.name !== name))} onClear={() => setMyBrands([])} onSelect={setSelected} lang={lang} />
@@ -586,39 +604,7 @@ export default function App() {
             ))}
           </div>
 
-          <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 40 }}>
-
-            {/* Sources & Methodology banner */}
-            <a href="/sources.html" style={{ textDecoration: "none" }}>
-              <div style={{
-                background: "linear-gradient(135deg, rgba(99,202,183,0.06) 0%, rgba(99,202,183,0.02) 100%)",
-                border: "1px solid rgba(99,202,183,0.15)",
-                borderRadius: 14,
-                padding: "24px 28px",
-                marginBottom: 32,
-                textAlign: "left",
-                cursor: "pointer",
-                transition: "border-color .2s",
-              }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(99,202,183,0.35)"}
-              onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(99,202,183,0.15)"}
-              >
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#e8e8f0", marginBottom: 6 }}>
-                      🔍 {t.sources_banner_title}
-                    </div>
-                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, maxWidth: 460 }}>
-                      {t.sources_banner_desc}
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 11, color: "#63CAB7", whiteSpace: "nowrap", fontFamily: "monospace", marginTop: 2, flexShrink: 0 }}>
-                    {t.sources_banner_cta}
-                  </div>
-                </div>
-              </div>
-            </a>
-
+          <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
             {/* Footer */}
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
               {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}<br />
