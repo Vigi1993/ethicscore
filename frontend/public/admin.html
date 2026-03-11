@@ -182,14 +182,26 @@ let counts = { pending: 0, approved: 0, rejected: 0 };
 const CAT_LABELS = { armi: "Arms", ambiente: "Environment", diritti: "Rights", fisco: "Tax" };
 const CAT_ICONS = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
 
+const SCORE_LABELS = {
+  5: { label: "Positive evidence",        color: "#4ade80", dot: "●●●●●" },
+  4: { label: "Predominantly positive",   color: "#86efac", dot: "●●●●○" },
+  3: { label: "No evidence available",    color: "rgba(255,255,255,0.3)", dot: "●●●○○" },
+  2: { label: "Predominantly negative",   color: "#fb923c", dot: "●●○○○" },
+  1: { label: "Negative evidence",        color: "#ef4444", dot: "●○○○○" },
+};
+
 function renderScoreCard(p) {
-  const diff = p.proposed_score - p.current_score;
-  const direction = diff > 0 ? "up" : diff < 0 ? "down" : "same";
-  const arrowClass = `score-${direction}`;
-  const arrow = direction === "up" ? "↑" : direction === "down" ? "↓" : "→";
   const brand = p.brands?.name || `Brand ${p.brand_id}`;
   const source = p.sources;
   const catIcons = { armi: "⚔️", ambiente: "🌿", diritti: "🤝", fisco: "💰" };
+  const cur = SCORE_LABELS[p.current_score] || SCORE_LABELS[3];
+  const prop = SCORE_LABELS[p.proposed_score] || SCORE_LABELS[3];
+  const diff = p.proposed_score - p.current_score;
+  const arrow = diff > 0 ? "↑" : diff < 0 ? "↓" : "→";
+  const arrowColor = diff > 0 ? "#4ade80" : diff < 0 ? "#ef4444" : "rgba(255,255,255,0.3)";
+
+  // Criterion label — from scoring_criteria via proposal
+  const criterionLabel = p.scoring_criteria?.label_en || p.criterion_id || "";
 
   const actions = p.status === "pending"
     ? `<div class="proposal-actions">
@@ -197,19 +209,27 @@ function renderScoreCard(p) {
         <button class="btn btn-reject" onclick="rejectScore(${p.id})">✗ Reject</button>
        </div>`
     : `<div class="proposal-actions">
-        <span class="status-chip ${p.status === 'approved' ? 'status-approved' : 'status-rejected'}">${p.status === 'approved' ? '✓ Applied' : '✗ Rejected'}</span>
+        <span class="status-chip ${p.status === "approved" ? "status-approved" : "status-rejected"}">${p.status === "approved" ? "✓ Applied" : "✗ Rejected"}</span>
        </div>`;
 
   return `<div class="proposal-card ${p.status}" id="score-card-${p.id}">
     <span class="cat-badge cat-${p.category_key}">${catIcons[p.category_key] || "•"} ${CAT_LABELS[p.category_key] || p.category_key}</span>
     <div class="proposal-body">
       <div class="proposal-title">${brand}</div>
-      <div class="score-box">
-        <span style="font-size:13px;color:var(--muted)">Current:</span>
-        <span class="score-arrow" style="color:var(--text)">${p.current_score}</span>
-        <span style="color:var(--muted);font-size:16px">→</span>
-        <span class="score-arrow ${arrowClass}">${arrow} ${p.proposed_score}</span>
-        <span style="font-size:11px;color:var(--muted);margin-left:4px">(${diff > 0 ? "+" : ""}${diff})</span>
+      ${criterionLabel ? `<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px;font-family:'DM Mono',monospace;letter-spacing:0.5px">› ${criterionLabel}</div>` : ""}
+      <div class="score-box" style="align-items:flex-start;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--muted);width:52px">Before:</span>
+          <span style="font-family:'DM Mono',monospace;font-size:13px;color:${cur.color}">${cur.dot}</span>
+          <span style="font-size:12px;color:${cur.color}">${cur.label}</span>
+          <span style="font-size:11px;color:rgba(255,255,255,0.2)">(${p.current_score}/5)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--muted);width:52px">After <span style="color:${arrowColor}">${arrow}</span>:</span>
+          <span style="font-family:'DM Mono',monospace;font-size:13px;color:${prop.color}">${prop.dot}</span>
+          <span style="font-size:12px;color:${prop.color};font-weight:500">${prop.label}</span>
+          <span style="font-size:11px;color:rgba(255,255,255,0.2)">(${p.proposed_score}/5)</span>
+        </div>
       </div>
       ${p.motivation ? `<div class="proposal-summary">${p.motivation}</div>` : ""}
       ${source ? `<a class="proposal-url" href="${source.url}" target="_blank">↗ ${source.title || source.url}</a>` : ""}
@@ -245,6 +265,15 @@ async function rejectScore(id) {
     document.getElementById("s-scores").textContent = counts.scores;
     showToast("Score proposal rejected");
   } catch(e) { showToast("✗ Error — try again", true); card.querySelectorAll("button").forEach(b => b.disabled = false); }
+}
+
+async function refreshScores() {
+  const res = await fetch(`${API}/score-proposals?status=pending`).then(r => r.json());
+  allProposals.scores = res.proposals;
+  counts.scores = res.count;
+  document.getElementById("badge-scores").textContent = counts.scores;
+  document.getElementById("s-scores").textContent = counts.scores;
+  renderTab();
 }
 
 async function loadAll() {
@@ -288,11 +317,11 @@ function renderTab() {
   if (currentTab === "scores") {
     const proposals = allProposals.scores || [];
     if (proposals.length === 0) {
-      document.getElementById("content").innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No pending score updates</div>`;
+      document.getElementById("content").innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No pending score updates<br><br><button onclick="refreshScores()" style="background:rgba(99,202,183,0.1);border:1px solid rgba(99,202,183,0.25);color:#63cab7;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px">↻ Refresh</button></div>`;
       return;
     }
     const groups = groupByBrand(proposals);
-    let html = "";
+    let html = `<div style="text-align:right;margin-bottom:12px"><button onclick="refreshScores()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px">↻ Refresh</button></div>`;
     Object.values(groups).forEach(group => {
       html += `<div class="brand-group">
         <div class="brand-header">
