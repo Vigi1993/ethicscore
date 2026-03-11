@@ -80,6 +80,11 @@ function getVerdict(score, lang) {
   return { label: verdicts[0], emoji: "🔴" };
 }
 
+function getSectorAvgScore(brands) {
+  if (!brands.length) return 0;
+  return Math.round(brands.reduce((sum, b) => sum + getScore(b), 0) / brands.length);
+}
+
 // Ritorna label categoria nella lingua corretta
 function getCatLabel(cat, lang) {
   if (lang === "en" && cat.label_en) return cat.label_en;
@@ -337,46 +342,67 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
   );
 }
 
-function SectorSection({ sector, brands, myBrands, onAdd, onSelect, lang }) {
+function BrandRow({ brand, idx, myBrands, onAdd, onSelect, lang }) {
   const categories = useCategories();
-  const t = UI[lang] || UI.en;
-  const [expanded, setExpanded] = useState(false);
-  const sorted = [...brands].sort((a, b) => getScore(a) - getScore(b));
-  const visible = expanded ? sorted : sorted.slice(0, 4);
+  const score = getScore(brand);
+  const inList = myBrands.find(b => b.name === brand.name);
   return (
-    <div style={{ marginBottom: 36 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 3, height: 16, background: "rgba(99,202,183,0.4)", borderRadius: 99 }} />
-          <span style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.35)", textTransform: "uppercase" }}>{sector}</span>
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.15)" }}>· {brands.length}</span>
+    <div className="brand-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 11, cursor: "pointer", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", transition: "background 0.15s" }}>
+      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", width: 16, textAlign: "right", flexShrink: 0 }}>{idx + 1}</div>
+      <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, background: `${getColor(score)}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: getColor(score) }}>{brand.logo}</div>
+      <div style={{ flex: 1, minWidth: 0 }} onClick={() => onSelect(brand)}>
+        <div style={{ fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{brand.name}</div>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.22)" }}>{brand.parent}</div>
+      </div>
+      <div style={{ display: "flex", gap: 5, alignItems: "center", flexShrink: 0 }}>
+        {categories.map(cat => <div key={cat.key} title={getCatLabel(cat, lang)} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key]) }} />)}
+      </div>
+      <div style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }} onClick={() => onSelect(brand)}>{score}</div>
+      <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
+    </div>
+  );
+}
+
+function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, lang, defaultOpen }) {
+  const t = UI[lang] || UI.en;
+  const [expanded, setExpanded] = useState(defaultOpen);
+  const sorted = [...brands].sort((a, b) => getScore(b) - getScore(a));
+  const avgScore = getSectorAvgScore(brands);
+  const bestBrand = sorted[0];
+  const avgColor = getColor(avgScore);
+
+  return (
+    <div style={{ marginBottom: 8, border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
+      {/* Header collassabile */}
+      <div onClick={() => setExpanded(!expanded)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", cursor: "pointer", transition: "background 0.15s" }}
+        onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
+        onMouseOut={e => e.currentTarget.style.background = "transparent"}
+      >
+        <span style={{ fontSize: 18, flexShrink: 0 }}>{sectorIcon}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{sector}</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+            {brands.length} {lang === "it" ? "brand" : "brands"}
+            {bestBrand && <span> · {lang === "it" ? "migliore" : "best"}: <span style={{ color: getColor(getScore(bestBrand)) }}>{bestBrand.name} {getScore(bestBrand)}</span></span>}
+          </div>
         </div>
-        {brands.length > 4 && (
-          <button onClick={() => setExpanded(!expanded)} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)", padding: "3px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11 }}>
-            {expanded ? t.show_less : t.show_more(brands.length - 4)}
-          </button>
-        )}
+        <div style={{ textAlign: "right", flexShrink: 0 }}>
+          <div style={{ fontSize: 20, fontWeight: 700, color: avgColor, lineHeight: 1 }}>{avgScore}</div>
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>{lang === "it" ? "media" : "avg"}</div>
+        </div>
+        <div style={{ fontSize: 16, color: "rgba(255,255,255,0.2)", flexShrink: 0, transition: "transform 0.2s", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}>⌄</div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-        {visible.map((brand, idx) => {
-          const score = getScore(brand); const inList = myBrands.find(b => b.name === brand.name);
-          return (
-            <div key={brand.name} className="brand-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 11, cursor: "pointer", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", transition: "background 0.15s" }}>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", width: 16, textAlign: "right", flexShrink: 0 }}>{idx + 1}</div>
-              <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, background: `${getColor(score)}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: getColor(score) }}>{brand.logo}</div>
-              <div style={{ flex: 1, minWidth: 0 }} onClick={() => onSelect(brand)}>
-                <div style={{ fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{brand.name}</div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.22)" }}>{brand.parent}</div>
-              </div>
-              <div style={{ display: "flex", gap: 5, alignItems: "center", flexShrink: 0 }}>
-                {categories.map(cat => <div key={cat.key} title={getCatLabel(cat, lang)} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key]) }} />)}
-              </div>
-              <div style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }} onClick={() => onSelect(brand)}>{score}</div>
-              <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
-            </div>
-          );
-        })}
-      </div>
+
+      {/* Brand list espandibile */}
+      {expanded && (
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", padding: "8px 12px 12px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            {sorted.map((brand, idx) => (
+              <BrandRow key={brand.name} brand={brand} idx={idx} myBrands={myBrands} onAdd={onAdd} onSelect={onSelect} lang={lang} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -427,7 +453,13 @@ export default function App() {
   };
 
   const sectors = [...new Set(db.map(b => b.sector))].sort();
-  const brandsBySector = sectors.map(sector => ({ sector, brands: db.filter(b => b.sector === sector) }));
+  const brandsBySector = sectors
+    .map(sector => {
+      const brands = db.filter(b => b.sector === sector);
+      const sectorIcon = brands[0]?.sector_icon || "🏢";
+      return { sector, sectorIcon, brands, avgScore: getSectorAvgScore(brands) };
+    })
+    .sort((a, b) => b.avgScore - a.avgScore);
 
   if (loading) return (
     <div style={{ minHeight: "100vh", background: "#080814", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -508,8 +540,8 @@ export default function App() {
 
           <div style={{ marginTop: 52 }}>
             <div style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 32 }}>{t.ranking_title}</div>
-            {brandsBySector.map(({ sector, brands }) => (
-              <SectorSection key={sector} sector={sector} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} lang={lang} />
+            {brandsBySector.map(({ sector, sectorIcon, brands }, idx) => (
+              <SectorSection key={sector} sector={sector} sectorIcon={sectorIcon} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} lang={lang} defaultOpen={idx === 0} />
             ))}
           </div>
 
