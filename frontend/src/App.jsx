@@ -364,45 +364,71 @@ function BrandRow({ brand, idx, myBrands, onAdd, onSelect, lang }) {
 }
 
 function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, lang, defaultOpen }) {
+  const categories = useCategories();
   const t = UI[lang] || UI.en;
   const [expanded, setExpanded] = useState(defaultOpen);
   const sorted = [...brands].sort((a, b) => getScore(b) - getScore(a));
   const avgScore = getSectorAvgScore(brands);
-  const bestBrand = sorted[0];
+  const best = sorted[0];
+  const rest = sorted.slice(1);
   const avgColor = getColor(avgScore);
+  const bestScore = best ? getScore(best) : 0;
+  const bestInList = best && myBrands.find(b => b.name === best.name);
 
   return (
     <div style={{ marginBottom: 8, border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
-      {/* Header collassabile */}
-      <div onClick={() => setExpanded(!expanded)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", cursor: "pointer", transition: "background 0.15s" }}
+
+      {/* Header settore */}
+      <div onClick={() => setExpanded(!expanded)} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", cursor: "pointer" }}
         onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
         onMouseOut={e => e.currentTarget.style.background = "transparent"}
       >
         <span style={{ fontSize: 18, flexShrink: 0 }}>{sectorIcon}</span>
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ flex: 1 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{sector}</div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>
             {brands.length} {lang === "it" ? "brand" : "brands"}
-            {bestBrand && <span> · {lang === "it" ? "migliore" : "best"}: <span style={{ color: getColor(getScore(bestBrand)) }}>{bestBrand.name} {getScore(bestBrand)}</span></span>}
           </div>
         </div>
-        <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <div style={{ fontSize: 20, fontWeight: 700, color: avgColor, lineHeight: 1 }}>{avgScore}</div>
+        <div style={{ textAlign: "right", flexShrink: 0, marginRight: 8 }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: avgColor }}>{avgScore}</div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>{lang === "it" ? "media" : "avg"}</div>
         </div>
         <div style={{ fontSize: 16, color: "rgba(255,255,255,0.2)", flexShrink: 0, transition: "transform 0.2s", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}>⌄</div>
       </div>
 
-      {/* Brand list espandibile */}
-      {expanded && (
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", padding: "8px 12px 12px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-            {sorted.map((brand, idx) => (
-              <BrandRow key={brand.name} brand={brand} idx={idx} myBrands={myBrands} onAdd={onAdd} onSelect={onSelect} lang={lang} />
-            ))}
+      {/* Best brand — sempre visibile quando espanso */}
+      {expanded && best && (
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", margin: "0 12px", padding: "12px 6px 8px" }}>
+          <div className="brand-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 11, background: `${getColor(bestScore)}08`, border: `1px solid ${getColor(bestScore)}22`, cursor: "pointer" }}>
+            <div style={{ width: 34, height: 34, borderRadius: 9, background: `${getColor(bestScore)}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: getColor(bestScore), flexShrink: 0 }}>{best.logo}</div>
+            <div style={{ flex: 1, minWidth: 0 }} onClick={() => onSelect(best)}>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{best.name}</div>
+              <div style={{ display: "flex", gap: 6, marginTop: 4, alignItems: "center" }}>
+                {categories.map(cat => (
+                  <div key={cat.key} style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: 99, background: getColor(best.scores[cat.key]) }} />
+                    <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>{cat.key}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(bestScore), flexShrink: 0 }} onClick={() => onSelect(best)}>{bestScore}</div>
+            <button className="add-btn" onClick={() => onAdd(best)} style={{ background: bestInList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: bestInList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{bestInList ? "✓" : "+"}</button>
           </div>
+
+          {/* Altri brand a scomparsa */}
+          {rest.length > 0 && (
+            <div style={{ marginTop: 5, display: "flex", flexDirection: "column", gap: 4 }}>
+              {rest.map((brand, idx) => (
+                <BrandRow key={brand.name} brand={brand} idx={idx + 1} myBrands={myBrands} onAdd={onAdd} onSelect={onSelect} lang={lang} />
+              ))}
+            </div>
+          )}
         </div>
       )}
+
+      {expanded && <div style={{ height: 8 }} />}
     </div>
   );
 }
