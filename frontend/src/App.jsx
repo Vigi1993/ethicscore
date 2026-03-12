@@ -12,7 +12,7 @@ const UI = {
     tagline: "Open Source · Community Driven",
     subtitle: "Discover the ethical impact of the brands you use every day.",
     search_placeholder: "Search brand, platform, service...",
-    db_info: (n, s, src) => `${n} brands · ${s} sectors · ${src || "–"} sources ·`,
+    db_info: (n, s, src) => `${n} brands · ${s} sectors · ${src || "–"} sources · open source`,
     my_list_title: "Your ethical footprint",
     aggregated_score: "Aggregated score",
     clear_list: "Clear list",
@@ -23,7 +23,7 @@ const UI = {
     notes_title: "Notes & Sources",
     alternatives_label: "✦ More ethical alternatives",
     parent: "Parent company",
-    footer: "EthicPrint is an open source, non-profit project.",
+    footer: "EthicPrint is an open source, non-profit project.\nData sourced from SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.",
     footer_cta: "Contribute on GitHub · Report an error · Add a brand",
     sources_banner_title: "How do we score brands?",
     sources_banner_desc: "Every score is backed by verified sources, weighted by publisher authority. Amnesty International counts more than a blog. Everything is public.",
@@ -40,7 +40,7 @@ const UI = {
     tagline: "Open Source · Community Driven",
     subtitle: "Scopri l'impatto etico dei brand che usi ogni giorno.",
     search_placeholder: "Cerca brand, piattaforma, fornitore...",
-    db_info: (n, s, src) => `${n} brand · ${s} settori · ${src || "–"} fonti ·`,
+    db_info: (n, s, src) => `${n} brand · ${s} settori · ${src || "–"} fonti · open source`,
     my_list_title: "La tua impronta etica",
     aggregated_score: "Score aggregato",
     clear_list: "Svuota lista",
@@ -51,7 +51,7 @@ const UI = {
     notes_title: "Note & Fonti",
     alternatives_label: "✦ Alternative più etiche",
     parent: "Casa madre",
-    footer: "EthicPrint è un progetto open source e no-profit.",
+    footer: "EthicPrint è un progetto open source e no-profit.\nI dati sono raccolti da SIPRI, CDP, KnowTheChain, Oxfam, Ethical Consumer.",
     footer_cta: "Contribuisci su GitHub · Segnala un errore · Aggiungi un brand",
     sources_banner_title: "Come calcoliamo i punteggi?",
     sources_banner_desc: "Ogni punteggio è supportato da fonti verificate, pesate per autorevolezza. Amnesty International vale più di un blog. Tutto è pubblico.",
@@ -71,11 +71,12 @@ function getScore(brand) {
   return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
 }
 
-function getColor(score) {
-  if (score >= 90) return "#4ade80";
-  if (score >= 75) return "#86efac";
-  if (score >= 55) return "#facc15";
-  if (score >= 35) return "#fb923c";
+function getColor(score, max = 100) {
+  const pct = (score / max) * 100;
+  if (pct >= 90) return "#4ade80";
+  if (pct >= 75) return "#86efac";
+  if (pct >= 55) return "#facc15";
+  if (pct >= 35) return "#fb923c";
   return "#ef4444";
 }
 
@@ -99,10 +100,11 @@ function getCatLabel(cat, lang) {
   return cat.label;
 }
 
-function ScoreBar({ value, color }) {
+function ScoreBar({ value, color, max = 25 }) {
+  const pct = Math.min(100, Math.round((value / max) * 100));
   return (
     <div style={{ background: "#1a1a2e", borderRadius: 99, height: 6, width: "100%", overflow: "hidden" }}>
-      <div style={{ width: `${value}%`, height: "100%", background: color, borderRadius: 99, transition: "width 1s cubic-bezier(.4,0,.2,1)" }} />
+      <div style={{ width: `${pct}%`, height: "100%", background: color, borderRadius: 99, transition: "width 1s cubic-bezier(.4,0,.2,1)" }} />
     </div>
   );
 }
@@ -196,19 +198,19 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 20, marginBottom: 28, alignItems: "center" }}>
-          <RadarChart scores={b.scores} lang={lang} />
-          <div style={{ flex: 1 }}>
-            {categories.map(cat => (
-              <div key={cat.key} style={{ marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: getColor(b.scores[cat.key]) }}>{b.scores[cat.key]}</span>
+        <div style={{ marginBottom: 28 }}>
+          {categories.map(cat => (
+            <div key={cat.key} style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)" }}>{cat.icon} {getCatLabel(cat, lang)}</span>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: getColor(b.scores[cat.key], 25) }}>{b.scores[cat.key]}</span>
+                  <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>/25</span>
                 </div>
-                <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key])} />
               </div>
-            ))}
-          </div>
+              <ScoreBar value={b.scores[cat.key]} color={getColor(b.scores[cat.key], 25)} max={25} />
+            </div>
+          ))}
         </div>
 
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
@@ -307,7 +309,7 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
         {categories.map(cat => (
           <div key={cat.key} style={{ flex: "1 1 120px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "10px 14px" }}>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>{cat.icon} {getCatLabel(cat, lang)}</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key]) }}>{avgScores[cat.key]}</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: getColor(avgScores[cat.key], 25) }}>{avgScores[cat.key]}</div>
           </div>
         ))}
       </div>
@@ -363,7 +365,7 @@ function BrandRow({ brand, idx, myBrands, onAdd, onSelect, lang }) {
         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.22)" }}>{brand.parent}</div>
       </div>
       <div style={{ display: "flex", gap: 5, alignItems: "center", flexShrink: 0 }}>
-        {categories.map(cat => <div key={cat.key} title={getCatLabel(cat, lang)} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key]) }} />)}
+        {categories.map(cat => <div key={cat.key} title={getCatLabel(cat, lang)} style={{ width: 5, height: 5, borderRadius: 99, background: getColor(brand.scores[cat.key], 25) }} />)}
       </div>
       <div style={{ fontSize: 17, fontWeight: 700, color: getColor(score), width: 32, textAlign: "right", flexShrink: 0 }} onClick={() => onSelect(brand)}>{score}</div>
       <button className="add-btn" onClick={() => onAdd(brand)} style={{ background: inList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: inList ? "#63cab7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s", flexShrink: 0 }}>{inList ? "✓" : "+"}</button>
@@ -430,7 +432,7 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
               <div style={{ display: "flex", gap: 6, marginTop: 4, alignItems: "center" }}>
                 {categories.map(cat => (
                   <div key={cat.key} style={{ display: "flex", alignItems: "center", gap: 3 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: 99, background: getColor(best.scores[cat.key]) }} />
+                    <div style={{ width: 6, height: 6, borderRadius: 99, background: getColor(best.scores[cat.key], 25) }} />
                     <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>{getCatLabel(cat, lang).split(" ")[0]}</span>
                   </div>
                 ))}
