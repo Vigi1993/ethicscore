@@ -92,7 +92,6 @@
     .cat-header-row.open { border-radius: 10px 10px 0 0; border-bottom-color: transparent; }
     .cat-icon { font-size: 15px; }
     .cat-title { font-size: 13px; font-weight: 500; flex: 1; }
-    .cat-pts { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); }
     .cat-chev { color: var(--muted); font-size: 11px; transition: transform .25s; }
     .cat-chev.open { transform: rotate(180deg); }
     .cat-body { overflow: hidden; transition: max-height .35s ease; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
@@ -369,7 +368,7 @@ function renderCriteria(data) {
       '<div class="cat-header-row" id="cat-hdr-' + cat + '" onclick="toggleCat(\'' + cat + '\')">' +
         '<span class="cat-icon">' + meta.icon + '</span>' +
         '<span class="cat-title" data-en="' + titleEn + '" data-it="' + titleIt + '">' + displayTitle + '</span>' +
-        '<span class="cat-pts">25 pts</span>' +
+        '' +
         '<span class="cat-chev" id="cat-chev-' + cat + '">&#9660;</span>' +
       '</div>' +
       '<div class="cat-body" id="cat-body-' + cat + '" style="max-height:0">';
