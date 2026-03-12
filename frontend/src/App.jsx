@@ -213,6 +213,12 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           </div>
         </div>
 
+        {b.impact_summary && (
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, fontStyle: "italic" }}>
+            {b.impact_summary}
+          </div>
+        )}
+
         <div style={{ marginBottom: 28 }}>
           {categories.map(cat => {
             const status = b.confidence?.[cat.key]?.data_status || "none";
