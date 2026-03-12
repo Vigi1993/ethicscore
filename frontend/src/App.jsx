@@ -644,7 +644,9 @@ export default function App() {
             {/* Footer */}
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
               {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}<br />
-              <span style={{ color: "rgba(99,202,183,0.5)" }}>{t.footer_cta}</span>
+              <a href="/contribute.html" style={{ color: "rgba(99,202,183,0.5)", textDecoration: "none" }}>
+                {lang === "it" ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand" : "➕ Contribute · Report an error · Add a brand"}
+              </a>
             </div>
           </div>
         </div>
