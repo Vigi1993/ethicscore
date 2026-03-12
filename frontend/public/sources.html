@@ -3,296 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sources & Methodology — EthicPrint</title>
+  <title>Sources &amp; Methodology — EthicPrint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #08080f;
-      --surface: #0f0f1a;
-      --border: rgba(255,255,255,0.06);
-      --text: #e8e8f0;
-      --muted: rgba(255,255,255,0.35);
-      --accent: #63CAB7;
+      --bg: #08080f; --surface: #0f0f1a; --border: rgba(255,255,255,0.06);
+      --text: #e8e8f0; --muted: rgba(255,255,255,0.35); --accent: #63CAB7;
       --accent-dim: rgba(99,202,183,0.1);
-      --gold: #f0c060;
-      --gold-dim: rgba(240,192,96,0.08);
-      --silver: #a0b4c8;
-      --silver-dim: rgba(160,180,200,0.07);
-      --bronze: #c08060;
-      --bronze-dim: rgba(192,128,96,0.06);
+      --gold: #f0c060; --gold-dim: rgba(240,192,96,0.08);
+      --silver: #a0b4c8; --silver-dim: rgba(160,180,200,0.07);
+      --bronze: #c08060; --bronze-dim: rgba(192,128,96,0.06);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; min-height: 100vh; }
 
-    /* ── TOP BAR ── */
-    .topbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 100;
-      background: rgba(8,8,15,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .back {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      text-decoration: none;
-      letter-spacing: 1px;
-      transition: color .2s;
-    }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; background: rgba(8,8,15,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .back { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 1px; transition: color .2s; }
     .back:hover { color: var(--accent); }
-    .lang-toggle {
-      display: flex;
-      gap: 2px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 3px;
-    }
-    .lang-btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 5px;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all .2s;
-      letter-spacing: 1px;
-    }
-    .lang-btn.active {
-      background: rgba(99,202,183,0.15);
-      color: var(--accent);
-    }
+    .lang-toggle { display: flex; gap: 2px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+    .lang-btn { font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 10px; border-radius: 5px; border: none; background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; letter-spacing: 1px; }
+    .lang-btn.active { background: rgba(99,202,183,0.15); color: var(--accent); }
 
-    /* ── CONTENT ── */
-    .wrap {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 80px 24px 64px;
-    }
+    .wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px 64px; }
 
-    .hero {
-      padding: 32px 0 48px;
-      opacity: 0;
-      animation: fadeUp .5s .1s forwards;
-    }
-    .hero-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .hero-title {
-      font-size: clamp(28px, 5vw, 44px);
-      font-weight: 500;
-      line-height: 1.1;
-      letter-spacing: -1px;
-      margin-bottom: 16px;
-    }
+    .hero { padding: 32px 0 48px; opacity: 0; animation: fadeUp .5s .1s forwards; }
+    .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; }
+    .hero-title { font-size: clamp(28px, 5vw, 44px); font-weight: 500; line-height: 1.1; letter-spacing: -1px; margin-bottom: 16px; }
     .hero-title span { color: var(--accent); }
-    .hero-desc {
-      font-size: 14px;
-      color: var(--muted);
-      max-width: 500px;
-      line-height: 1.8;
-    }
+    .hero-desc { font-size: 14px; color: var(--muted); max-width: 500px; line-height: 1.8; }
 
-    /* ── SECTION ── */
-    .section {
-      margin-bottom: 56px;
-      opacity: 0;
-      animation: fadeUp .5s .2s forwards;
-    }
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
+    .section { margin-bottom: 56px; opacity: 0; animation: fadeUp .5s .2s forwards; }
+    .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
+    .section-intro { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; margin-bottom: 24px; }
 
-    /* ── TIER CARDS ── */
-    .tier-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
+    /* TIER SOURCE CARDS */
+    .tier-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     @media (max-width: 520px) { .tier-cards { grid-template-columns: 1fr; } }
-
-    .tier-card {
-      border-radius: 12px;
-      padding: 18px 20px;
-      border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
-    .tier-card::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; right: 0; height: 2px;
-    }
-    .tier-card.t1 { background: var(--gold-dim); }
-    .tier-card.t1::before { background: var(--gold); }
-    .tier-card.t2 { background: var(--silver-dim); }
-    .tier-card.t2::before { background: var(--silver); }
-    .tier-card.t3 { background: var(--bronze-dim); }
-    .tier-card.t3::before { background: var(--bronze); }
-
+    .tier-card { border-radius: 12px; padding: 18px 20px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .tier-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .tier-card.t1 { background: var(--gold-dim); } .tier-card.t1::before { background: var(--gold); }
+    .tier-card.t2 { background: var(--silver-dim); } .tier-card.t2::before { background: var(--silver); }
+    .tier-card.t3 { background: var(--bronze-dim); } .tier-card.t3::before { background: var(--bronze); }
     .tier-num { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; margin-bottom: 2px; }
-    .tier-card.t1 .tier-num { color: var(--gold); }
-    .tier-card.t2 .tier-num { color: var(--silver); }
-    .tier-card.t3 .tier-num { color: var(--bronze); }
+    .tier-card.t1 .tier-num { color: var(--gold); } .tier-card.t2 .tier-num { color: var(--silver); } .tier-card.t3 .tier-num { color: var(--bronze); }
     .tier-name { font-size: 11px; font-weight: 500; margin-bottom: 6px; }
     .tier-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
-    .tier-weight {
-      margin-top: 10px;
-      font-family: 'DM Mono', monospace; font-size: 10px;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .tier-card.t1 .tier-weight { color: var(--gold); }
-    .tier-card.t2 .tier-weight { color: var(--silver); }
-    .tier-card.t3 .tier-weight { color: var(--bronze); }
+    .tier-weight { margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 10px; display: flex; align-items: center; gap: 6px; }
+    .tier-card.t1 .tier-weight { color: var(--gold); } .tier-card.t2 .tier-weight { color: var(--silver); } .tier-card.t3 .tier-weight { color: var(--bronze); }
     .weight-dots { display: flex; gap: 3px; }
     .wd { width: 6px; height: 6px; border-radius: 50%; }
-    .wd.on.g  { background: var(--gold); }
-    .wd.on.s  { background: var(--silver); }
-    .wd.on.b  { background: var(--bronze); }
+    .wd.on.g { background: var(--gold); } .wd.on.s { background: var(--silver); } .wd.on.b { background: var(--bronze); }
     .wd.off.g { background: transparent; border: 1px solid var(--gold); }
     .wd.off.s { background: transparent; border: 1px solid var(--silver); }
     .wd.off.b { background: transparent; border: 1px solid var(--bronze); }
 
-    /* ── PUBLISHER TIERS ── */
-    .pub-section {
-      margin-bottom: 56px;
-      opacity: 0;
-      animation: fadeUp .5s .3s forwards;
-    }
-
+    /* COLLAPSIBLE BLOCKS */
+    .pub-section { margin-bottom: 56px; opacity: 0; animation: fadeUp .5s .3s forwards; }
     .tier-block { margin-bottom: 12px; }
-
-    .tier-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      cursor: pointer;
-      user-select: none;
-      transition: border-color .2s;
-    }
+    .tier-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; user-select: none; transition: border-color .2s; }
     .tier-header:hover { border-color: rgba(255,255,255,0.1); }
     .tier-header.open { border-radius: 10px 10px 0 0; border-bottom-color: transparent; }
-
-    .tier-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px; letter-spacing: 2px;
-      padding: 3px 9px; border-radius: 100px; border: 1px solid;
-      text-transform: uppercase; flex-shrink: 0;
-    }
-    .tier-badge.t1 { color: var(--gold);   border-color: rgba(240,192,96,0.3);  background: var(--gold-dim); }
+    .tier-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; padding: 3px 9px; border-radius: 100px; border: 1px solid; text-transform: uppercase; flex-shrink: 0; }
+    .tier-badge.t1 { color: var(--gold); border-color: rgba(240,192,96,0.3); background: var(--gold-dim); }
     .tier-badge.t2 { color: var(--silver); border-color: rgba(160,180,200,0.25); background: var(--silver-dim); }
     .tier-badge.t3 { color: var(--bronze); border-color: rgba(192,128,96,0.25); background: var(--bronze-dim); }
-
     .tier-hcount { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-left: auto; }
     .tier-chevron { color: var(--muted); font-size: 11px; transition: transform .25s; flex-shrink: 0; }
     .tier-chevron.open { transform: rotate(180deg); }
-
-    /* scrollable body */
-    .tier-body {
-      overflow: hidden;
-      transition: max-height .35s ease;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: none;
-      border-radius: 0 0 10px 10px;
-    }
-    .pub-scroll {
-      max-height: 240px;
-      overflow-y: auto;
-      padding: 8px;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255,255,255,0.08) transparent;
-    }
+    .tier-body { overflow: hidden; transition: max-height .35s ease; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
+    .pub-scroll { max-height: 240px; overflow-y: auto; padding: 8px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
     .pub-scroll::-webkit-scrollbar { width: 4px; }
     .pub-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-
-    .pub-card {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 8px; padding: 9px 12px;
-      border-radius: 6px; text-decoration: none;
-      transition: background .15s;
-    }
+    .pub-card { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 12px; border-radius: 6px; text-decoration: none; transition: background .15s; }
     .pub-card:hover { background: rgba(255,255,255,0.03); }
     .pub-name { font-size: 12px; font-weight: 400; color: var(--text); }
     .pub-topic { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
     .pub-arrow { font-size: 12px; color: rgba(255,255,255,0.15); flex-shrink: 0; transition: color .2s; }
     .pub-card:hover .pub-arrow { color: var(--accent); }
+    .tier3-note { padding: 16px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .pub-loading { padding: 16px; font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 1px; }
 
-    .tier3-note {
-      padding: 16px;
-      font-size: 12px; color: var(--muted); line-height: 1.7;
-    }
+    /* SCORING CRITERIA */
+    .scale-box { display: flex; flex-direction: column; gap: 7px; margin-bottom: 28px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+    .scale-eyebrow { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+    .scale-row { display: flex; align-items: center; gap: 12px; }
+    .scale-dots { font-family: 'DM Mono', monospace; font-size: 12px; width: 64px; letter-spacing: 3px; }
+    .scale-num { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.2); width: 16px; }
+    .scale-label { font-size: 12px; }
 
-    /* ── NOTE ── */
-    .note-section {
-      margin-bottom: 64px;
-      opacity: 0;
-      animation: fadeUp .5s .4s forwards;
-    }
-    .note-box {
-      background: var(--accent-dim);
-      border: 1px solid rgba(99,202,183,0.15);
-      border-radius: 12px;
-      padding: 18px 22px;
-      font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.8;
-    }
+    .cat-block { margin-bottom: 12px; }
+    .cat-header-row { display: flex; align-items: center; gap: 10px; padding: 13px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; user-select: none; transition: border-color .2s; }
+    .cat-header-row:hover { border-color: rgba(255,255,255,0.1); }
+    .cat-header-row.open { border-radius: 10px 10px 0 0; border-bottom-color: transparent; }
+    .cat-icon { font-size: 15px; }
+    .cat-title { font-size: 13px; font-weight: 500; flex: 1; }
+    .cat-pts { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); }
+    .cat-chev { color: var(--muted); font-size: 11px; transition: transform .25s; }
+    .cat-chev.open { transform: rotate(180deg); }
+    .cat-body { overflow: hidden; transition: max-height .35s ease; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; }
+    .criterion-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .criterion-row:last-child { border-bottom: none; }
+    .criterion-num { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.15); width: 16px; padding-top: 2px; flex-shrink: 0; }
+    .criterion-label { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+    .criterion-desc { font-size: 11px; color: rgba(255,255,255,0.25); line-height: 1.6; margin-top: 3px; }
+
+    /* FINAL SCORE SCALE */
+    .score-bands { display: flex; flex-direction: column; gap: 8px; }
+    .score-band { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 10px; border: 1px solid; }
+    .band-range { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; width: 60px; flex-shrink: 0; }
+    .band-label { font-size: 13px; font-weight: 500; flex: 1; }
+    .band-label-it { font-size: 11px; margin-top: 1px; opacity: 0.55; }
+    .band-bar { height: 3px; border-radius: 2px; flex-shrink: 0; width: 48px; }
+
+    /* NOTE */
+    .note-section { margin-bottom: 64px; opacity: 0; animation: fadeUp .5s .5s forwards; }
+    .note-box { background: var(--accent-dim); border: 1px solid rgba(99,202,183,0.15); border-radius: 12px; padding: 18px 22px; font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.8; }
     .note-box strong { color: var(--accent); font-weight: 500; }
     .note-box a { color: var(--accent); }
 
-    /* ── FOOTER ── */
-    .page-footer {
-      border-top: 1px solid var(--border);
-      padding: 24px 0 48px;
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-    }
-    .page-footer a {
-      font-size: 11px; color: var(--muted); text-decoration: none;
-      font-family: 'DM Mono', monospace; transition: color .2s;
-    }
+    .page-footer { border-top: 1px solid var(--border); padding: 24px 0 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .page-footer a { font-size: 11px; color: var(--muted); text-decoration: none; font-family: 'DM Mono', monospace; transition: color .2s; }
     .page-footer a:hover { color: var(--accent); }
 
-    /* loading */
-    .pub-loading { padding: 16px; font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 1px; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
 <div class="topbar">
-  <a href="/" class="back">← EthicPrint</a>
+  <a href="/" class="back">&#8592; EthicPrint</a>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
     <button class="lang-btn" onclick="setLang('it')" id="btn-it">IT</button>
@@ -303,57 +144,36 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-eyebrow" data-en="Transparency · Methodology" data-it="Trasparenza · Metodologia">Transparency · Methodology</div>
-    <h1 class="hero-title" data-en="Sources &<br><span>Methodology</span>" data-it="Fonti &<br><span>Metodologia</span>">Sources &<br><span>Methodology</span></h1>
+    <div class="hero-eyebrow" data-en="Transparency &middot; Methodology" data-it="Trasparenza &middot; Metodologia">Transparency &middot; Methodology</div>
+    <h1 class="hero-title">Sources &amp;<br><span>Methodology</span></h1>
     <p class="hero-desc"
-      data-en="EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much."
-      data-it="EthicPrint valuta i brand usando fonti verificate e pubblicamente disponibili. Non tutte le fonti hanno lo stesso peso — ecco come decidiamo di quali publisher fidarci e quanto.">
-      EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight — here's exactly how we decide which publishers we trust and how much.
+      data-en="EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight &mdash; here's exactly how we decide which publishers we trust and how much."
+      data-it="EthicPrint valuta i brand usando fonti verificate e pubblicamente disponibili. Non tutte le fonti hanno lo stesso peso &mdash; ecco come decidiamo di quali publisher fidarci e quanto.">
+      EthicPrint scores brands using verified, publicly available sources. Not all sources carry the same weight &mdash; here's exactly how we decide which publishers we trust and how much.
     </p>
   </div>
 
   <!-- TIER SYSTEM -->
   <div class="section">
-    <div class="section-label" data-en="The tier system" data-it="Il sistema a tier">The tier system</div>
+    <div class="section-label" data-en="The source tier system" data-it="Il sistema a tier delle fonti">The source tier system</div>
     <div class="tier-cards">
       <div class="tier-card t1">
         <div class="tier-num">T1</div>
         <div class="tier-name" data-en="Primary sources" data-it="Fonti primarie">Primary sources</div>
-        <div class="tier-desc"
-          data-en="International NGOs, investigative media, and recognized research institutes."
-          data-it="ONG internazionali, media investigativi e istituti di ricerca riconosciuti.">
-          International NGOs, investigative media, and recognized research institutes.
-        </div>
-        <div class="tier-weight">
-          <div class="weight-dots"><div class="wd on g"></div><div class="wd on g"></div><div class="wd on g"></div></div>
-          weight ×3
-        </div>
+        <div class="tier-desc" data-en="International NGOs, investigative media, and recognized research institutes." data-it="ONG internazionali, media investigativi e istituti di ricerca riconosciuti.">International NGOs, investigative media, and recognized research institutes.</div>
+        <div class="tier-weight"><div class="weight-dots"><div class="wd on g"></div><div class="wd on g"></div><div class="wd on g"></div></div>weight &times;3</div>
       </div>
       <div class="tier-card t2">
         <div class="tier-num">T2</div>
         <div class="tier-name" data-en="Verified sources" data-it="Fonti verificate">Verified sources</div>
-        <div class="tier-desc"
-          data-en="National media, official government data, institutional and certified reports."
-          data-it="Media nazionali, dati governativi ufficiali, report istituzionali e certificazioni.">
-          National media, official government data, institutional and certified reports.
-        </div>
-        <div class="tier-weight">
-          <div class="weight-dots"><div class="wd on s"></div><div class="wd on s"></div><div class="wd off s"></div></div>
-          weight ×2
-        </div>
+        <div class="tier-desc" data-en="National media, official government data, institutional and certified reports." data-it="Media nazionali, dati governativi ufficiali, report istituzionali e certificazioni.">National media, official government data, institutional and certified reports.</div>
+        <div class="tier-weight"><div class="weight-dots"><div class="wd on s"></div><div class="wd on s"></div><div class="wd off s"></div></div>weight &times;2</div>
       </div>
       <div class="tier-card t3">
         <div class="tier-num">T3</div>
         <div class="tier-name" data-en="Supporting sources" data-it="Fonti di supporto">Supporting sources</div>
-        <div class="tier-desc"
-          data-en="Blogs and secondary publications. Valid only as supporting evidence."
-          data-it="Blog e pubblicazioni secondarie. Valide solo come evidenza di supporto.">
-          Blogs and secondary publications. Valid only as supporting evidence.
-        </div>
-        <div class="tier-weight">
-          <div class="weight-dots"><div class="wd on b"></div><div class="wd off b"></div><div class="wd off b"></div></div>
-          weight ×1
-        </div>
+        <div class="tier-desc" data-en="Blogs and secondary publications. Valid only as supporting evidence." data-it="Blog e pubblicazioni secondarie. Valide solo come evidenza di supporto.">Blogs and secondary publications. Valid only as supporting evidence.</div>
+        <div class="tier-weight"><div class="weight-dots"><div class="wd on b"></div><div class="wd off b"></div><div class="wd off b"></div></div>weight &times;1</div>
       </div>
     </div>
   </div>
@@ -361,67 +181,157 @@
   <!-- PUBLISHERS -->
   <div class="pub-section">
     <div class="section-label" data-en="Trusted publishers" data-it="Publisher di riferimento">Trusted publishers</div>
-
-    <!-- T1 -->
     <div class="tier-block">
       <div class="tier-header" id="hdr-t1" onclick="toggleTier('t1')">
         <span class="tier-badge t1">Tier 1</span>
-        <span class="tier-hcount" id="count-t1" data-en="loading…" data-it="caricamento…">loading…</span>
-        <span class="tier-chevron" id="chev-t1">▼</span>
+        <span class="tier-hcount" id="count-t1">loading&hellip;</span>
+        <span class="tier-chevron" id="chev-t1">&#9660;</span>
       </div>
       <div class="tier-body" id="body-t1" style="max-height:0">
-        <div class="pub-scroll" id="scroll-t1">
-          <div class="pub-loading">Loading…</div>
-        </div>
+        <div class="pub-scroll" id="scroll-t1"><div class="pub-loading">Loading&hellip;</div></div>
       </div>
     </div>
-
-    <!-- T2 -->
     <div class="tier-block">
       <div class="tier-header" id="hdr-t2" onclick="toggleTier('t2')">
         <span class="tier-badge t2">Tier 2</span>
-        <span class="tier-hcount" id="count-t2" data-en="loading…" data-it="caricamento…">loading…</span>
-        <span class="tier-chevron" id="chev-t2">▼</span>
+        <span class="tier-hcount" id="count-t2">loading&hellip;</span>
+        <span class="tier-chevron" id="chev-t2">&#9660;</span>
       </div>
       <div class="tier-body" id="body-t2" style="max-height:0">
-        <div class="pub-scroll" id="scroll-t2">
-          <div class="pub-loading">Loading…</div>
-        </div>
+        <div class="pub-scroll" id="scroll-t2"><div class="pub-loading">Loading&hellip;</div></div>
       </div>
     </div>
-
-    <!-- T3 -->
     <div class="tier-block">
       <div class="tier-header" id="hdr-t3" onclick="toggleTier('t3')">
         <span class="tier-badge t3">Tier 3</span>
-        <span class="tier-hcount"
-          data-en="weight ×1"
-          data-it="peso ×1">weight ×1</span>
-        <span class="tier-chevron" id="chev-t3">▼</span>
+        <span class="tier-hcount" data-en="weight &times;1" data-it="peso &times;1">weight &times;1</span>
+        <span class="tier-chevron" id="chev-t3">&#9660;</span>
       </div>
       <div class="tier-body" id="body-t3" style="max-height:0">
         <div class="tier3-note"
-          data-en="Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist."
-          data-it="Il Tier 3 include blog, pubblicazioni specialistiche e fonti secondarie. Usate solo come supporto alle fonti di tier superiore — mai come unica base per un punteggio. Valutate caso per caso, nessuna whitelist fissa.">
-          Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources — never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist.
+          data-en="Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources &mdash; never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist."
+          data-it="Il Tier 3 include blog, pubblicazioni specialistiche e fonti secondarie. Usate solo come supporto alle fonti di tier superiore &mdash; mai come unica base per un punteggio. Valutate caso per caso, nessuna whitelist fissa.">
+          Tier 3 includes blogs, specialist publications, and secondary sources. Used only as supporting evidence alongside higher-tier sources &mdash; never as the sole basis for a score. Evaluated case-by-case, no fixed whitelist.
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- HOW WE SCORE -->
+  <div class="section" style="animation-delay:.35s">
+    <div class="section-label" data-en="How we score brands" data-it="Come valutiamo i brand">How we score brands</div>
+    <p class="section-intro"
+      data-en="Each brand is evaluated on 20 criteria across 4 equal categories (25 pts each). Every criterion is rated 1&ndash;5 based on evidence from verified sources. Score 3 means no evidence found &mdash; neutral, never penalized."
+      data-it="Ogni brand viene valutato su 20 criteri in 4 categorie di uguale peso (25 pt ciascuna). Ogni criterio riceve un punteggio da 1 a 5 in base alle evidenze da fonti verificate. Il punteggio 3 indica assenza di evidenze &mdash; neutro, non penalizzante.">
+      Each brand is evaluated on 20 criteria across 4 equal categories (25 pts each). Every criterion is rated 1&ndash;5 based on evidence from verified sources. Score 3 means no evidence found &mdash; neutral, never penalized.
+    </p>
+
+    <!-- Evidence scale -->
+    <div class="scale-box">
+      <div class="scale-eyebrow" data-en="Evidence scale per criterion" data-it="Scala delle evidenze per criterio">Evidence scale per criterion</div>
+      <div class="scale-row">
+        <span class="scale-dots" style="color:#4ade80">&#9679;&#9679;&#9679;&#9679;&#9679;</span>
+        <span class="scale-num">5</span>
+        <span class="scale-label" style="color:#4ade80" data-en="Positive evidence" data-it="Evidenza positiva">Positive evidence</span>
+      </div>
+      <div class="scale-row">
+        <span class="scale-dots" style="color:#86efac">&#9679;&#9679;&#9679;&#9679;&#9675;</span>
+        <span class="scale-num">4</span>
+        <span class="scale-label" style="color:#86efac" data-en="Predominantly positive" data-it="Prevalentemente positiva">Predominantly positive</span>
+      </div>
+      <div class="scale-row">
+        <span class="scale-dots" style="color:rgba(255,255,255,0.2)">&#9679;&#9679;&#9679;&#9675;&#9675;</span>
+        <span class="scale-num">3</span>
+        <span class="scale-label" style="color:rgba(255,255,255,0.3)" data-en="No evidence available &mdash; neutral" data-it="Nessuna evidenza &mdash; neutro">No evidence available &mdash; neutral</span>
+      </div>
+      <div class="scale-row">
+        <span class="scale-dots" style="color:#fb923c">&#9679;&#9679;&#9675;&#9675;&#9675;</span>
+        <span class="scale-num">2</span>
+        <span class="scale-label" style="color:#fb923c" data-en="Predominantly negative" data-it="Prevalentemente negativa">Predominantly negative</span>
+      </div>
+      <div class="scale-row">
+        <span class="scale-dots" style="color:#ef4444">&#9679;&#9675;&#9675;&#9675;&#9675;</span>
+        <span class="scale-num">1</span>
+        <span class="scale-label" style="color:#ef4444" data-en="Negative evidence" data-it="Evidenza negativa accertata">Negative evidence</span>
+      </div>
+    </div>
+
+    <!-- Criteria by category -->
+    <div id="criteria-container">
+      <div class="pub-loading">Loading criteria&hellip;</div>
+    </div>
+  </div>
+
+  <!-- FINAL SCORE SCALE -->
+  <div class="section" style="animation-delay:.45s">
+    <div class="section-label" data-en="Final score &amp; rating bands" data-it="Punteggio finale &amp; fasce di valutazione">Final score &amp; rating bands</div>
+    <p class="section-intro"
+      data-en="The final score is the average of the 4 category scores (0&ndash;100 each). It reflects only criteria for which evidence has been found and verified."
+      data-it="Il punteggio finale &egrave; la media dei 4 punteggi di categoria (0&ndash;100 ciascuno). Riflette solo i criteri per cui sono state trovate e verificate evidenze.">
+      The final score is the average of the 4 category scores (0&ndash;100 each). It reflects only criteria for which evidence has been found and verified.
+    </p>
+    <div class="score-bands">
+
+      <div class="score-band" style="background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.2)">
+        <span class="band-range" style="color:#4ade80">90&ndash;100</span>
+        <div>
+          <div class="band-label" style="color:#4ade80" data-en="Deeply Ethical" data-it="Profondamente Etico">Deeply Ethical</div>
+          <div class="band-label-it" data-en="Consistent virtuous behavior across all dimensions, documented by multiple verified sources." data-it="Comportamento virtuoso e coerente su tutte le dimensioni, documentato da pi&ugrave; fonti verificate.">Consistent virtuous behavior across all dimensions, documented by multiple verified sources.</div>
+        </div>
+        <div class="band-bar" style="background:#4ade80"></div>
+      </div>
+
+      <div class="score-band" style="background:rgba(134,239,172,0.06);border-color:rgba(134,239,172,0.18)">
+        <span class="band-range" style="color:#86efac">75&ndash;89</span>
+        <div>
+          <div class="band-label" style="color:#86efac" data-en="Fairly Ethical" data-it="Abbastanza Etico">Fairly Ethical</div>
+          <div class="band-label-it" data-en="Strong ethical record with minor or isolated criticisms." data-it="Profilo etico solido con criticit&agrave; minori o isolate.">Strong ethical record with minor or isolated criticisms.</div>
+        </div>
+        <div class="band-bar" style="background:#86efac"></div>
+      </div>
+
+      <div class="score-band" style="background:rgba(250,204,21,0.06);border-color:rgba(250,204,21,0.18)">
+        <span class="band-range" style="color:#facc15">55&ndash;74</span>
+        <div>
+          <div class="band-label" style="color:#facc15" data-en="Partially Ethical" data-it="Parzialmente Etico">Partially Ethical</div>
+          <div class="band-label-it" data-en="Mixed evidence: positive practices coexist with documented problems." data-it="Evidenze miste: pratiche positive convivono con problemi documentati.">Mixed evidence: positive practices coexist with documented problems.</div>
+        </div>
+        <div class="band-bar" style="background:#facc15"></div>
+      </div>
+
+      <div class="score-band" style="background:rgba(251,146,60,0.06);border-color:rgba(251,146,60,0.18)">
+        <span class="band-range" style="color:#fb923c">35&ndash;54</span>
+        <div>
+          <div class="band-label" style="color:#fb923c" data-en="Scarcely Ethical" data-it="Scarsamente Etico">Scarcely Ethical</div>
+          <div class="band-label-it" data-en="Multiple documented issues across categories, limited evidence of improvement." data-it="Problematiche documentate in pi&ugrave; categorie, scarse evidenze di miglioramento.">Multiple documented issues across categories, limited evidence of improvement.</div>
+        </div>
+        <div class="band-bar" style="background:#fb923c"></div>
+      </div>
+
+      <div class="score-band" style="background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.2)">
+        <span class="band-range" style="color:#ef4444">0&ndash;34</span>
+        <div>
+          <div class="band-label" style="color:#ef4444" data-en="Ethically Compromised" data-it="Eticamente Inadeguato">Ethically Compromised</div>
+          <div class="band-label-it" data-en="Serious, systematic violations documented across multiple dimensions." data-it="Violazioni gravi e sistematiche documentate su pi&ugrave; dimensioni.">Serious, systematic violations documented across multiple dimensions.</div>
+        </div>
+        <div class="band-bar" style="background:#ef4444"></div>
+      </div>
+
     </div>
   </div>
 
   <!-- NOTE -->
   <div class="note-section">
     <div class="note-box">
-      <span data-en="<strong>Every score change requires human review.</strong> New sources — whether found automatically or proposed by the community — are never applied directly. They go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, <a href='mailto:info@ethicprint.org'>write to us</a>."
-        data-it="<strong>Ogni modifica al punteggio richiede revisione umana.</strong> Le nuove fonti — trovate automaticamente o proposte dalla community — non vengono mai applicate direttamente. Passano sempre per un'approvazione manuale prima di influenzare qualsiasi punteggio. Se conosci una fonte affidabile che non abbiamo, <a href='mailto:info@ethicprint.org'>scrivici</a>.">
-        <strong>Every score change requires human review.</strong> New sources — whether found automatically or proposed by the community — are never applied directly. They go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, <a href="mailto:info@ethicprint.org">write to us</a>.
+      <span data-en="&lt;strong&gt;Every score change requires human review.&lt;/strong&gt; New sources &mdash; whether found automatically or proposed by the community &mdash; are never applied directly. They go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, &lt;a href='mailto:info@ethicprint.org'&gt;write to us&lt;/a&gt;."
+        data-it="&lt;strong&gt;Ogni modifica al punteggio richiede revisione umana.&lt;/strong&gt; Le nuove fonti &mdash; trovate automaticamente o proposte dalla community &mdash; non vengono mai applicate direttamente. Passano sempre per un&rsquo;approvazione manuale prima di influenzare qualsiasi punteggio. Se conosci una fonte affidabile che non abbiamo, &lt;a href='mailto:info@ethicprint.org'&gt;scrivici&lt;/a&gt;.">
+        <strong>Every score change requires human review.</strong> New sources &mdash; whether found automatically or proposed by the community &mdash; are never applied directly. They go through a manual approval step before affecting any brand score. If you know a reliable source we're missing, <a href="mailto:info@ethicprint.org">write to us</a>.
       </span>
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="page-footer">
-    <a href="/">← EthicPrint</a>
+    <a href="/">&#8592; EthicPrint</a>
     <div style="display:flex;gap:20px">
       <a href="https://github.com/Vigi1993/ethicprint" target="_blank">GitHub</a>
       <a href="mailto:info@ethicprint.org" data-en="Suggest a source" data-it="Suggerisci una fonte">Suggest a source</a>
@@ -435,14 +345,15 @@ const API = "https://web-production-14708.up.railway.app";
 let currentLang = localStorage.getItem('ep_lang') || 'en';
 
 const T = {
-  en: {
-    count: (n, w) => `${n} publishers · weight ×${w}`,
-    weight: w => `weight ×${w}`,
-  },
-  it: {
-    count: (n, w) => `${n} publisher · peso ×${w}`,
-    weight: w => `peso ×${w}`,
-  }
+  en: { count: (n, w) => `${n} publishers · weight ×${w}` },
+  it: { count: (n, w) => `${n} publisher · peso ×${w}` },
+};
+
+const CAT_META = {
+  armi:     { icon: '⚔️',  en: 'Conflicts & Arms',    it: 'Conflitti & Armi' },
+  diritti:  { icon: '🤝',  en: 'Human Rights',         it: 'Diritti Umani' },
+  ambiente: { icon: '🌿',  en: 'Environment & CO₂',    it: 'Ambiente & CO₂' },
+  fisco:    { icon: '💰',  en: 'Tax & Transparency',   it: 'Fisco & Trasparenza' },
 };
 
 function setLang(lang) {
@@ -450,7 +361,6 @@ function setLang(lang) {
   localStorage.setItem('ep_lang', lang);
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   document.getElementById('btn-it').classList.toggle('active', lang === 'it');
-  // Update all data-en/data-it elements
   document.querySelectorAll('[data-en]').forEach(el => {
     const val = el.getAttribute(`data-${lang}`);
     if (val !== null) el.innerHTML = val;
@@ -461,6 +371,17 @@ function toggleTier(id) {
   const body = document.getElementById(`body-${id}`);
   const chev = document.getElementById(`chev-${id}`);
   const hdr  = document.getElementById(`hdr-${id}`);
+  const isOpen = chev.classList.contains('open');
+  body.style.maxHeight = isOpen ? '0' : '99999px';
+  chev.classList.toggle('open', !isOpen);
+  hdr.classList.toggle('open', !isOpen);
+}
+
+function toggleCat(cat) {
+  const body = document.getElementById(`cat-body-${cat}`);
+  const chev = document.getElementById(`cat-chev-${cat}`);
+  const hdr  = document.getElementById(`cat-hdr-${cat}`);
+  if (!body) return;
   const isOpen = chev.classList.contains('open');
   body.style.maxHeight = isOpen ? '0' : '99999px';
   chev.classList.toggle('open', !isOpen);
@@ -478,33 +399,86 @@ function renderPub(p) {
   </a>`;
 }
 
+function renderCriteria(data) {
+  const catOrder = ['armi', 'diritti', 'ambiente', 'fisco'];
+  const container = document.getElementById('criteria-container');
+  if (!container) return;
+
+  let html = '';
+  catOrder.forEach(cat => {
+    const criteria = data[cat] || [];
+    const meta = CAT_META[cat];
+    const titleEn = meta.en;
+    const titleIt = meta.it;
+    const displayTitle = currentLang === 'it' ? titleIt : titleEn;
+
+    html += `<div class="cat-block">
+      <div class="cat-header-row" id="cat-hdr-${cat}" onclick="toggleCat('${cat}')">
+        <span class="cat-icon">${meta.icon}</span>
+        <span class="cat-title" data-en="${titleEn}" data-it="${titleIt}">${displayTitle}</span>
+        <span class="cat-pts">25 pts</span>
+        <span class="cat-chev" id="cat-chev-${cat}">▼</span>
+      </div>
+      <div class="cat-body" id="cat-body-${cat}" style="max-height:0">`;
+
+    criteria.forEach((c, i) => {
+      const label = (currentLang === 'it' && c.label_it) ? c.label_it : c.label_en;
+      const desc  = (currentLang === 'it' && c.description_it) ? c.description_it : (c.description_en || '');
+      html += `<div class="criterion-row">
+        <span class="criterion-num">${i + 1}</span>
+        <div>
+          <div class="criterion-label"
+            data-en="${(c.label_en||'').replace(/"/g,'&quot;')}"
+            data-it="${(c.label_it||c.label_en||'').replace(/"/g,'&quot;')}">${label}</div>
+          ${desc ? `<div class="criterion-desc"
+            data-en="${(c.description_en||'').replace(/"/g,'&quot;')}"
+            data-it="${(c.description_it||'').replace(/"/g,'&quot;')}">${desc}</div>` : ''}
+        </div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+  toggleCat('armi');
+}
+
 async function load() {
   try {
-    const res = await fetch(`${API}/publishers`);
-    const data = await res.json();
+    const [pubRes, critRes] = await Promise.all([
+      fetch(`${API}/publishers`),
+      fetch(`${API}/scoring-criteria`),
+    ]);
+    const pubData = await pubRes.json();
+    const critData = await critRes.json();
 
     const t = T[currentLang];
 
     // T1
-    document.getElementById('scroll-t1').innerHTML = data.tier1.map(renderPub).join('') || '<div class="pub-loading">—</div>';
-    document.getElementById('count-t1').textContent = t.count(data.tier1.length, 3);
-    document.getElementById('count-t1').setAttribute('data-en', T.en.count(data.tier1.length, 3));
-    document.getElementById('count-t1').setAttribute('data-it', T.it.count(data.tier1.length, 3));
+    document.getElementById('scroll-t1').innerHTML = pubData.tier1.length
+      ? pubData.tier1.map(renderPub).join('')
+      : '<div class="pub-loading">—</div>';
+    document.getElementById('count-t1').textContent = t.count(pubData.tier1.length, 3);
+    document.getElementById('count-t1').setAttribute('data-en', T.en.count(pubData.tier1.length, 3));
+    document.getElementById('count-t1').setAttribute('data-it', T.it.count(pubData.tier1.length, 3));
 
     // T2
-    document.getElementById('scroll-t2').innerHTML = data.tier2.map(renderPub).join('') || '<div class="pub-loading">—</div>';
-    document.getElementById('count-t2').textContent = t.count(data.tier2.length, 2);
-    document.getElementById('count-t2').setAttribute('data-en', T.en.count(data.tier2.length, 2));
-    document.getElementById('count-t2').setAttribute('data-it', T.it.count(data.tier2.length, 2));
+    document.getElementById('scroll-t2').innerHTML = pubData.tier2.length
+      ? pubData.tier2.map(renderPub).join('')
+      : '<div class="pub-loading">—</div>';
+    document.getElementById('count-t2').textContent = t.count(pubData.tier2.length, 2);
+    document.getElementById('count-t2').setAttribute('data-en', T.en.count(pubData.tier2.length, 2));
+    document.getElementById('count-t2').setAttribute('data-it', T.it.count(pubData.tier2.length, 2));
 
-    // Open T1 by default after load
     toggleTier('t1');
+    renderCriteria(critData);
+
   } catch(e) {
-    console.error('Failed to load publishers', e);
+    console.error('Failed to load data', e);
   }
 }
 
-// Init
 setLang(currentLang);
 load();
 </script>
