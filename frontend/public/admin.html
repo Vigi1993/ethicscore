@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => document.getElementById('pwd
     <div style="width:1px;height:20px;background:rgba(255,255,255,0.08);margin:0 4px"></div>
     <button class="tab" onclick="switchTab('scores')">Score Updates <span class="badge badge-pending" id="badge-scores">–</span></button>
     <button class="tab" onclick="switchTab('costs')">💰 Costs</button>
+    <button class="tab" onclick="switchTab('contributions')">📬 Contributions <span class="badge badge-pending" id="badge-contributions">–</span></button>
   </div>
 </header>
 
@@ -423,8 +424,9 @@ async function reject(id) {
 function switchTab(tab) {
   currentTab = tab;
   currentCat = "all";
-  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores","costs"][i] === tab));
+  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["pending","approved","rejected","scores","costs","contributions"][i] === tab));
   if (tab === 'costs') { loadCosts(); return; }
+  if (tab === 'contributions') { loadContributions(); return; }
   document.querySelectorAll(".filter-chip").forEach(c => c.classList.toggle("active", c.textContent.trim() === "All"));
   renderTab();
 }
@@ -589,6 +591,100 @@ async function loadCosts() {
     <div style="background:rgba(99,202,183,0.05);border:1px solid rgba(99,202,183,0.12);border-radius:12px;padding:16px 20px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7">
       ℹ️ Brave Search è l'unico servizio tracciato internamente. Per gli altri apri i rispettivi dashboard — le API di usage richiederebbero chiavi client-side per motivi di sicurezza.
     </div>`;
+}
+
+
+// ─── CONTRIBUTIONS TAB ──────────────────────────────────────────────────────
+
+async function loadContributions() {
+  const el = document.getElementById("content");
+  el.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;padding:40px 0;text-align:center">Loading contributions…</div>`;
+  try {
+    const res = await fetch(`${API}/contribute/pending`, { headers: { "x-admin-key": ADMIN_KEY } });
+    const data = await res.json();
+    document.getElementById("badge-contributions").textContent = (data.counts.brand_proposals + data.counts.error_reports) || "0";
+    renderContributions(data);
+  } catch(e) {
+    el.innerHTML = `<div style="color:#f87171;padding:20px">Failed to load contributions</div>`;
+  }
+}
+
+function renderContributions(data) {
+  const el = document.getElementById("content");
+  const { brand_proposals, error_reports } = data;
+
+  let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+    <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase">
+      ${brand_proposals.length} brand proposals · ${error_reports.length} error reports
+    </div>
+    <button onclick="loadContributions()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px">↻ Refresh</button>
+  </div>`;
+
+  if (brand_proposals.length === 0 && error_reports.length === 0) {
+    html += `<div class="empty"><div class="empty-icon">📬</div>No pending contributions</div>`;
+    el.innerHTML = html;
+    return;
+  }
+
+  // Brand proposals
+  if (brand_proposals.length > 0) {
+    html += `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px">➕ Brand Proposals</div>`;
+    brand_proposals.forEach(p => {
+      html += `<div class="proposal-card" style="margin-bottom:8px">
+        <div class="proposal-body">
+          <div class="proposal-title">${p.name}</div>
+          <div class="proposal-publisher">${p.sector_key || '—'} ${p.website ? `· <a href="${p.website}" target="_blank" style="color:#63cab7">${p.website}</a>` : ''}</div>
+          ${p.reason ? `<div class="proposal-summary">${p.reason}</div>` : ''}
+          <div class="proposal-meta">${p.submitter || 'Anonymous'} · ${new Date(p.created_at).toLocaleDateString()}</div>
+        </div>
+        <div class="proposal-actions">
+          <button class="btn btn-approve" onclick="resolveContrib('brand-proposal', ${p.id}, 'approved', this)">✓ Approve</button>
+          <button class="btn btn-reject" onclick="resolveContrib('brand-proposal', ${p.id}, 'rejected', this)">✗ Reject</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  // Error reports
+  if (error_reports.length > 0) {
+    html += `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px;margin-top:24px">⚠️ Error Reports</div>`;
+    error_reports.forEach(r => {
+      const brandName = r.brands?.name || `Brand #${r.brand_id}`;
+      html += `<div class="proposal-card" style="margin-bottom:8px">
+        <div class="proposal-body">
+          <div class="proposal-title">${brandName} ${r.category_key ? `· <span class="cat-badge cat-${r.category_key}">${r.category_key}</span>` : ''}</div>
+          <div class="proposal-summary" style="margin-top:6px">${r.description}</div>
+          ${r.source_url ? `<a href="${r.source_url}" target="_blank" class="proposal-url">${r.source_url}</a>` : ''}
+          <div class="proposal-meta">${r.submitter || 'Anonymous'} · ${new Date(r.created_at).toLocaleDateString()}</div>
+        </div>
+        <div class="proposal-actions">
+          <button class="btn btn-approve" onclick="resolveContrib('error-report', ${r.id}, 'resolved', this)">✓ Resolved</button>
+          <button class="btn btn-reject" onclick="resolveContrib('error-report', ${r.id}, 'rejected', this)">✗ Ignore</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  el.innerHTML = html;
+}
+
+async function resolveContrib(type, id, status, btn) {
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    const res = await fetch(`${API}/contribute/${type}/${id}/resolve?status=${status}`, {
+      method: 'POST',
+      headers: { "x-admin-key": ADMIN_KEY }
+    });
+    if (!res.ok) throw new Error();
+    btn.closest('.proposal-card').style.opacity = '0.3';
+    showToast(status === 'resolved' || status === 'approved' ? '✓ Done' : '✗ Ignored');
+    setTimeout(() => loadContributions(), 800);
+  } catch {
+    btn.disabled = false;
+    btn.textContent = status === 'resolved' || status === 'approved' ? '✓' : '✗';
+    showToast('Error', true);
+  }
 }
 
 // loadAll() called after password check
