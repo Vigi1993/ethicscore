@@ -582,7 +582,7 @@ export default function App() {
   return (
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
-      <div style={{ minHeight: "100vh", background: "#08080f", fontFamily: "'DM Sans', sans-serif", color: "#e8e8f0", backgroundImage: "radial-gradient(ellipse at 15% 10%, rgba(30,30,60,0.5) 0%, transparent 50%), radial-gradient(ellipse at 85% 90%, rgba(60,20,60,0.3) 0%, transparent 50%)" }}>
+      <div style={{ minHeight: "100vh", background: "#08080f", fontFamily: "'DM Sans', sans-serif", color: "#e8e8f0" }}>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
           ::selection { background: rgba(99,202,183,0.3); }
