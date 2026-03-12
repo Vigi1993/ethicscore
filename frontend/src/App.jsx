@@ -72,18 +72,20 @@ function getScore(brand) {
 }
 
 function getColor(score) {
-  if (score >= 75) return "#4ade80";
+  if (score >= 90) return "#4ade80";
+  if (score >= 75) return "#86efac";
   if (score >= 55) return "#facc15";
   if (score >= 35) return "#fb923c";
-  return "#f87171";
+  return "#ef4444";
 }
 
 function getVerdict(score, lang) {
-  const verdicts = UI[lang]?.score_verdicts || UI.en.score_verdicts;
-  if (score >= 75) return { label: verdicts[3], emoji: "🟢" };
-  if (score >= 55) return { label: verdicts[2], emoji: "🟡" };
-  if (score >= 35) return { label: verdicts[1], emoji: "🟠" };
-  return { label: verdicts[0], emoji: "🔴" };
+  const it = lang === "it";
+  if (score >= 90) return { label: it ? "Profondamente Etico"   : "Deeply Ethical",        emoji: "🟢" };
+  if (score >= 75) return { label: it ? "Abbastanza Etico"      : "Fairly Ethical",         emoji: "🟢" };
+  if (score >= 55) return { label: it ? "Parzialmente Etico"    : "Partially Ethical",      emoji: "🟡" };
+  if (score >= 35) return { label: it ? "Scarsamente Etico"     : "Scarcely Ethical",       emoji: "🟠" };
+  return           { label: it ? "Eticamente Inadeguato"        : "Ethically Compromised",  emoji: "🔴" };
 }
 
 function getSectorAvgScore(brands) {
