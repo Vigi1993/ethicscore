@@ -13,7 +13,7 @@
     --border: rgba(255,255,255,0.06);
     --text: #e8e8f0;
     --muted: rgba(255,255,255,0.3);
-    --accent: #5ecf8a;
+    --accent: #63CAB7;
     --green: #4ade80;
     --red: #f87171;
     --yellow: #facc15;
@@ -33,7 +33,7 @@
   header h1 { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
   .tabs { display: flex; gap: 4px; margin-left: auto; }
   .tab { padding: 6px 14px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; transition: all 0.15s; color: var(--muted); background: transparent; }
-  .tab.active { background: rgba(94,207,138,0.1); border-color: rgba(94,207,138,0.25); color: var(--accent); }
+  .tab.active { background: rgba(99,202,183,0.1); border-color: rgba(99,202,183,0.25); color: var(--accent); }
   .tab:hover:not(.active) { background: rgba(255,255,255,0.04); color: var(--text); }
   .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 99px; font-size: 10px; font-weight: 600; padding: 0 5px; margin-left: 6px; }
   .badge-pending { background: rgba(250,204,21,0.15); color: var(--yellow); }
@@ -48,7 +48,7 @@
 
   .brand-group { margin-bottom: 24px; }
   .brand-header { display: flex; align-items: center; gap: 10px; padding: 12px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
-  .brand-logo { width: 28px; height: 28px; border-radius: 7px; background: rgba(94,207,138,0.1); border: 1px solid rgba(94,207,138,0.2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+  .brand-logo { width: 28px; height: 28px; border-radius: 7px; background: rgba(99,202,183,0.1); border: 1px solid rgba(99,202,183,0.2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
   .brand-name { font-size: 14px; font-weight: 600; }
   .brand-count { font-size: 11px; color: var(--muted); }
 
@@ -64,14 +64,14 @@
   .cat-badge { padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; margin-top: 2px; }
   .cat-armi { background: rgba(248,113,113,0.12); color: #f87171; }
   .cat-ambiente { background: rgba(74,222,128,0.12); color: #4ade80; }
-  .cat-diritti { background: rgba(94,207,138,0.12); color: #5ecf8a; }
+  .cat-diritti { background: rgba(99,202,183,0.12); color: #63CAB7; }
   .cat-fisco { background: rgba(250,204,21,0.12); color: #facc15; }
 
   .proposal-body { flex: 1; min-width: 0; }
   .proposal-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .proposal-publisher { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
   .proposal-summary { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; margin-bottom: 8px; }
-  .proposal-url { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(94,207,138,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .proposal-url { font-size: 11px; font-family: 'DM Mono', monospace; color: rgba(99,202,183,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
   .proposal-url:hover { color: var(--accent); }
   .proposal-meta { font-size: 10px; color: var(--muted); margin-top: 4px; }
 
@@ -100,10 +100,10 @@
   .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
   .filter-bar span { font-size: 11px; color: var(--muted); margin-right: 4px; }
   .filter-chip { padding: 4px 12px; border-radius: 99px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-  .filter-chip.active { background: rgba(94,207,138,0.1); border-color: rgba(94,207,138,0.25); color: var(--accent); }
+  .filter-chip.active { background: rgba(99,202,183,0.1); border-color: rgba(99,202,183,0.25); color: var(--accent); }
 
   .job-badge { font-size: 9px; padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .job-new { background: rgba(94,207,138,0.1); color: var(--accent); }
+  .job-new { background: rgba(99,202,183,0.1); color: var(--accent); }
   .score-arrow { font-size: 18px; font-weight: 700; font-family: 'DM Mono', monospace; }
   .score-up { color: var(--green); }
   .score-down { color: var(--red); }
@@ -116,10 +116,10 @@
 
 <div id="gate" style="position:fixed;inset:0;background:#0a0a0f;display:flex;align-items:center;justify-content:center;z-index:9999">
   <div style="background:#111118;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px;width:320px;text-align:center">
-    <div style="font-family:'DM Mono',monospace;font-size:11px;color:#5ecf8a;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px">EthicPrint Admin</div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:#63CAB7;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px">EthicPrint Admin</div>
     <input id="pwd-input" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPwd()"
       style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:12px">
-    <button onclick="checkPwd()" style="width:100%;background:rgba(94,207,138,0.15);border:1px solid rgba(94,207,138,0.3);color:#5ecf8a;padding:12px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500">Enter</button>
+    <button onclick="checkPwd()" style="width:100%;background:rgba(99,202,183,0.15);border:1px solid rgba(99,202,183,0.3);color:#63CAB7;padding:12px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500">Enter</button>
     <div id="pwd-error" style="color:#f87171;font-size:12px;margin-top:10px;display:none">Wrong password</div>
   </div>
 </div>
@@ -322,7 +322,7 @@ function renderTab() {
   if (currentTab === "scores") {
     const proposals = allProposals.scores || [];
     if (proposals.length === 0) {
-      document.getElementById("content").innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No pending score updates<br><br><button onclick="refreshScores()" style="background:rgba(94,207,138,0.1);border:1px solid rgba(94,207,138,0.25);color:#5ecf8a;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px">↻ Refresh</button></div>`;
+      document.getElementById("content").innerHTML = `<div class="empty"><div class="empty-icon">✅</div>No pending score updates<br><br><button onclick="refreshScores()" style="background:rgba(99,202,183,0.1);border:1px solid rgba(99,202,183,0.25);color:#63CAB7;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px">↻ Refresh</button></div>`;
       return;
     }
     const groups = groupByBrand(proposals);
@@ -447,7 +447,7 @@ function filterCat(cat) {
 function showToast(msg, error = false) {
   const t = document.getElementById("toast");
   t.textContent = msg;
-  t.style.borderColor = error ? "rgba(248,113,113,0.3)" : "rgba(94,207,138,0.3)";
+  t.style.borderColor = error ? "rgba(248,113,113,0.3)" : "rgba(99,202,183,0.3)";
   t.classList.remove("hide");
   setTimeout(() => t.classList.add("hide"), 3000);
 }
@@ -483,7 +483,7 @@ async function fetchBraveCount() {
   } catch { return null; }
 }
 
-function costBar(used, total, color = "#5ecf8a") {
+function costBar(used, total, color = "#63CAB7") {
   const pct = Math.min(100, Math.round((used / total) * 100));
   const barColor = pct >= 90 ? "#ef4444" : pct >= 70 ? "#fb923c" : color;
   return `
@@ -530,7 +530,7 @@ async function loadCosts() {
     "Open Anthropic Console for token usage",
     "",
     `<a href="https://console.anthropic.com/settings/usage" target="_blank"
-       style="color:#5ecf8a;font-size:11px;text-decoration:none">
+       style="color:#63CAB7;font-size:11px;text-decoration:none">
        console.anthropic.com/settings/usage ↗
      </a>`
   );
@@ -553,7 +553,7 @@ async function loadCosts() {
     "3 services: API · Checker · Finder",
     "",
     `<a href="https://railway.app/dashboard" target="_blank"
-       style="color:#5ecf8a;font-size:11px;text-decoration:none">
+       style="color:#63CAB7;font-size:11px;text-decoration:none">
        railway.app/dashboard ↗
      </a>`
   );
@@ -565,7 +565,7 @@ async function loadCosts() {
     "DB · Auth · Storage",
     "",
     `<a href="https://supabase.com/dashboard" target="_blank"
-       style="color:#5ecf8a;font-size:11px;text-decoration:none">
+       style="color:#63CAB7;font-size:11px;text-decoration:none">
        supabase.com/dashboard ↗
      </a>`
   );
@@ -577,7 +577,7 @@ async function loadCosts() {
     "Email notifications",
     "",
     `<a href="https://resend.com/emails" target="_blank"
-       style="color:#5ecf8a;font-size:11px;text-decoration:none">
+       style="color:#63CAB7;font-size:11px;text-decoration:none">
        resend.com/emails ↗
      </a>`
   );
@@ -593,7 +593,7 @@ async function loadCosts() {
         ${resendCard}
       </div>
     </div>
-    <div style="background:rgba(94,207,138,0.05);border:1px solid rgba(94,207,138,0.12);border-radius:12px;padding:16px 20px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7">
+    <div style="background:rgba(99,202,183,0.05);border:1px solid rgba(99,202,183,0.12);border-radius:12px;padding:16px 20px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7">
       ℹ️ Brave Search è l'unico servizio tracciato internamente. Per gli altri apri i rispettivi dashboard — le API di usage richiederebbero chiavi client-side per motivi di sicurezza.
     </div>`;
 }
@@ -638,7 +638,7 @@ function renderContributions(data) {
       html += `<div class="proposal-card" style="margin-bottom:8px">
         <div class="proposal-body">
           <div class="proposal-title">${p.name}</div>
-          <div class="proposal-publisher">${p.sector_key || '—'} ${p.website ? `· <a href="${p.website}" target="_blank" style="color:#5ecf8a">${p.website}</a>` : ''}</div>
+          <div class="proposal-publisher">${p.sector_key || '—'} ${p.website ? `· <a href="${p.website}" target="_blank" style="color:#63CAB7">${p.website}</a>` : ''}</div>
           ${p.reason ? `<div class="proposal-summary">${p.reason}</div>` : ''}
           <div class="proposal-meta">${p.submitter || 'Anonymous'} · ${new Date(p.created_at).toLocaleDateString()}</div>
         </div>
@@ -735,11 +735,11 @@ function renderIssues(issues) {
           </div>
           <div style="font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title || 'Untitled'}</div>
           <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px">${s.publisher || '—'} · Brand #${s.brand_id}</div>
-          <a href="${s.url}" target="_blank" style="font-size:11px;font-family:'DM Mono',monospace;color:rgba(94,207,138,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:380px">${s.url}</a>
+          <a href="${s.url}" target="_blank" style="font-size:11px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:380px">${s.url}</a>
           <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px">Last checked: ${s.last_checked ? new Date(s.last_checked).toLocaleDateString() : '—'}</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-          <button class="btn" style="background:rgba(94,207,138,0.1);border-color:rgba(94,207,138,0.25);color:#5ecf8a;font-size:11px"
+          <button class="btn" style="background:rgba(99,202,183,0.1);border-color:rgba(99,202,183,0.25);color:#63CAB7;font-size:11px"
             onclick="findReplacement(${s.id}, this)">🔍 Find replacement</button>
           <button class="btn btn-reject" onclick="markResolved(${s.id}, this)" style="font-size:11px">✓ Mark resolved</button>
         </div>
@@ -797,7 +797,7 @@ function renderCandidates(sourceId, data) {
         </div>
         <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:4px">${c.title || 'No title'}</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:6px;line-height:1.5">${c.summary || ''}</div>
-        <a href="${c.url}" target="_blank" style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(94,207,138,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:340px">${c.url}</a>
+        <a href="${c.url}" target="_blank" style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(99,202,183,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:340px">${c.url}</a>
       </div>
       <button class="btn btn-approve" style="font-size:11px;flex-shrink:0"
         onclick="proposeReplacement(${sourceId}, '${c.url.replace(/'/g,"\'")}', '${(c.title||'').replace(/'/g,"\'")}', '${(c.publisher||'').replace(/'/g,"\'")}', '${(c.summary||'').replace(/'/g,"\'")}', this)">
@@ -978,7 +978,7 @@ function renderCurrentScores(scoresRes) {
     for (const c of catCriteria) {
       const s = c.computed_score;
       const met = c.criteria_met;
-      const col = s === null ? "rgba(255,255,255,0.15)" : s >= 0 ? "#5ecf8a" : "#ef4444";
+      const col = s === null ? "rgba(255,255,255,0.15)" : s >= 0 ? "#63CAB7" : "#ef4444";
       html += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
         <span style="color:rgba(255,255,255,0.4)">${c.criterion?.label_en || c.criterion_id}</span>
         <span style="font-family:'DM Mono',monospace;color:${col}">${met ? (s > 0 ? '+' : '') + s : '—'}</span>
@@ -1019,9 +1019,9 @@ function showCatCriteria(cat) {
   for (const c of ["armi","ambiente","diritti","fisco"]) {
     const btn = document.getElementById(`v2-cat-${c}`);
     if (!btn) continue;
-    btn.style.background = c === cat ? "rgba(94,207,138,0.1)" : "transparent";
-    btn.style.borderColor = c === cat ? "rgba(94,207,138,0.25)" : "rgba(255,255,255,0.08)";
-    btn.style.color = c === cat ? "#5ecf8a" : "rgba(255,255,255,0.4)";
+    btn.style.background = c === cat ? "rgba(99,202,183,0.1)" : "transparent";
+    btn.style.borderColor = c === cat ? "rgba(99,202,183,0.25)" : "rgba(255,255,255,0.08)";
+    btn.style.color = c === cat ? "#63CAB7" : "rgba(255,255,255,0.4)";
   }
 
   const criteria = v2Criteria[cat] || [];
@@ -1077,7 +1077,7 @@ function showCatCriteria(cat) {
         </div>
         <button onclick="submitCriterionScore(${selectedBrand?.id}, ${crit.id}, this)"
           id="submit-${crit.id}"
-          style="background:rgba(94,207,138,0.1);border:1px solid rgba(94,207,138,0.25);color:#5ecf8a;
+          style="background:rgba(99,202,183,0.1);border:1px solid rgba(99,202,183,0.25);color:#63CAB7;
                  padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;
                  font-weight:600;transition:all .15s;white-space:nowrap">
           Save score →
@@ -1113,7 +1113,7 @@ function updateValuePreview(critId) {
   const tier = parseInt(tierEl.value);
   const judgment = judgmentEl.dataset.judgment;
   const value = TIER_VALUES[tier][judgment];
-  const color = value > 0 ? "#5ecf8a" : value < 0 ? "#ef4444" : "rgba(255,255,255,0.3)";
+  const color = value > 0 ? "#63CAB7" : value < 0 ? "#ef4444" : "rgba(255,255,255,0.3)";
   previewEl.innerHTML = `Value: <span style="color:${color};font-size:16px;font-weight:700">${value > 0 ? '+' : ''}${value}</span>`;
 }
 
@@ -1157,7 +1157,7 @@ async function submitCriterionScore(brandId, criterionId, btn) {
     setTimeout(() => {
       btn.disabled = false;
       btn.textContent = "Save score →";
-      btn.style.color = "#5ecf8a";
+      btn.style.color = "#63CAB7";
     }, 2000);
   } catch(e) {
     showToast("Error: " + e.message, true);
