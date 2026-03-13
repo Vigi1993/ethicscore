@@ -595,14 +595,10 @@ function renderCriteriaList() {
     const critId=crit.id;
     const assigned=localAssignments.get(critId)||null;
 
-    // Fonti assegnate ad altri criteri della stessa categoria
-    const assignedElsewhere=new Set(
-      criteria.filter(c=>c.id!==critId&&localAssignments.has(c.id)).map(c=>localAssignments.get(c.id).source_id)
-    );
-
+    // Fonti disponibili: solo quelle escluse per questo criterio specifico vengono rimosse.
+    // Una fonte puo' essere usata su piu' criteri anche della stessa categoria.
     const available=catSources.filter(s=>{
       if(localExclusions.has(`${s.id}_${critId}`)) return false;
-      if(assignedElsewhere.has(s.id)) return false;
       return true;
     });
 
@@ -611,11 +607,11 @@ function renderCriteriaList() {
       <div class="criterion-code">${crit.code}</div>`;
 
     if(assigned){
-      // Recap fonte assegnata
+      // Recap fonte assegnata — mostrato sopra il form
       const src=v2Sources.find(s=>s.id===assigned.source_id);
       const val=assigned.value;
       const vc=scoreColor(val);
-      html+=`<div class="assigned-source">
+      html+=`<div class="assigned-source" style="margin-bottom:14px">
         <div class="assigned-info">
           <div class="assigned-title">${src?(src.title||src.url):`Source #${assigned.source_id}`}</div>
           <div class="assigned-meta">
@@ -625,11 +621,12 @@ function renderCriteriaList() {
             <span style="color:rgba(255,255,255,0.3);font-size:10px">${assigned.label_en||''}</span>
           </div>
         </div>
-        <button class="btn-unassign" onclick="unassignSource(${selectedBrand.id},${critId},${assigned.source_id})">↩ Remove</button>
+        <button class="btn-unassign" onclick="unassignSource(${selectedBrand.id},${critId},${assigned.source_id})">\u21a9 Remove</button>
       </div>`;
-    } else {
-      html+=renderCriterionForm(critId,available);
     }
+
+    // Il form appare sempre, anche se c'e' gia' un assegnamento (per aggiungerne altri o cambiarlo)
+    html+=renderCriterionForm(critId,available);
     html+=`</div>`;
   });
   el.innerHTML=html;
