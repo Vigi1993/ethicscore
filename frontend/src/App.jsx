@@ -32,7 +32,6 @@ const UI = {
     loading: "Loading...",
     hint: "Add the brands you use with + to discover your personal ethical footprint.",
     hint_dismiss: "Got it",
-
     show_less: "Less",
     show_more: (n) => `+${n} more`,
     score_verdicts: ["Strongly discouraged", "Problematic", "Improvable", "Fairly ethical"],
@@ -60,29 +59,26 @@ const UI = {
     loading: "Caricamento...",
     hint: "Aggiungi i brand che usi con + per scoprire la tua impronta etica personale.",
     hint_dismiss: "Capito",
-
     show_less: "Meno",
     show_more: (n) => `+${n} altri`,
     score_verdicts: ["Fortemente sconsigliato", "Problematico", "Migliorabile", "Abbastanza etico"],
   }
 };
 
-// ─── SCORING V2 (-400/+400) ──────────────────────────────────────────────────
 const SCORE_RANGE = 400;
 
 function getScore(brand) {
   if (brand.total_score !== undefined && brand.total_score !== null) return brand.total_score;
-  return null; // nessun dato
+  return null;
 }
 
 function getColor(score) {
-  // Score da -400 a +400
   if (score === null || score === undefined) return "rgba(255,255,255,0.2)";
-  if (score >= 200)  return "#6dbb7a";   // deeply ethical   — verde
-  if (score >= 50)   return "#a8c5a0";   // fairly ethical   — verde chiaro
-  if (score >= -49)  return "#facc15";   // partially        — giallo
-  if (score >= -199) return "#fb923c";   // scarcely         — arancione
-  return "#ef4444";                      // compromised      — rosso
+  if (score >= 200)  return "#6dbb7a";
+  if (score >= 50)   return "#a8c5a0";
+  if (score >= -49)  return "#facc15";
+  if (score >= -199) return "#fb923c";
+  return "#ef4444";
 }
 
 function getVerdict(score, lang) {
@@ -101,27 +97,20 @@ function getSectorAvgScore(brands) {
   return Math.round(scored.reduce((sum, b) => sum + getScore(b), 0) / scored.length);
 }
 
-// Ritorna label categoria nella lingua corretta
 function getCatLabel(cat, lang) {
   if (lang === "en" && cat.label_en) return cat.label_en;
   return cat.label;
 }
 
 function ScoreBar({ value, color, max = 20 }) {
-  // Barra centrata: zero al centro, positivi a destra, negativi a sinistra
   const pct = Math.min(100, Math.abs(Math.round((value / max) * 50)));
   const positive = value >= 0;
   return (
     <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 99, height: 6, width: "100%", overflow: "hidden", position: "relative" }}>
-      {/* Zero line */}
       <div style={{ position: "absolute", left: "50%", top: 0, width: 1, height: "100%", background: "rgba(255,255,255,0.1)" }} />
-      {/* Bar */}
       <div style={{
-        position: "absolute",
-        top: 0, height: "100%",
-        width: `${pct}%`,
-        background: color,
-        borderRadius: 99,
+        position: "absolute", top: 0, height: "100%",
+        width: `${pct}%`, background: color, borderRadius: 99,
         transition: "width 1s cubic-bezier(.4,0,.2,1)",
         left: positive ? "50%" : undefined,
         right: positive ? undefined : `${50}%`,
@@ -174,7 +163,6 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const [fullBrand, setFullBrand] = useState(null);
   const t = UI[lang] || UI.en;
   const total = fullBrand ? getScore(fullBrand) : null;
-  const b_scored = fullBrand?.categories_scored ?? 4;
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
 
@@ -200,7 +188,6 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
       <div style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32, maxWidth: 520, width: "100%", boxShadow: "0 40px 80px rgba(0,0,0,0.6)", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
 
-        {/* X chiudi in alto a destra */}
         <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)", width: 32, height: 32, borderRadius: 99, cursor: "pointer", fontSize: 18, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}
           onMouseOver={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.color = "#fff"; }}
           onMouseOut={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.4)"; }}
@@ -241,7 +228,7 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           {categories.map(cat => {
             const conf = b.confidence?.[cat.key] || {};
             const criteria_met = conf.criteria_met;
-            const score = b.scores[cat.key];  // legacy fallback
+            const score = b.scores[cat.key];
             const catColor = criteria_met ? getColor(score) : "rgba(255,255,255,0.15)";
             const t1 = conf.tier1 ?? conf.t1 ?? 0;
             const t2 = conf.tier2 ?? conf.t2 ?? 0;
@@ -272,25 +259,38 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           })}
         </div>
 
+        {/* ── NOTES & SOURCES ── */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 14, letterSpacing: 1, textTransform: "uppercase" }}>{t.notes_title}</div>
           {categories.map(cat => {
             const catSources = b.sources?.[cat.key] || [];
+            const hasNote = b.notes?.[cat.key];
+            const conf = b.confidence?.[cat.key];
+            if (!hasNote && !catSources.length && !conf) return null;
             return (
-              <div key={cat.key} style={{ marginBottom: 16 }}>
-                <div style={{ marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: cat.color }}>{cat.icon} </span>
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{b.notes?.[cat.key]}</span>
+              <div key={cat.key} style={{ marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                {/* Categoria label */}
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                  <span style={{ fontSize: 13 }}>{cat.icon}</span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1 }}>
+                    {getCatLabel(cat, lang)}
+                  </span>
                 </div>
-                {b.confidence?.[cat.key] && (() => {
-                  const c = b.confidence[cat.key];
-                  const srcWord = lang === "it" ? (c.count === 1 ? "fonte verificata" : "fonti verificate") : (c.count === 1 ? "verified source" : "verified sources");
-                  return (
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: 8 }}>
-                      <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>◆ {c.count} {srcWord}</span>
-                    </div>
-                  );
-                })()}
+                {/* Note testuali */}
+                {hasNote && (
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 8 }}>
+                    {b.notes[cat.key]}
+                  </div>
+                )}
+                {/* Contatore fonti */}
+                {conf && (
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: catSources.length ? 8 : 0 }}>
+                    <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>
+                      ◆ {conf.count} {lang === "it" ? (conf.count === 1 ? "fonte verificata" : "fonti verificate") : (conf.count === 1 ? "verified source" : "verified sources")}
+                    </span>
+                  </div>
+                )}
+                {/* Link fonti */}
                 {catSources.length > 0 && (
                   <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 16 }}>
                     {catSources.map((src, i) => (
@@ -363,7 +363,6 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
         </div>
         <button onClick={onClear} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)", padding: "6px 12px", borderRadius: 8, cursor: "pointer", fontSize: 11 }}>{t.clear_list}</button>
       </div>
-
       <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
         {categories.map(cat => (
           <div key={cat.key} style={{ flex: "1 1 120px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, padding: "10px 14px" }}>
@@ -372,7 +371,6 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
           </div>
         ))}
       </div>
-
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: problematic.length > 0 ? 24 : 0 }}>
         {myBrands.map(b => {
           const s = getScore(b);
@@ -386,7 +384,6 @@ function MyListPanel({ myBrands, onRemove, onClear, onSelect, lang }) {
           );
         })}
       </div>
-
       {problematic.length > 0 && (
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
           <div style={{ fontSize: 11, color: "#f87171", letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>{t.alternatives_title}</div>
@@ -465,8 +462,11 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
   return (
     <div style={{ marginBottom: 8, border: "1px solid rgba(255,255,255,0.05)", borderRadius: 14, overflow: "hidden", background: "rgba(255,255,255,0.01)" }}>
 
-      {/* Header settore */}
-      <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px" }}>
+      {/* Header settore — cliccabile per expand/collapse */}
+      <div
+        onClick={() => setExpanded(e => !e)}
+        style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", cursor: "pointer", userSelect: "none" }}
+      >
         <span style={{ fontSize: 18, flexShrink: 0 }}>{sectorIcon}</span>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{sector}</div>
@@ -478,10 +478,11 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
           <div style={{ fontSize: 18, fontWeight: 700, color: avgColor }}>{avgScore}</div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>{lang === "it" ? "media" : "avg"}</div>
         </div>
-
+        {/* Chevron */}
+        <div style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, transition: "transform 0.25s", transform: expanded ? "rotate(180deg)" : "rotate(0deg)", flexShrink: 0 }}>▼</div>
       </div>
 
-      {/* Best brand — sempre visibile quando espanso */}
+      {/* Best brand + rest — visibili solo se expanded */}
       {expanded && best && (
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.04)", margin: "0 12px", padding: "12px 6px 8px" }}>
           <div className="brand-row" style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 11, background: `${getColor(bestScore)}08`, border: `1px solid ${getColor(bestScore)}22`, cursor: "pointer" }}>
@@ -500,8 +501,6 @@ function SectorSection({ sector, sectorIcon, brands, myBrands, onAdd, onSelect, 
             <div style={{ fontSize: 22, fontWeight: 700, color: getColor(bestScore), flexShrink: 0 }} onClick={() => onSelect(best)}>{bestScore}</div>
             <button className="add-btn" onClick={() => onAdd(best)} style={{ background: bestInList ? "rgba(99,202,183,0.1)" : "transparent", border: "1px solid rgba(255,255,255,0.08)", color: bestInList ? "#63CAB7" : "rgba(255,255,255,0.3)", padding: "4px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11, fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{bestInList ? "✓" : "+"}</button>
           </div>
-
-          {/* Altri brand a scomparsa */}
           {rest.length > 0 && <RestBrands rest={rest} myBrands={myBrands} onAdd={onAdd} onSelect={onSelect} lang={lang} />}
         </div>
       )}
@@ -599,16 +598,7 @@ export default function App() {
           <div style={{ textAlign: "center", marginBottom: 52 }}>
             <div style={{ fontSize: 11, letterSpacing: 4, color: "rgba(99,202,183,0.7)", textTransform: "uppercase", marginBottom: 16 }}>{t.tagline}</div>
             <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
-              <img
-                src={logoSrc}
-                alt="EthicPrint"
-                style={{
-                  height: "clamp(48px, 10vw, 80px)",
-                  width: "auto",
-                  filter: "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.25))",
-                  mixBlendMode: "normal",
-                }}
-              />
+              <img src={logoSrc} alt="EthicPrint" style={{ height: "clamp(48px, 10vw, 80px)", width: "auto", filter: "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.25))", mixBlendMode: "normal" }} />
             </div>
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
               {t.subtitle}<br />
@@ -673,13 +663,12 @@ export default function App() {
 
           <div style={{ marginTop: 52 }}>
             <div style={{ fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", marginBottom: 32 }}>{t.ranking_title}</div>
-            {brandsBySector.map(({ sector, sectorIcon, brands }, idx) => (
+            {brandsBySector.map(({ sector, sectorIcon, brands }) => (
               <SectorSection key={sector} sector={sector} sectorIcon={sectorIcon} brands={brands} myBrands={myBrands} onAdd={addToList} onSelect={setSelected} lang={lang} defaultOpen={true} />
             ))}
           </div>
 
           <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
-            {/* Footer */}
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
               {t.footer.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}<br />
               <a href="/contribute.html" style={{ color: "rgba(99,202,183,0.5)", textDecoration: "none" }}>
