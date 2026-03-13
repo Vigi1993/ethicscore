@@ -249,7 +249,7 @@ let v2CriteriaPub = 0;
 let selectedBrand = null;
 let activeCat     = 'armi';
 let localExclusions  = new Set();
-let localAssignments = new Map(); // criterionId → { source_id, tier, value, label_en }
+let localAssignments = new Map(); // criterionId → [{ source_id, tier, value, label_en }, ...]
 
 // ══════════════════════════════════════════════════
 // UTILS
@@ -507,13 +507,13 @@ async function onBrandSelect(brandId) {
   v2Scores={}; v2BrandTotal=scoresRes.total_score_v2; v2CriteriaPub=scoresRes.criteria_published||0;
   (scoresRes.criteria||[]).forEach(c=>{
     v2Scores[c.criterion_id]=c;
-    if(c.sources?.length&&c.sources[0].source_id){
-      localAssignments.set(c.criterion_id,{
-        source_id:c.sources[0].source_id,
-        tier:c.sources[0].tier,
-        value:c.sources[0].value,
-        label_en:c.sources[0].label_en,
-      });
+    if(c.sources?.length){
+      const arr=c.sources.filter(s=>s.source_id).map(s=>({
+        source_id:s.source_id, tier:s.tier, value:s.value, label_en:s.label_en,
+      }));
+      if(arr.length) localAssignments.set(c.criterion_id,arr);
+      // marca le fonti gia' salvate come escluse dalla tendina di questo criterio
+      arr.forEach(a=>localExclusions.add(`${a.source_id}_${c.criterion_id}`));
     }
   });
 
@@ -593,7 +593,7 @@ function renderCriteriaList() {
   let html='';
   criteria.forEach(crit=>{
     const critId=crit.id;
-    const assigned=localAssignments.get(critId)||null;
+    const assignedList=localAssignments.get(critId)||[];
 
     // Fonti disponibili: solo quelle escluse per questo criterio specifico vengono rimosse.
     // Una fonte puo' essere usata su piu' criteri anche della stessa categoria.
@@ -606,12 +606,11 @@ function renderCriteriaList() {
       <div class="criterion-title">${crit.label_en}</div>
       <div class="criterion-code">${crit.code}</div>`;
 
-    if(assigned){
-      // Recap fonte assegnata — mostrato sopra il form
+    assignedList.forEach(assigned=>{
       const src=v2Sources.find(s=>s.id===assigned.source_id);
       const val=assigned.value;
       const vc=scoreColor(val);
-      html+=`<div class="assigned-source" style="margin-bottom:14px">
+      html+=`<div class="assigned-source" style="margin-bottom:8px">
         <div class="assigned-info">
           <div class="assigned-title">${src?(src.title||src.url):`Source #${assigned.source_id}`}</div>
           <div class="assigned-meta">
@@ -623,7 +622,8 @@ function renderCriteriaList() {
         </div>
         <button class="btn-unassign" onclick="unassignSource(${selectedBrand.id},${critId},${assigned.source_id})">\u21a9 Remove</button>
       </div>`;
-    }
+    });
+    if(assignedList.length) html+=`<div style="margin-bottom:14px"></div>`;
 
     // Il form appare sempre, anche se c'e' gia' un assegnamento (per aggiungerne altri o cambiarlo)
     html+=renderCriterionForm(critId,available);
@@ -738,7 +738,13 @@ async function saveScore(brandId,critId) {
     // Aggiorna stato locale
     const value=TIER_VALUES[tier][judgment];
     if(sourceId){
-      localAssignments.set(critId,{source_id:sourceId,tier,value,label_en:JUDGMENT_LABELS[judgment]?.en||judgment});
+      const entry={source_id:sourceId,tier,value,label_en:JUDGMENT_LABELS[judgment]?.en||judgment};
+      const existing=localAssignments.get(critId)||[];
+      // evita duplicati per stessa fonte
+      const filtered=existing.filter(e=>e.source_id!==sourceId);
+      localAssignments.set(critId,[...filtered,entry]);
+      // escludi questa fonte dalla tendina di questo criterio
+      localExclusions.add(`${sourceId}_${critId}`);
     }
     // Ricarica scores
     const scoresRes=await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r=>r.json());
@@ -760,7 +766,12 @@ async function unassignSource(brandId,critId,sourceId) {
       method:'DELETE',headers:{'x-admin-key':ADMIN_KEY}
     });
     if(!res.ok) throw new Error();
-    localAssignments.delete(critId);
+    // Rimuovi solo questa fonte dall'array del criterio
+    const remaining=(localAssignments.get(critId)||[]).filter(e=>e.source_id!==sourceId);
+    if(remaining.length) localAssignments.set(critId,remaining);
+    else localAssignments.delete(critId);
+    // Rimetti la fonte disponibile nella tendina
+    localExclusions.delete(`${sourceId}_${critId}`);
     const scoresRes=await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r=>r.json());
     v2Scores={};v2BrandTotal=scoresRes.total_score_v2;v2CriteriaPub=scoresRes.criteria_published||0;
     (scoresRes.criteria||[]).forEach(c=>{v2Scores[c.criterion_id]=c;});
