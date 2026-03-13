@@ -205,7 +205,6 @@ function renderScoreCard(p) {
   const arrow = diff > 0 ? "↑" : diff < 0 ? "↓" : "→";
   const arrowColor = diff > 0 ? "#4ade80" : diff < 0 ? "#ef4444" : "rgba(255,255,255,0.3)";
 
-  // Criterion label — from scoring_criteria via proposal
   const criterionLabel = p.scoring_criteria?.label_en || p.criterion_id || "";
 
   const actions = p.status === "pending"
@@ -372,7 +371,6 @@ function renderCard(p) {
   const jobClass = p.job_type === "replacement" ? "job-replacement" : "job-new";
   const jobLabel = p.job_type === "replacement" ? "replacement" : "new";
 
-  // AI judgment block
   const JUDGMENT_COLORS = {
     "Positive": "#4ade80",
     "Predominantly positive": "#a8c5a0",
@@ -436,7 +434,6 @@ function renderCard(p) {
 async function approve(id) {
   const card = document.getElementById(`card-${id}`);
   card.querySelectorAll("button").forEach(b => b.disabled = true);
-  // Legge il giudizio confermato (eventualmente modificato dall'utente)
   const jsel = document.getElementById(`jsel-${id}`);
   const confirmedJudgment = jsel ? jsel.value : null;
   try {
@@ -500,27 +497,7 @@ function showToast(msg, error = false) {
 
 // ─── COSTS TAB ─────────────────────────────────────────────────────────────
 
-const ANTHROPIC_PRICES = {
-  "claude-haiku-4-5-20251001": { input: 0.80, output: 4.00 },   // per 1M tokens
-  "claude-sonnet-4-6":         { input: 3.00, output: 15.00 },
-};
-
-async function fetchAnthropicUsage() {
-  // Anthropic usage API — current month
-  const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
-  const end   = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
-  try {
-    const r = await fetch(`https://api.anthropic.com/v1/usage?start_date=${start}&end_date=${end}`, {
-      headers: { "x-api-key": "", "anthropic-version": "2023-06-01" }
-    });
-    if (!r.ok) return null;
-    return await r.json();
-  } catch { return null; }
-}
-
 async function fetchBraveCount() {
-  // Brave: contatore interno dal nostro backend
   try {
     const r = await fetch(`${API}/costs/brave-count`);
     if (!r.ok) return null;
@@ -562,27 +539,18 @@ async function loadCosts() {
   const now = new Date();
   const monthLabel = now.toLocaleString("en", { month: "long", year: "numeric" });
 
-  // ── Fetch all data in parallel ──
-  const [braveData] = await Promise.all([
-    fetchBraveCount(),
-  ]);
+  const [braveData] = await Promise.all([fetchBraveCount()]);
 
-  // ── Anthropic: note — the usage API requires passing your API key client-side
-  // which we don't do for security. Instead we show a note directing to the console.
   const anthropicCard = costCard(
     "🤖", "Anthropic",
     "→ Console",
     "Open Anthropic Console for token usage",
     "",
-    `<a href="https://console.anthropic.com/settings/usage" target="_blank"
-       style="color:#63CAB7;font-size:11px;text-decoration:none">
-       console.anthropic.com/settings/usage ↗
-     </a>`
+    `<a href="https://console.anthropic.com/settings/usage" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">console.anthropic.com/settings/usage ↗</a>`
   );
 
-  // ── Brave Search ──
-  const braveMonthly = braveData?.month || 0;
-  const braveLimit   = 2000; // piano base Brave
+  const braveMonthly = braveData?.month_total || 0;
+  const braveLimit = 2000;
   const braveCard = costCard(
     "🔍", "Brave Search",
     `${braveMonthly.toLocaleString()}`,
@@ -591,55 +559,39 @@ async function loadCosts() {
     `Finder: ~${braveData?.finder || 0} · Checker: ~${braveData?.checker || 0}`
   );
 
-  // ── Railway ──
   const railwayCard = costCard(
     "🚂", "Railway",
     "→ Dashboard",
     "3 services: API · Checker · Finder",
     "",
-    `<a href="https://railway.app/dashboard" target="_blank"
-       style="color:#63CAB7;font-size:11px;text-decoration:none">
-       railway.app/dashboard ↗
-     </a>`
+    `<a href="https://railway.app/dashboard" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">railway.app/dashboard ↗</a>`
   );
 
-  // ── Supabase ──
   const supabaseCard = costCard(
     "🗄️", "Supabase",
     "→ Dashboard",
     "DB · Auth · Storage",
     "",
-    `<a href="https://supabase.com/dashboard" target="_blank"
-       style="color:#63CAB7;font-size:11px;text-decoration:none">
-       supabase.com/dashboard ↗
-     </a>`
+    `<a href="https://supabase.com/dashboard" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">supabase.com/dashboard ↗</a>`
   );
 
-  // ── Resend ──
   const resendCard = costCard(
     "📧", "Resend",
     "→ Dashboard",
     "Email notifications",
     "",
-    `<a href="https://resend.com/emails" target="_blank"
-       style="color:#63CAB7;font-size:11px;text-decoration:none">
-       resend.com/emails ↗
-     </a>`
+    `<a href="https://resend.com/emails" target="_blank" style="color:#63CAB7;font-size:11px;text-decoration:none">resend.com/emails ↗</a>`
   );
 
   el.innerHTML = `
     <div style="margin-bottom:24px">
       <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">${monthLabel}</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
-        ${anthropicCard}
-        ${braveCard}
-        ${railwayCard}
-        ${supabaseCard}
-        ${resendCard}
+        ${anthropicCard}${braveCard}${railwayCard}${supabaseCard}${resendCard}
       </div>
     </div>
     <div style="background:rgba(99,202,183,0.05);border:1px solid rgba(99,202,183,0.12);border-radius:12px;padding:16px 20px;font-size:12px;color:rgba(255,255,255,0.3);line-height:1.7">
-      ℹ️ Brave Search è l'unico servizio tracciato internamente. Per gli altri apri i rispettivi dashboard — le API di usage richiederebbero chiavi client-side per motivi di sicurezza.
+      ℹ️ Brave Search è l'unico servizio tracciato internamente. Per gli altri apri i rispettivi dashboard.
     </div>`;
 }
 
@@ -676,7 +628,6 @@ function renderContributions(data) {
     return;
   }
 
-  // Brand proposals
   if (brand_proposals.length > 0) {
     html += `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px">➕ Brand Proposals</div>`;
     brand_proposals.forEach(p => {
@@ -695,7 +646,6 @@ function renderContributions(data) {
     });
   }
 
-  // Error reports
   if (error_reports.length > 0) {
     html += `<div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:12px;margin-top:24px">⚠️ Error Reports</div>`;
     error_reports.forEach(r => {
@@ -738,7 +688,7 @@ async function resolveContrib(type, id, status, btn) {
 }
 
 
-// ─── ISSUES TAB (broken/missing sources) ─────────────────────────────────────
+// ─── ISSUES TAB ─────────────────────────────────────────────────────────────
 
 async function loadIssues() {
   const el = document.getElementById("content");
@@ -857,17 +807,7 @@ function renderCandidates(sourceId, data) {
 async function proposeReplacement(sourceId, url, title, publisher, summary, btn) {
   btn.disabled = true;
   btn.textContent = '…';
-
-  // Get brand_id and category_key from the issue card
-  const issueCard = document.getElementById(`issue-${sourceId}`);
-  // We need brand_id — fetch from API
   try {
-    const res = await fetch(`${API}/source-proposals`, {
-      method: 'POST' ,
-      headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY }
-    });
-    // Actually insert via the existing propose endpoint logic but we need brand_id
-    // Simpler: call a dedicated endpoint
     const propRes = await fetch(`${API}/sources/${sourceId}/propose-replacement`, {
       method: 'POST',
       headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
@@ -902,24 +842,23 @@ async function markResolved(sourceId, btn) {
 }
 
 
-// ─── SCORE V2 TAB ─────────────────────────────────────────────────────────────
+// ─── SCORE V2 TAB ────────────────────────────────────────────────────────────
 
 const TIER_VALUES = {
-  1: { positive: 20, prev_positive: 10, prev_negative: -10, negative: -20 },
-  2: { positive: 10, prev_positive:  5, prev_negative:  -5, negative: -10 },
-  3: { positive:  2, prev_positive:  1, prev_negative:  -1, negative:  -2 },
+  1: {"positive": 20, "prev_positive": 10, "prev_negative": -10, "negative": -20},
+  2: {"positive": 10, "prev_positive":  5, "prev_negative":  -5, "negative": -10},
+  3: {"positive":  2, "prev_positive":  1, "prev_negative":  -1, "negative":  -2},
 };
 const JUDGMENT_LABELS = {
-  positive:      { en: "Positive evidence",      it: "Evidenza positiva",       color: "#4ade80" },
-  prev_positive: { en: "Predominantly positive", it: "Prevalentemente positiva",color: "#86efac" },
-  prev_negative: { en: "Predominantly negative", it: "Prevalentemente negativa",color: "#fb923c" },
-  negative:      { en: "Negative evidence",      it: "Evidenza negativa",        color: "#ef4444" },
+  positive:      { en: "Positive evidence",      it: "Evidenza positiva",        color: "#4ade80" },
+  prev_positive: { en: "Predominantly positive", it: "Prevalentemente positiva", color: "#86efac" },
+  prev_negative: { en: "Predominantly negative", it: "Prevalentemente negativa", color: "#fb923c" },
+  negative:      { en: "Negative evidence",      it: "Evidenza negativa",         color: "#ef4444" },
 };
-// CAT_ICONS and CAT_LABELS defined globally above
 
 let v2Brands = [];
-let v2Criteria = {};  // { armi: [...], ambiente: [...], diritti: [...], fisco: [...] }
-let v2Sources = [];   // sources for selected brand
+let v2Criteria = {};
+let v2Sources = [];   // ← flat array, già fixato
 let selectedBrand = null;
 
 async function loadScoreV2() {
@@ -931,13 +870,21 @@ async function loadScoreV2() {
       fetch(`${API}/scoring-criteria`).then(r => r.json()),
     ]);
     v2Brands = brandsRes;
-    // group criteria by category
     v2Criteria = {};
     for (const c of (criteriaRes.criteria || [])) {
       const cat = c.category_key;
       if (!v2Criteria[cat]) v2Criteria[cat] = [];
       v2Criteria[cat].push(c);
     }
+
+    // ── FIX: scoring-criteria ritorna un oggetto {armi:[...], ...}
+    // non ha .criteria — gestiamo entrambi i formati
+    if (!criteriaRes.criteria) {
+      for (const [cat, items] of Object.entries(criteriaRes)) {
+        if (Array.isArray(items)) v2Criteria[cat] = items;
+      }
+    }
+
     populateBrandSelect();
     document.getElementById("badge-scores").textContent = v2Brands.length;
   } catch(e) {
@@ -948,27 +895,21 @@ async function loadScoreV2() {
 function renderScoreV2Shell() {
   return `
   <div style="display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start">
-
-    <!-- LEFT: brand selector + current scores -->
     <div>
       <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px">Brand</div>
       <select id="v2-brand-select" onchange="onBrandSelect(this.value)"
         style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:10px 12px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:16px;outline:none">
         <option value="">— Select brand —</option>
       </select>
-
       <div id="v2-current-scores" style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px">
         Select a brand to see current scores
       </div>
     </div>
-
-    <!-- RIGHT: scoring form -->
     <div id="v2-form-area">
       <div style="font-size:11px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;letter-spacing:1px;padding:40px 0;text-align:center">
         Select a brand to score
       </div>
     </div>
-
   </div>`;
 }
 
@@ -985,12 +926,30 @@ async function onBrandSelect(brandId) {
   selectedBrand = v2Brands.find(b => b.id == brandId);
   if (!selectedBrand) return;
 
-  // Load sources and current scores
   const [sourcesRes, scoresRes] = await Promise.all([
     fetch(`${API}/brands/${brandId}/sources`).then(r => r.json()),
     fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json()).catch(() => ({ criteria: [] })),
   ]);
-  v2Sources = sourcesRes.sources || [];
+
+  // ── FIX PRINCIPALE ──────────────────────────────────────────────────────
+  // Il backend ritorna { armi: [...], ambiente: [...], diritti: [...], fisco: [...] }
+  // Il frontend si aspettava sourcesRes.sources che era sempre undefined.
+  // Ora appiattisce l'oggetto in un array flat con category_key e tier inclusi.
+  if (Array.isArray(sourcesRes)) {
+    // Formato alternativo: già un array
+    v2Sources = sourcesRes;
+  } else if (sourcesRes.sources && Array.isArray(sourcesRes.sources)) {
+    // Formato futuro (se backend aggiornato)
+    v2Sources = sourcesRes.sources;
+  } else {
+    // Formato attuale: { armi: [...], ambiente: [...], ... }
+    v2Sources = Object.entries(sourcesRes).flatMap(([cat, items]) =>
+      Array.isArray(items)
+        ? items.map(s => ({ ...s, category_key: s.category_key || cat }))
+        : []
+    );
+  }
+  // ────────────────────────────────────────────────────────────────────────
 
   renderCurrentScores(scoresRes);
   renderScoringForm(brandId);
@@ -1042,7 +1001,6 @@ function renderScoringForm(brandId) {
     Score a criterion — ${selectedBrand?.name}
   </div>`;
 
-  // Category tabs
   html += `<div style="display:flex;gap:6px;margin-bottom:20px" id="v2-cat-tabs">`;
   for (const cat of ["armi","ambiente","diritti","fisco"]) {
     html += `<button onclick="showCatCriteria('${cat}')"
@@ -1052,7 +1010,6 @@ function renderScoringForm(brandId) {
     </button>`;
   }
   html += `</div>`;
-
   html += `<div id="v2-criteria-list"></div>`;
 
   el.innerHTML = html;
@@ -1060,7 +1017,6 @@ function renderScoringForm(brandId) {
 }
 
 function showCatCriteria(cat) {
-  // Update tab styles
   for (const c of ["armi","ambiente","diritti","fisco"]) {
     const btn = document.getElementById(`v2-cat-${c}`);
     if (!btn) continue;
@@ -1072,6 +1028,9 @@ function showCatCriteria(cat) {
   const criteria = v2Criteria[cat] || [];
   const el = document.getElementById("v2-criteria-list");
   if (!el) return;
+
+  // ── FIX: filtra per categoria, includendo fonti senza category_key
+  const catSources = v2Sources.filter(s => !s.category_key || s.category_key === cat);
 
   let html = "";
   for (const crit of criteria) {
@@ -1086,9 +1045,9 @@ function showCatCriteria(cat) {
           <select id="source-${crit.id}"
             style="width:100%;background:#0f1a14;border:1px solid rgba(255,255,255,0.1);color:#f0f0f0;padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none">
             <option value="">— No source —</option>
-            ${v2Sources.filter(s => !s.category_key || s.category_key === cat)
-              .map(s => `<option value="${s.id}">[T${s.tier||3}] ${s.publisher ? s.publisher+' — ' : ''}${(s.title||s.url||'').substring(0,50)}</option>`)
-              .join('')}
+            ${catSources.map(s =>
+              `<option value="${s.id}">[T${s.tier || 3}] ${s.publisher ? s.publisher + ' — ' : ''}${(s.title || s.url || '').substring(0, 50)}</option>`
+            ).join('')}
           </select>
         </div>
         <div>
@@ -1135,13 +1094,11 @@ function showCatCriteria(cat) {
 }
 
 function selectJudgment(critId, judgment, btn) {
-  // Deselect all in this group
   document.querySelectorAll(`#judgment-${critId} button`).forEach(b => {
     b.style.background = "transparent";
     b.style.borderColor = "rgba(255,255,255,0.08)";
     b.style.fontWeight = "400";
   });
-  // Select this one
   btn.style.background = `${JUDGMENT_LABELS[judgment].color}22`;
   btn.style.borderColor = `${JUDGMENT_LABELS[judgment].color}55`;
   btn.style.fontWeight = "600";
@@ -1180,13 +1137,7 @@ async function submitCriterionScore(brandId, criterionId, btn) {
     const res = await fetch(`${API}/scoring/criterion-score`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-admin-key": ADMIN_KEY },
-      body: JSON.stringify({
-        brand_id: brandId,
-        criterion_id: criterionId,
-        source_id: sourceId,
-        tier,
-        judgment,
-      })
+      body: JSON.stringify({ brand_id: brandId, criterion_id: criterionId, source_id: sourceId, tier, judgment })
     });
     if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
@@ -1195,7 +1146,6 @@ async function submitCriterionScore(brandId, criterionId, btn) {
     btn.textContent = "✓ Saved";
     btn.style.color = "#4ade80";
 
-    // Reload scores panel
     const scoresRes = await fetch(`${API}/scoring/criterion-scores/${brandId}`).then(r => r.json());
     renderCurrentScores(scoresRes);
 
