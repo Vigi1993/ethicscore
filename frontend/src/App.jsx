@@ -7,7 +7,12 @@ import { CategoriesContext } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
-import { getSectorAvgScore, getCatLabel } from "./utils/brandHelpers";
+import {
+  getScore,
+  getColor,
+  getSectorAvgScore,
+  getCatLabel,
+} from "./utils/brandHelpers";
 import { UI } from "./constants/uiText";
 
 const THRESHOLD = 50;
@@ -34,7 +39,10 @@ function LangToggle({ lang, setLang }) {
           onClick={() => setLang(l)}
           style={{
             background: lang === l ? "rgba(99,202,183,0.2)" : "transparent",
-            border: lang === l ? "1px solid rgba(99,202,183,0.4)" : "1px solid transparent",
+            border:
+              lang === l
+                ? "1px solid rgba(99,202,183,0.4)"
+                : "1px solid transparent",
             color: lang === l ? "#63CAB7" : "rgba(255,255,255,0.35)",
             padding: "4px 12px",
             borderRadius: 99,
@@ -49,58 +57,6 @@ function LangToggle({ lang, setLang }) {
         </button>
       ))}
     </div>
-  );
-}
-
-  const gridPoints = (scale) =>
-    keys.map((_, i) => [cx + r * scale * Math.cos(angles[i]), cy + r * scale * Math.sin(angles[i])]);
-
-  const polyStr = (pts) => pts.map((p) => p.join(",")).join(" ");
-
-  return (
-    <svg width={size} height={size} style={{ overflow: "visible" }}>
-      {[0.25, 0.5, 0.75, 1].map((s) => (
-        <polygon
-          key={s}
-          points={polyStr(gridPoints(s))}
-          fill="none"
-          stroke="rgba(255,255,255,0.06)"
-          strokeWidth="1"
-        />
-      ))}
-      {angles.map((a, i) => (
-        <line
-          key={i}
-          x1={cx}
-          y1={cy}
-          x2={cx + r * Math.cos(a)}
-          y2={cy + r * Math.sin(a)}
-          stroke="rgba(255,255,255,0.07)"
-          strokeWidth="1"
-        />
-      ))}
-      <polygon points={polyStr(points)} fill="rgba(99,202,183,0.18)" stroke="#63CAB7" strokeWidth="1.5" />
-      {points.map((p, i) => (
-        <circle key={i} cx={p[0]} cy={p[1]} r={3} fill="#63CAB7" />
-      ))}
-      {angles.map((a, i) => {
-        const lx = cx + (r + 16) * Math.cos(a);
-        const ly = cy + (r + 16) * Math.sin(a);
-        return (
-          <text
-            key={i}
-            x={lx}
-            y={ly + 4}
-            textAnchor="middle"
-            fill="rgba(255,255,255,0.45)"
-            fontSize="9"
-            fontFamily="'DM Sans', sans-serif"
-          >
-            {labels[i]}
-          </text>
-        );
-      })}
-    </svg>
   );
 }
 
@@ -125,12 +81,12 @@ export default function App() {
     document.head.appendChild(link);
   }, []);
 
-const addToList = (brand) => {
-  if (!myBrands.find((b) => b.name === brand.name)) {
-    setMyBrands((prev) => [...prev, brand]);
-  }
-  setQuery("");
-};
+  const addToList = (brand) => {
+    if (!myBrands.find((b) => b.name === brand.name)) {
+      setMyBrands((prev) => [...prev, brand]);
+    }
+    setQuery("");
+  };
 
   const sectors = [...new Set(db.map((b) => b.sector))].sort();
 
@@ -138,7 +94,12 @@ const addToList = (brand) => {
     .map((sector) => {
       const brands = db.filter((b) => b.sector === sector);
       const sectorIcon = brands[0]?.sector_icon || "🏢";
-      return { sector, sectorIcon, brands, avgScore: getSectorAvgScore(brands) };
+      return {
+        sector,
+        sectorIcon,
+        brands,
+        avgScore: getSectorAvgScore(brands),
+      };
     })
     .sort((a, b) => (b.avgScore ?? -9999) - (a.avgScore ?? -9999));
 
@@ -171,7 +132,14 @@ const addToList = (brand) => {
     <CategoriesContext.Provider value={categories}>
       <LangToggle lang={lang} setLang={setLang} />
 
-      <div style={{ minHeight: "100vh", background: "#08080f", fontFamily: "'DM Sans', sans-serif", color: "#e8e8f0" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#08080f",
+          fontFamily: "'DM Sans', sans-serif",
+          color: "#e8e8f0",
+        }}
+      >
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }
           ::selection { background: rgba(99,202,183,0.3); }
@@ -204,13 +172,22 @@ const addToList = (brand) => {
                 style={{
                   height: "clamp(48px, 10vw, 80px)",
                   width: "auto",
-                  filter: "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.25))",
+                  filter:
+                    "brightness(1.05) drop-shadow(0 0 18px rgba(99,202,183,0.25))",
                   mixBlendMode: "normal",
                 }}
               />
             </div>
 
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 16, maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
+            <p
+              style={{
+                color: "rgba(255,255,255,0.4)",
+                fontSize: 16,
+                maxWidth: 440,
+                margin: "0 auto",
+                lineHeight: 1.6,
+              }}
+            >
               {t.subtitle}
               <br />
               <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
@@ -232,7 +209,14 @@ const addToList = (brand) => {
                 boxShadow: query ? "0 0 0 2px rgba(99,202,183,0.15)" : "none",
               }}
             >
-              <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" viewBox="0 0 24 24">
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.35-4.35" />
               </svg>
@@ -322,20 +306,49 @@ const addToList = (brand) => {
                       </div>
 
                       <div style={{ flex: 1 }} onClick={() => setSelected(brand)}>
-                        <div style={{ fontSize: 14, fontWeight: 600 }}>{brand.name}</div>
-                        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{brand.sector}</div>
+                        <div style={{ fontSize: 14, fontWeight: 600 }}>
+                          {brand.name}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 11,
+                            color: "rgba(255,255,255,0.35)",
+                          }}
+                        >
+                          {brand.sector}
+                        </div>
                       </div>
 
-                      <div style={{ textAlign: "right", marginRight: 8 }} onClick={() => setSelected(brand)}>
-                        <div style={{ fontSize: 18, fontWeight: 700, color: getColor(score) }}>{score ?? "—"}</div>
-                        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)" }}>/ ±400</div>
+                      <div
+                        style={{ textAlign: "right", marginRight: 8 }}
+                        onClick={() => setSelected(brand)}
+                      >
+                        <div
+                          style={{
+                            fontSize: 18,
+                            fontWeight: 700,
+                            color: getColor(score),
+                          }}
+                        >
+                          {score ?? "—"}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 10,
+                            color: "rgba(255,255,255,0.3)",
+                          }}
+                        >
+                          / ±400
+                        </div>
                       </div>
 
                       <button
                         className="add-btn"
                         onClick={() => addToList(brand)}
                         style={{
-                          background: inList ? "rgba(99,202,183,0.1)" : "rgba(255,255,255,0.06)",
+                          background: inList
+                            ? "rgba(99,202,183,0.1)"
+                            : "rgba(255,255,255,0.06)",
                           border: "1px solid rgba(255,255,255,0.1)",
                           color: inList ? "#63CAB7" : "rgba(255,255,255,0.5)",
                           padding: "6px 12px",
@@ -370,7 +383,16 @@ const addToList = (brand) => {
               }}
             >
               <span style={{ fontSize: 16 }}>👆</span>
-              <span style={{ flex: 1, fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>{t.hint}</span>
+              <span
+                style={{
+                  flex: 1,
+                  fontSize: 13,
+                  color: "rgba(255,255,255,0.6)",
+                  lineHeight: 1.4,
+                }}
+              >
+                {t.hint}
+              </span>
               <button
                 onClick={() => setShowHint(false)}
                 style={{
@@ -390,14 +412,26 @@ const addToList = (brand) => {
             </div>
           )}
 
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", marginBottom: 8, paddingLeft: 4 }}>
+          <div
+            style={{
+              fontSize: 12,
+              color: "rgba(255,255,255,0.2)",
+              marginBottom: 8,
+              paddingLeft: 4,
+            }}
+          >
             {t.db_info(db.length, sectors.length, sourcesCount)}
           </div>
 
           <div style={{ marginBottom: 40, paddingLeft: 4 }}>
             <a
               href="/sources.html"
-              style={{ fontSize: 12, color: "rgba(99,202,183,0.6)", textDecoration: "none", transition: "color .2s" }}
+              style={{
+                fontSize: 12,
+                color: "rgba(99,202,183,0.6)",
+                textDecoration: "none",
+                transition: "color .2s",
+              }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = "#63CAB7";
               }}
@@ -405,18 +439,22 @@ const addToList = (brand) => {
                 e.currentTarget.style.color = "rgba(99,202,183,0.6)";
               }}
             >
-              {lang === "en" ? "How do we score brands? →" : "Come calcoliamo i punteggi? →"}
+              {lang === "en"
+                ? "How do we score brands? →"
+                : "Come calcoliamo i punteggi? →"}
             </a>
           </div>
 
-         <MyListPanel
-              myBrands={myBrands}
-              onRemove={(name) => setMyBrands((prev) => prev.filter((b) => b.name !== name))}
-              onClear={() => setMyBrands([])}
-              onSelect={setSelected}
-              lang={lang}
-              ui={UI}
-              threshold={THRESHOLD}
+          <MyListPanel
+            myBrands={myBrands}
+            onRemove={(name) =>
+              setMyBrands((prev) => prev.filter((b) => b.name !== name))
+            }
+            onClear={() => setMyBrands([])}
+            onSelect={setSelected}
+            lang={lang}
+            ui={UI}
+            threshold={THRESHOLD}
           />
 
           <div style={{ marginTop: 52 }}>
@@ -432,23 +470,36 @@ const addToList = (brand) => {
               {t.ranking_title}
             </div>
 
-          {brandsBySector.map(({ sector, sectorIcon, brands }) => (
-            <SectorSection
-              key={sector}
-              sector={sector}
-              sectorIcon={sectorIcon}
-              brands={brands}
-              myBrands={myBrands}
-              onAdd={addToList}
-              onSelect={setSelected}
-              lang={lang}
-              defaultOpen={true}
-            />
-          ))}
+            {brandsBySector.map(({ sector, sectorIcon, brands }) => (
+              <SectorSection
+                key={sector}
+                sector={sector}
+                sectorIcon={sectorIcon}
+                brands={brands}
+                myBrands={myBrands}
+                onAdd={addToList}
+                onSelect={setSelected}
+                lang={lang}
+                defaultOpen={true}
+              />
+            ))}
           </div>
 
-          <div style={{ marginTop: 64, textAlign: "center", borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 32 }}>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", lineHeight: 1.8 }}>
+          <div
+            style={{
+              marginTop: 64,
+              textAlign: "center",
+              borderTop: "1px solid rgba(255,255,255,0.04)",
+              paddingTop: 32,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 12,
+                color: "rgba(255,255,255,0.2)",
+                lineHeight: 1.8,
+              }}
+            >
               {t.footer.split("\n").map((line, i) => (
                 <span key={i}>
                   {line}
@@ -456,8 +507,16 @@ const addToList = (brand) => {
                 </span>
               ))}
               <br />
-              <a href="/contribute.html" style={{ color: "rgba(99,202,183,0.5)", textDecoration: "none" }}>
-                {lang === "it" ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand" : "➕ Contribute · Report an error · Add a brand"}
+              <a
+                href="/contribute.html"
+                style={{
+                  color: "rgba(99,202,183,0.5)",
+                  textDecoration: "none",
+                }}
+              >
+                {lang === "it"
+                  ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand"
+                  : "➕ Contribute · Report an error · Add a brand"}
               </a>
             </div>
           </div>
