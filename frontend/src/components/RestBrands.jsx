@@ -7,9 +7,6 @@ export default function RestBrands({
   onAdd,
   onSelect,
   lang,
-  getScore,
-  getColor,
-  getCatLabel,
 }) {
   const [open, setOpen] = useState(false);
 
