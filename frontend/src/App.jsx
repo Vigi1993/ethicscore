@@ -7,6 +7,7 @@ import { CategoriesContext, useCategories } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
+import { getSectorAvgScore } from "./utils/brandHelpers";
 
 const THRESHOLD = 50;
 
