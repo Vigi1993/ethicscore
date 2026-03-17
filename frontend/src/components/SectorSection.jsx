@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useCategories } from "../context/categoriesContext";
 import RestBrands from "./RestBrands";
 import {
+  getCatLabel,
   getDisplayScore,
   getDisplayScoreColor,
   getSectorAvgDisplayScore,
-  getCatLabel,
 } from "../utils/brandHelpers";
 
 export default function SectorSection({
@@ -22,13 +22,15 @@ export default function SectorSection({
   const [expanded, setExpanded] = useState(defaultOpen);
 
   const sorted = [...brands].sort(
-    (a, b) => (getScore(b) ?? -9999) - (getScore(a) ?? -9999)
+    (a, b) => (getDisplayScore(b) ?? -9999) - (getDisplayScore(a) ?? -9999)
   );
+
   const avgScore = getSectorAvgDisplayScore(brands);
   const avgColor = getDisplayScoreColor(avgScore);
-  const bestScore = best ? getDisplayScore(best) : null;
+
   const best = sorted[0];
   const rest = sorted.slice(1);
+  const bestScore = best ? getDisplayScore(best) : null;
   const bestInList = best && myBrands.find((b) => b.name === best.name);
 
   return (
@@ -113,8 +115,8 @@ export default function SectorSection({
               gap: 12,
               padding: "12px 14px",
               borderRadius: 11,
-              background: `${getColor(bestScore)}08`,
-              border: `1px solid ${getColor(bestScore)}22`,
+              background: `${getDisplayScoreColor(bestScore)}08`,
+              border: `1px solid ${getDisplayScoreColor(bestScore)}22`,
               cursor: "pointer",
             }}
           >
@@ -123,13 +125,13 @@ export default function SectorSection({
                 width: 34,
                 height: 34,
                 borderRadius: 9,
-                background: `${getColor(bestScore)}20`,
+                background: `${getDisplayScoreColor(bestScore)}20`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 13,
                 fontWeight: 700,
-                color: getColor(bestScore),
+                color: getDisplayScoreColor(bestScore),
                 flexShrink: 0,
               }}
             >
@@ -138,6 +140,7 @@ export default function SectorSection({
 
             <div style={{ flex: 1, minWidth: 0 }} onClick={() => onSelect(best)}>
               <div style={{ fontSize: 14, fontWeight: 600 }}>{best.name}</div>
+
               <div
                 style={{
                   display: "flex",
@@ -156,7 +159,11 @@ export default function SectorSection({
                         width: 6,
                         height: 6,
                         borderRadius: 99,
-                        background: getColor(best.scores?.[cat.key]),
+                        background:
+                          best.scores?.[cat.key] !== null &&
+                          best.scores?.[cat.key] !== undefined
+                            ? "rgba(255,255,255,0.35)"
+                            : "rgba(255,255,255,0.12)",
                       }}
                     />
                     <span
@@ -173,12 +180,12 @@ export default function SectorSection({
               style={{
                 fontSize: 22,
                 fontWeight: 700,
-                color: getColor(bestScore),
+                color: getDisplayScoreColor(bestScore),
                 flexShrink: 0,
               }}
               onClick={() => onSelect(best)}
             >
-              {bestScore}
+              {bestScore ?? "—"}
             </div>
 
             <button
