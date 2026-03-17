@@ -6,6 +6,8 @@ import {
   getColor,
   getCatLabel,
   getSectorAvgScore,
+  getDisplayScore,
+  getDisplayScoreColor,
 } from "../utils/brandHelpers";
 
 export default function SectorSection({
@@ -28,7 +30,7 @@ export default function SectorSection({
   const best = sorted[0];
   const rest = sorted.slice(1);
   const avgColor = getColor(avgScore);
-  const bestScore = best ? getScore(best) : 0;
+  const bestScore = best ? getDisplayScore(best) : null;
   const bestInList = best && myBrands.find((b) => b.name === best.name);
 
   return (
