@@ -3,7 +3,7 @@ import logoSrc from "./assets/logo.png";
 import BrandCard from "./components/BrandCard";
 import MyListPanel from "./components/MyListPanel";
 import SectorSection from "./components/SectorSection";
-import { CategoriesContext} from "./context/categoriesContext";
+import { CategoriesContext } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
