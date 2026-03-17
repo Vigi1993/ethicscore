@@ -3,6 +3,7 @@ import logoSrc from "./assets/logo.png";
 import { getBrandDetail } from "./api/brands";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
+import { useBrandSearch } from "./hooks/useBrandSearch";
 
 const CategoriesContext = createContext([]);
 const useCategories = () => useContext(CategoriesContext);
@@ -1187,7 +1188,7 @@ export default function App() {
   const [lang, setLang] = useState("en");
   const { db, categories, loading } = useInitialData(lang);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const results = useBrandSearch(query, db);
   const [selected, setSelected] = useState(null);
   const [myBrands, setMyBrands] = useState([]);
   const [showHint, setShowHint] = useState(true);
@@ -1204,30 +1205,12 @@ export default function App() {
     document.head.appendChild(link);
   }, []);
 
-  useEffect(() => {
-    if (query.length < 2) {
-      setResults([]);
-      return;
-    }
-
-    const q = query.toLowerCase();
-
-    setResults(
-      db.filter((b) => {
-        const name = (b.name || "").toLowerCase();
-        const sector = (b.sector || "").toLowerCase();
-        return name.includes(q) || sector.includes(q);
-      })
-    );
-  }, [query, db]);
-
-  const addToList = (brand) => {
-    if (!myBrands.find((b) => b.name === brand.name)) {
-      setMyBrands((prev) => [...prev, brand]);
-    }
-    setQuery("");
-    setResults([]);
-  };
+const addToList = (brand) => {
+  if (!myBrands.find((b) => b.name === brand.name)) {
+    setMyBrands((prev) => [...prev, brand]);
+  }
+  setQuery("");
+};
 
   const sectors = [...new Set(db.map((b) => b.sector))].sort();
 
@@ -1353,7 +1336,6 @@ export default function App() {
                 <button
                   onClick={() => {
                     setQuery("");
-                    setResults([]);
                   }}
                   style={{
                     background: "none",
