@@ -22,6 +22,9 @@ function normalizeAlternative(alt) {
         : typeof alt.total_score === "number"
           ? alt.total_score
           : null,
+    public_score:
+    typeof brand.public_score === "number" ? brand.public_score : null,
+    public_label: brand.public_label ?? "",
     logo: alt.logo ?? alt.sector_icon ?? "🏢",
     scores:
       alt.scores && typeof alt.scores === "object" ? alt.scores : {},
@@ -53,6 +56,9 @@ function normalizeBrandSummary(brand) {
     sector_icon: brand.sector_icon ?? "",
     total_score:
       typeof brand.total_score === "number" ? brand.total_score : null,
+    public_score:
+    typeof brand.public_score === "number" ? brand.public_score : null,
+    public_label: brand.public_label ?? "",
     parent: brand.parent ?? brand.parent_company ?? "",
     logo: brand.logo ?? brand.sector_icon ?? "🏢",
     logo_url: brand.logo_url ?? null,
