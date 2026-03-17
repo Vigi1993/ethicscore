@@ -1,12 +1,10 @@
-import { useState, useEffect, useRef, createContext, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 import logoSrc from "./assets/logo.png";
+import BrandCard from "./components/BrandCard";
+import { CategoriesContext, useCategories } from "./context/categoriesContext";
 import { useInitialData } from "./hooks/useInitialData";
 import { useSourcesCount } from "./hooks/useSourcesCount";
 import { useBrandSearch } from "./hooks/useBrandSearch";
-import BrandCard from "./components/BrandCard";
-
-export const CategoriesContext = createContext([]);
-const useCategories = () => useContext(CategoriesContext);
 
 const THRESHOLD = 50;
 
