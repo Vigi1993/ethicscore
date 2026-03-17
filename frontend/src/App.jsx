@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import logoSrc from "./assets/logo.png";
-
-const API = "https://web-production-14708.up.railway.app";
+import { getBrands, getBrandDetail } from "./api/brands";
+import { getCategories } from "./api/categories";
+import { getPublicSourcesCount } from "./api/sources";
 
 const CategoriesContext = createContext([]);
 const useCategories = () => useContext(CategoriesContext);
@@ -166,13 +167,25 @@ function BrandCard({ brand, onClose, lang, onSelectAlt }) {
   const verdict = getVerdict(total, lang);
   const color = getColor(total);
 
-  useEffect(() => {
+useEffect(() => {
+  let isMounted = true;
+
+  async function loadBrandDetail() {
     setFullBrand(null);
-    fetch(`${API}/brands/${brand.id}?lang=${lang}`)
-      .then(r => r.json())
-      .then(data => setFullBrand(data))
-      .catch(() => setFullBrand(brand));
-  }, [brand.id, lang]);
+
+    const data = await getBrandDetail(brand.id, lang);
+
+    if (!isMounted) return;
+
+    setFullBrand(data || brand);
+  }
+
+  loadBrandDetail();
+
+  return () => {
+    isMounted = false;
+  };
+}, [brand.id, lang, brand]);
 
   if (!fullBrand) return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={onClose}>
@@ -524,26 +537,60 @@ export default function App() {
   const inputRef = useRef(null);
   const t = UI[lang] || UI.en;
 
-  useEffect(() => {
-    setLoading(true);
-    Promise.all([
-      fetch(`${API}/brands?lang=${lang}`).then(r => r.json()),
-      fetch(`${API}/categories`).then(r => r.json()),
-    ])
-      .then(([brandsData, categoriesData]) => {
-        setDb(brandsData);
-        setCategories(categoriesData);
-        setLoading(false);
-      })
-      .catch(err => { console.error("Error loading data:", err); setLoading(false); });
-  }, [lang]);
+useEffect(() => {
+  let isMounted = true;
 
-  useEffect(() => {
-    fetch(`${API}/sources/public`)
-      .then(r => r.json())
-      .then(data => setSourcesCount(data.total || 0))
-      .catch(() => {});
-  }, []);
+  async function loadInitialData() {
+    setLoading(true);
+
+    try {
+      const [brandsData, categoriesData] = await Promise.all([
+        getBrands(lang),
+        getCategories(),
+      ]);
+
+      if (!isMounted) return;
+
+      setDb(brandsData);
+      setCategories(categoriesData);
+    } catch (err) {
+      console.error("Error loading data:", err);
+
+      if (!isMounted) return;
+
+      setDb([]);
+      setCategories([]);
+    } finally {
+      if (isMounted) {
+        setLoading(false);
+      }
+    }
+  }
+
+  loadInitialData();
+
+  return () => {
+    isMounted = false;
+  };
+}, [lang]);
+
+useEffect(() => {
+  let isMounted = true;
+
+  async function loadSourcesCount() {
+    const count = await getPublicSourcesCount();
+
+    if (isMounted) {
+      setSourcesCount(count);
+    }
+  }
+
+  loadSourcesCount();
+
+  return () => {
+    isMounted = false;
+  };
+}, []);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -555,7 +602,22 @@ export default function App() {
   useEffect(() => {
     if (query.length < 2) { setResults([]); return; }
     const q = query.toLowerCase();
-    setResults(db.filter(b => b.name.toLowerCase().includes(q) || b.sector.toLowerCase().includes(q)));
+    useEffect(() => {
+  if (query.length < 2) {
+    setResults([]);
+    return;
+  }
+
+  const q = query.toLowerCase();
+
+  setResults(
+    db.filter((b) => {
+      const name = (b.name || "").toLowerCase();
+      const sector = (b.sector || "").toLowerCase();
+      return name.includes(q) || sector.includes(q);
+    })
+  );
+}, [query, db]);
   }, [query, db]);
 
   const addToList = (brand) => {
