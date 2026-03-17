@@ -14,7 +14,7 @@ export default function MyListPanel({
   lang,
   ui,
   threshold,
-}) { {
+}) {
   const categories = useCategories();
   const t = ui[lang] || ui.en;
 
@@ -190,7 +190,9 @@ export default function MyListPanel({
                   </span>
                 </div>
 
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>{t.replace_with}</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginBottom: 10 }}>
+                  {t.replace_with}
+                </div>
 
                 <button
                   onClick={() => onSelect(b)}
