@@ -599,10 +599,7 @@ useEffect(() => {
     document.head.appendChild(link);
   }, []);
 
-  useEffect(() => {
-    if (query.length < 2) { setResults([]); return; }
-    const q = query.toLowerCase();
-    useEffect(() => {
+useEffect(() => {
   if (query.length < 2) {
     setResults([]);
     return;
@@ -618,7 +615,6 @@ useEffect(() => {
     })
   );
 }, [query, db]);
-  }, [query, db]);
 
   const addToList = (brand) => {
     if (!myBrands.find(b => b.name === brand.name)) setMyBrands(prev => [...prev, brand]);
