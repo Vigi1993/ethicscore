@@ -53,9 +53,6 @@ export default function RestBrands({
               onAdd={onAdd}
               onSelect={onSelect}
               lang={lang}
-              getScore={getScore}
-              getColor={getColor}
-              getCatLabel={getCatLabel}
             />
           ))}
         </div>
