@@ -55,3 +55,32 @@ export function getCatLabel(cat, lang) {
   if (lang === "en" && cat.label_en) return cat.label_en;
   return cat.label;
 }
+
+export function getDisplayScore(brand) {
+  if (!brand || brand.insufficient_data) return null;
+
+  if (typeof brand.public_score === "number") {
+    return brand.public_score;
+  }
+
+  return null;
+}
+
+export function getDisplayLabel(brand, lang = "en") {
+  if (!brand || brand.insufficient_data) {
+    return lang === "it" ? "Dati insufficienti" : "Insufficient data";
+  }
+
+  if (brand.public_label) return brand.public_label;
+
+  return "";
+}
+
+export function getDisplayScoreColor(score) {
+  if (score === null || score === undefined) return "rgba(255,255,255,0.2)";
+  if (score >= 80) return "#6dbb7a";
+  if (score >= 60) return "#a8c5a0";
+  if (score >= 40) return "#facc15";
+  if (score >= 20) return "#fb923c";
+  return "#ef4444";
+}
