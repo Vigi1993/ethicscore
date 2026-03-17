@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getBrandDetail } from "../api/brands";
-import { CategoriesContext } from "../App";
+import { useCategories } from "../context/categoriesContext";
 
 function getScore(brand) {
   if (brand?.total_score !== undefined && brand?.total_score !== null) return brand.total_score;
@@ -89,7 +89,7 @@ const UI = {
 };
 
 export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
-  const categories = useContext(CategoriesContext);
+  const categories = useCategories();
   const [fullBrand, setFullBrand] = useState(brand || null);
   const t = UI[lang] || UI.en;
 
