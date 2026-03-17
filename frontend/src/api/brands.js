@@ -1,6 +1,22 @@
 // src/api/brands.js
 import { apiRequest } from "./http";
 
+function normalizeAlternative(alt) {
+  if (!alt || typeof alt !== "object") return null;
+
+  return {
+    id: alt.id ?? null,
+    name: alt.name ?? "",
+    sector: alt.sector ?? "",
+    score: typeof alt.score === "number"
+      ? alt.score
+      : typeof alt.total_score === "number"
+        ? alt.total_score
+        : null,
+    logo: alt.logo ?? alt.sector_icon ?? "🏢",
+  };
+}
+
 function normalizeBrandSummary(brand) {
   if (!brand || typeof brand !== "object") {
     return null;
@@ -13,31 +29,31 @@ function normalizeBrandSummary(brand) {
     sector_icon: brand.sector_icon ?? "",
     total_score:
       typeof brand.total_score === "number" ? brand.total_score : null,
-    parent_company: brand.parent_company ?? null,
-    alternatives: Array.isArray(brand.alternatives) ? brand.alternatives : [],
+    parent: brand.parent ?? brand.parent_company ?? "",
+    logo: brand.logo ?? brand.sector_icon ?? "🏢",
+    logo_url: brand.logo_url ?? null,
     scores:
       brand.scores && typeof brand.scores === "object" ? brand.scores : {},
-    notes: Array.isArray(brand.notes) ? brand.notes : [],
-    sources: Array.isArray(brand.sources) ? brand.sources : [],
-    logo_url: brand.logo_url ?? null,
+    notes:
+      brand.notes && typeof brand.notes === "object" ? brand.notes : {},
+    sources:
+      brand.sources && typeof brand.sources === "object" ? brand.sources : {},
+    confidence:
+      brand.confidence && typeof brand.confidence === "object"
+        ? brand.confidence
+        : {},
+    alternatives: Array.isArray(brand.alternatives)
+      ? brand.alternatives.map(normalizeAlternative).filter(Boolean)
+      : [],
+    impact_summary: brand.impact_summary ?? "",
+    insufficient_data: Boolean(brand.insufficient_data),
+    criteria_published:
+      typeof brand.criteria_published === "number" ? brand.criteria_published : 0,
   };
 }
 
 function normalizeBrandDetail(brand) {
-  const normalized = normalizeBrandSummary(brand);
-
-  if (!normalized) return null;
-
-  return {
-    ...normalized,
-    description: brand.description ?? "",
-    impact_summary: brand.impact_summary ?? "",
-    alternatives: Array.isArray(brand.alternatives) ? brand.alternatives : [],
-    sources: Array.isArray(brand.sources) ? brand.sources : [],
-    scores:
-      brand.scores && typeof brand.scores === "object" ? brand.scores : {},
-    notes: Array.isArray(brand.notes) ? brand.notes : [],
-  };
+  return normalizeBrandSummary(brand);
 }
 
 export async function getBrands(lang = "en") {
