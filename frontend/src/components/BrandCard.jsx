@@ -4,7 +4,6 @@ import { useCategories } from "../context/categoriesContext";
 import {
   getScore,
   getColor,
-  getVerdict,
   getCatLabel,
   getDisplayScore,
   getDisplayLabel,
@@ -234,14 +233,28 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
             >
               {b.name}
             </div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: "rgba(255,255,255,0.3)",
+                marginTop: 2,
+              }}
+            >
               {t.parent}: {b.parent}
             </div>
           </div>
 
           <div style={{ textAlign: "right" }}>
-            {b.insufficient_data ? (
-              <div style={{ fontSize: 13, color: "#fb923c", fontWeight: 600, maxWidth: 140, lineHeight: 1.4 }}>
+            {b.insufficient_data || displayScore === null ? (
+              <div
+                style={{
+                  fontSize: 13,
+                  color: "#fb923c",
+                  fontWeight: 600,
+                  maxWidth: 140,
+                  lineHeight: 1.4,
+                }}
+              >
                 {lang === "it" ? "⚠️ Dati insufficienti" : "⚠️ Insufficient data"}
               </div>
             ) : (
@@ -257,26 +270,51 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                 >
                   {displayScore}
                 </div>
-            
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: "rgba(255,255,255,0.3)",
+                    marginTop: 2,
+                  }}
+                >
                   / 100
                 </div>
-            
-                <div style={{ fontSize: 13, marginTop: 4 }}>
-                  {displayLabel}
-                </div>
-            
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", marginTop: 6 }}>
-                  {lang === "it"
-                    ? `${b.criteria_published} criteri pubblicati`
-                    : `${b.criteria_published} published criteria`}
-                </div>
-            
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", marginTop: 2 }}>
-                  raw {total ?? "—"}
-                </div>
+
+                {displayLabel && (
+                  <div style={{ fontSize: 13, marginTop: 4 }}>
+                    {displayLabel}
+                  </div>
+                )}
+
+                {b.criteria_published > 0 && (
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: "rgba(255,255,255,0.25)",
+                      marginTop: 6,
+                    }}
+                  >
+                    {lang === "it"
+                      ? `${b.criteria_published} criteri pubblicati`
+                      : `${b.criteria_published} published criteria`}
+                  </div>
+                )}
+
+                {total !== null && (
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: "rgba(255,255,255,0.18)",
+                      marginTop: 2,
+                    }}
+                  >
+                    raw {total}
+                  </div>
+                )}
               </>
             )}
+          </div>
         </div>
 
         {b.impact_summary && (
@@ -311,17 +349,32 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
             return (
               <div key={cat.key} style={{ marginBottom: 12, opacity: criteria_met ? 1 : 0.45 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontSize: 12, color: criteria_met ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: criteria_met ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)",
+                    }}
+                  >
                     {cat.icon} {getCatLabel(cat, lang)}
                   </span>
 
                   {criteria_met ? (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>{score}</span>
-                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>/ ±20</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>
+                        {score}
+                      </span>
+                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>
+                        / ±20
+                      </span>
                     </div>
                   ) : (
-                    <span style={{ fontSize: 10, color: "#fb923c", fontFamily: "'DM Mono', monospace" }}>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        color: "#fb923c",
+                        fontFamily: "'DM Mono', monospace",
+                      }}
+                    >
                       {hasAnySources
                         ? lang === "it"
                           ? "fonti insufficienti"
@@ -384,7 +437,14 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                 </div>
 
                 {hasNote && (
-                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 8 }}>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "rgba(255,255,255,0.45)",
+                      lineHeight: 1.6,
+                      marginBottom: 8,
+                    }}
+                  >
                     {b.notes?.[cat.key]}
                   </div>
                 )}
@@ -412,7 +472,14 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                 )}
 
                 {catSources.length > 0 && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingLeft: 16 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 4,
+                      paddingLeft: 16,
+                    }}
+                  >
                     {catSources.map((src, i) => (
                       <a
                         key={i}
@@ -440,7 +507,14 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                       >
                         ↗ {src.title || src.publisher || "Source"}
                         {src.publisher && src.title && (
-                          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>— {src.publisher}</span>
+                          <span
+                            style={{
+                              color: "rgba(255,255,255,0.2)",
+                              fontSize: 10,
+                            }}
+                          >
+                            — {src.publisher}
+                          </span>
                         )}
                       </a>
                     ))}
@@ -455,7 +529,9 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
           style={{
             marginTop: 20,
             background:
-              b.alternatives && b.alternatives.length > 0 ? "rgba(99,202,183,0.06)" : "rgba(255,255,255,0.02)",
+              b.alternatives && b.alternatives.length > 0
+                ? "rgba(99,202,183,0.06)"
+                : "rgba(255,255,255,0.02)",
             border:
               "1px solid " +
               (b.alternatives && b.alternatives.length > 0
@@ -465,7 +541,15 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
             padding: 16,
           }}
         >
-          <div style={{ fontSize: 11, color: "#63CAB7", letterSpacing: 1, textTransform: "uppercase", marginBottom: 10 }}>
+          <div
+            style={{
+              fontSize: 11,
+              color: "#63CAB7",
+              letterSpacing: 1,
+              textTransform: "uppercase",
+              marginBottom: 10,
+            }}
+          >
             {t.alternatives_label}
           </div>
 
@@ -509,16 +593,36 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                     {alt.logo}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{alt.name}</div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{alt.sector}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>
+                      {alt.name}
+                    </div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
+                      {alt.sector}
+                    </div>
                   </div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: getColor(alt.score) }}>{alt.score}</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>→</div>
+                  <div
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: getColor(alt.score),
+                    }}
+                  >
+                    {alt.score}
+                  </div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+                    →
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontStyle: "italic" }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: "rgba(255,255,255,0.35)",
+                fontStyle: "italic",
+              }}
+            >
               {lang === "it"
                 ? "🏆 Questo brand è tra i più virtuosi nel suo settore."
                 : "🏆 This brand is among the most ethical in its sector."}
