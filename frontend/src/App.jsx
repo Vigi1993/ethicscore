@@ -69,7 +69,6 @@ export default function App() {
   const results = useBrandSearch(query, db);
   const [selected, setSelected] = useState(null);
   const [myBrands, setMyBrands] = useState([]);
-  const [showHint, setShowHint] = useState(true);
   const sourcesCount = useSourcesCount();
   const inputRef = useRef(null);
 
@@ -317,7 +316,10 @@ export default function App() {
 
                       <button
                         className="add-btn"
-                        onClick={() => addToList(brand)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            addToList(brand);
+                          }}
                         style={{
                           background: inList
                             ? "rgba(99,202,183,0.1)"
@@ -341,49 +343,6 @@ export default function App() {
               </div>
             )}
           </div>
-
-          {showHint && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                background: "rgba(99,202,183,0.07)",
-                border: "1px solid rgba(99,202,183,0.2)",
-                borderRadius: 10,
-                padding: "10px 14px",
-                marginBottom: 8,
-              }}
-            >
-              <span style={{ fontSize: 16 }}>👆</span>
-              <span
-                style={{
-                  flex: 1,
-                  fontSize: 13,
-                  color: "rgba(255,255,255,0.6)",
-                  lineHeight: 1.4,
-                }}
-              >
-                {t.hint}
-              </span>
-              <button
-                onClick={() => setShowHint(false)}
-                style={{
-                  background: "transparent",
-                  border: "1px solid rgba(99,202,183,0.3)",
-                  color: "#63CAB7",
-                  padding: "4px 10px",
-                  borderRadius: 6,
-                  cursor: "pointer",
-                  fontSize: 11,
-                  fontFamily: "'DM Sans', sans-serif",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {t.hint_dismiss}
-              </button>
-            </div>
-          )}
 
           <div
             style={{
