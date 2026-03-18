@@ -749,9 +749,11 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                       : null;
                   
                     return (
+                      
                       <div
                         key={b.name}
                         onClick={() => onSelect(b)}
+                        className="footprint-brand-card"
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -761,8 +763,20 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                           background: "rgba(255,255,255,0.045)",
                           border: "1px solid rgba(255,255,255,0.08)",
                           cursor: "pointer",
+                          transition: "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "rgba(255,255,255,0.065)";
+                          e.currentTarget.style.borderColor = "rgba(99,202,183,0.22)";
+                          e.currentTarget.style.transform = "translateY(-1px)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "rgba(255,255,255,0.045)";
+                          e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                          e.currentTarget.style.transform = "translateY(0)";
                         }}
                       >
+                      
                         <div style={{ minWidth: 0, flex: 1 }}>
                           <div
                             style={{
@@ -963,17 +977,28 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
                               </div>
                             )}
                         </div>
-                  
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            justifyContent: "space-between",
-                            gap: 8,
-                            flexShrink: 0,
-                          }}
-                        >
+
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-end",
+                              justifyContent: "space-between",
+                              gap: 10,
+                              flexShrink: 0,
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: 14,
+                                color: "rgba(255,255,255,0.3)",
+                                fontFamily: "'DM Sans', sans-serif",
+                                lineHeight: 1,
+                              }}
+                            >
+                              →
+                            </div>
+                        
                           <div
                             style={{
                               fontSize: 11,
