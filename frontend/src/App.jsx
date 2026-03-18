@@ -197,6 +197,14 @@ export default function App() {
             </p>
           </div>
 
+              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
+                {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
+              </span>
+            </p>
+          </div>
+
+          <div style={{ position: "relative", marginBottom: 8 }}>
+
           <div style={{ position: "relative", marginBottom: 8 }}>
             <div
               style={{
@@ -376,20 +384,6 @@ export default function App() {
                 : "Come calcoliamo i punteggi? →"}
             </a>
           </div>
-          
-          <MyListPanel
-            myBrands={myBrands}
-            db={db}
-            onAdd={addToList}
-            onRemove={(name) =>
-              setMyBrands((prev) => prev.filter((b) => b.name !== name))
-            }
-            onClear={() => setMyBrands([])}
-            onSelect={setSelected}
-            lang={lang}
-            ui={UI}
-            threshold={THRESHOLD}
-          />
 
           <div style={{ marginTop: 52 }}>
             <div
