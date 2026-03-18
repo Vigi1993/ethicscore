@@ -45,6 +45,115 @@ function matchesHint(brand, hint) {
   return hint.terms.some((term) => haystack.includes(term));
 }
 
+function getWorstCategory(brand, categories) {
+  if (!brand?.scores) return null;
+
+  const scoredCategories = categories
+    .map((cat) => {
+      const raw = brand.scores?.[cat.key];
+      const publicScore =
+        typeof raw === "number" ? rawCategoryScoreToPublic(raw) : null;
+
+      return {
+        cat,
+        raw,
+        publicScore,
+      };
+    })
+    .filter((item) => typeof item.publicScore === "number");
+
+  if (!scoredCategories.length) return null;
+
+  scoredCategories.sort((a, b) => a.publicScore - b.publicScore);
+  return scoredCategories[0];
+}
+
+function getIssueLabel(brand, categories, lang) {
+  if (brand?.insufficient_data) {
+    return lang === "it" ? "Dati insufficienti" : "Insufficient data";
+  }
+
+  const worst = getWorstCategory(brand, categories);
+  if (!worst) {
+    return lang === "it" ? "Criticità etiche" : "Ethical concerns";
+  }
+
+  return getCatLabel(worst.cat, lang);
+}
+
+function getIssueExplanation(brand, categories, lang) {
+  if (brand?.insufficient_data) {
+    return lang === "it"
+      ? "Non ci sono ancora abbastanza fonti pubblicate per valutarlo bene."
+      : "There aren’t enough published sources yet to assess it properly.";
+  }
+
+  const worst = getWorstCategory(brand, categories);
+  const key = worst?.cat?.key;
+
+  const copy = {
+    it: {
+      environment: "Impatto ambientale debole rispetto ad alternative migliori.",
+      labor: "Possibili criticità su lavoro, filiera o condizioni produttive.",
+      conflicts: "Possibile esposizione a conflitti o aree controverse.",
+      transparency: "Trasparenza limitata su filiera, pratiche o governance.",
+      animals: "Possibili criticità su benessere animale o materiali usati.",
+      default: "Questo brand mostra segnali etici più deboli del previsto.",
+    },
+    en: {
+      environment: "Weaker environmental performance than better alternatives.",
+      labor: "Possible concerns around labor, supply chain, or production conditions.",
+      conflicts: "Possible exposure to conflicts or controversial areas.",
+      transparency: "Limited transparency on supply chain, practices, or governance.",
+      animals: "Possible concerns around animal welfare or materials used.",
+      default: "This brand shows weaker ethical signals than stronger alternatives.",
+    },
+  };
+
+  return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
+}
+
+function getAlternativeName(alternative) {
+  if (!alternative) return null;
+  if (typeof alternative === "string") return alternative;
+  return alternative.name || alternative.brand_name || alternative.title || null;
+}
+
+function getAlternativeScore(alternative) {
+  if (!alternative || typeof alternative === "string") return null;
+
+  if (typeof alternative.public_score === "number") {
+    return alternative.public_score;
+  }
+
+  if (typeof alternative.score === "number") {
+    return alternative.score;
+  }
+
+  return null;
+}
+
+function getTopAlternative(brand) {
+  if (!Array.isArray(brand?.alternatives) || !brand.alternatives.length) {
+    return null;
+  }
+
+  return brand.alternatives[0];
+}
+
+function getAlternativeDelta(brand) {
+  const current = getDisplayScore(brand);
+  const topAlternative = getTopAlternative(brand);
+  const altScore = getAlternativeScore(topAlternative);
+
+  if (typeof current !== "number" || typeof altScore !== "number") {
+    return null;
+  }
+
+  const delta = altScore - current;
+  return delta > 0 ? delta : null;
+}
+
 export default function MyListPanel({
   myBrands,
   db,
@@ -412,105 +521,175 @@ export default function MyListPanel({
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {problematic.map((b) => {
                     const displayScore = getDisplayScore(b);
-
+                    const issueLabel = getIssueLabel(b, categories, lang);
+                    const issueExplanation = getIssueExplanation(b, categories, lang);
+                    const topAlternative = getTopAlternative(b);
+                    const alternativeName = getAlternativeName(topAlternative);
+                    const alternativeDelta = getAlternativeDelta(b);
+                  
                     return (
                       <div
                         key={b.name}
                         onClick={() => onSelect(b)}
                         style={{
                           display: "flex",
-                          alignItems: "center",
                           justifyContent: "space-between",
-                          gap: 12,
-                          padding: "12px",
-                          borderRadius: 12,
-                          background: "rgba(255,255,255,0.04)",
+                          gap: 14,
+                          padding: "14px",
+                          borderRadius: 14,
+                          background: "rgba(255,255,255,0.045)",
                           border: "1px solid rgba(255,255,255,0.08)",
                           cursor: "pointer",
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            minWidth: 0,
-                            flex: 1,
-                          }}
-                        >
-                          <div style={{ fontSize: 16, minWidth: 18 }}>
-                            {b.insufficient_data ? "❔" : "⚠️"}
-                          </div>
-
-                          <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                              marginBottom: 8,
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            <div style={{ fontSize: 16, minWidth: 18 }}>
+                              {b.insufficient_data ? "❔" : "⚠️"}
+                            </div>
+                  
                             <div
                               style={{
                                 color: "#fff",
-                                fontSize: 14,
-                                fontWeight: 600,
+                                fontSize: 15,
+                                fontWeight: 700,
                                 fontFamily: "'DM Sans', sans-serif",
-                                marginBottom: 2,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
                               }}
                             >
                               {b.name}
                             </div>
-
+                  
                             <div
                               style={{
-                                color: "rgba(255,255,255,0.6)",
                                 fontSize: 12,
+                                fontWeight: 700,
+                                color: getDisplayScoreColor(displayScore),
                                 fontFamily: "'DM Sans', sans-serif",
+                                padding: "4px 8px",
+                                borderRadius: 999,
+                                background: "rgba(255,255,255,0.03)",
+                                border: "1px solid rgba(255,255,255,0.06)",
                               }}
                             >
-                              {getDisplayLabel(b, lang)}
+                              {displayScore ?? "—"} / 100
                             </div>
                           </div>
+                  
+                          <div
+                            style={{
+                              color: "rgba(255,255,255,0.86)",
+                              fontSize: 13,
+                              fontWeight: 600,
+                              fontFamily: "'DM Sans', sans-serif",
+                              marginBottom: 4,
+                            }}
+                          >
+                            {issueLabel}
+                          </div>
+                  
+                          <div
+                            style={{
+                              color: "rgba(255,255,255,0.62)",
+                              fontSize: 12,
+                              lineHeight: 1.5,
+                              fontFamily: "'DM Sans', sans-serif",
+                              marginBottom: alternativeName ? 10 : 0,
+                            }}
+                          >
+                            {issueExplanation}
+                          </div>
+                  
+                          {alternativeName && (
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                flexWrap: "wrap",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  color: "#63CAB7",
+                                  fontSize: 12,
+                                  fontWeight: 600,
+                                  fontFamily: "'DM Sans', sans-serif",
+                                }}
+                              >
+                                {lang === "it"
+                                  ? `Meglio passare a ${alternativeName}`
+                                  : `Better switch to ${alternativeName}`}
+                              </div>
+                  
+                              {alternativeDelta !== null && (
+                                <div
+                                  style={{
+                                    fontSize: 11,
+                                    color: "rgba(99,202,183,0.9)",
+                                    border: "1px solid rgba(99,202,183,0.2)",
+                                    background: "rgba(99,202,183,0.08)",
+                                    padding: "4px 8px",
+                                    borderRadius: 999,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                  }}
+                                >
+                                  {lang === "it"
+                                    ? `+${alternativeDelta} punti`
+                                    : `+${alternativeDelta} points`}
+                                </div>
+                              )}
+                  
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onSelect(b);
+                                }}
+                                style={{
+                                  background: "rgba(99,202,183,0.08)",
+                                  border: "1px solid rgba(99,202,183,0.2)",
+                                  borderRadius: 8,
+                                  padding: "6px 10px",
+                                  color: "#63CAB7",
+                                  cursor: "pointer",
+                                  fontSize: 11,
+                                  fontFamily: "'DM Sans', sans-serif",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {lang === "it" ? "Vedi dettaglio →" : "See details →"}
+                              </button>
+                            </div>
+                          )}
                         </div>
-
+                  
                         <div
                           style={{
                             display: "flex",
-                            alignItems: "center",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            justifyContent: "space-between",
                             gap: 8,
                             flexShrink: 0,
                           }}
                         >
                           <div
                             style={{
-                              fontSize: 13,
-                              fontWeight: 700,
-                              color: getDisplayScoreColor(displayScore),
+                              fontSize: 11,
+                              color: "rgba(255,255,255,0.45)",
                               fontFamily: "'DM Sans', sans-serif",
                             }}
                           >
-                            {displayScore ?? "—"}
+                            {getDisplayLabel(b, lang)}
                           </div>
-
-                          {b.alternatives?.length > 0 && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onSelect(b);
-                              }}
-                              style={{
-                                background: "rgba(99,202,183,0.08)",
-                                border: "1px solid rgba(99,202,183,0.2)",
-                                borderRadius: 8,
-                                padding: "7px 10px",
-                                color: "#63CAB7",
-                                cursor: "pointer",
-                                fontSize: 11,
-                                fontFamily: "'DM Sans', sans-serif",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {lang === "it" ? "Alternative →" : "Alternatives →"}
-                            </button>
-                          )}
-
+                  
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
