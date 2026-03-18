@@ -113,6 +113,94 @@ function getIssueExplanation(brand, categories, lang) {
   return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
 }
 
+function getImpactCopy(brand, categories, lang) {
+  if (brand?.insufficient_data) {
+    return lang === "it"
+      ? "Usandolo continui a sostenere un brand che oggi non è ancora valutabile con abbastanza evidenza pubblica."
+      : "Using it still supports a brand that cannot yet be assessed with enough public evidence.";
+  }
+
+  const worst = getWorstCategory(brand, categories);
+  const key = worst?.cat?.key;
+
+  const copy = {
+    it: {
+      environment:
+        "Usandolo continui a sostenere un modello con impatto ambientale più debole del necessario.",
+      labor:
+        "Usandolo continui a sostenere possibili criticità su lavoro, filiera o produzione.",
+      conflicts:
+        "Usandolo continui a sostenere possibili legami con aree o dinamiche controverse.",
+      transparency:
+        "Usandolo continui a sostenere un brand meno trasparente su pratiche e filiera.",
+      animals:
+        "Usandolo continui a sostenere possibili criticità su materiali o benessere animale.",
+      default:
+        "Usandolo continui a sostenere un brand con segnali etici più deboli di alternative migliori.",
+    },
+    en: {
+      environment:
+        "Using it continues to support a weaker environmental model than necessary.",
+      labor:
+        "Using it continues to support possible labor, supply chain, or production concerns.",
+      conflicts:
+        "Using it continues to support possible links to controversial areas or dynamics.",
+      transparency:
+        "Using it continues to support a brand with lower transparency on practices and supply chain.",
+      animals:
+        "Using it continues to support possible concerns around materials or animal welfare.",
+      default:
+        "Using it continues to support a brand with weaker ethical signals than better alternatives.",
+    },
+  };
+
+  return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
+}
+
+function getSwitchBenefitCopy(brand, categories, lang) {
+  if (brand?.insufficient_data) {
+    return lang === "it"
+      ? "Scegliere un’alternativa con più evidenza pubblica ti aiuta a fare una scelta più consapevole."
+      : "Choosing an alternative with more public evidence helps you make a more informed choice.";
+  }
+
+  const worst = getWorstCategory(brand, categories);
+  const key = worst?.cat?.key;
+
+  const copy = {
+    it: {
+      environment:
+        "Cambiare può ridurre il supporto a modelli più impattanti su ambiente e risorse.",
+      labor:
+        "Cambiare può spostare il tuo supporto verso filiere e condizioni più affidabili.",
+      conflicts:
+        "Cambiare può ridurre l’esposizione a brand con segnali più controversi.",
+      transparency:
+        "Cambiare può favorire brand più chiari su pratiche, filiera e governance.",
+      animals:
+        "Cambiare può favorire scelte più attente a materiali e benessere animale.",
+      default:
+        "Cambiare può spostare il tuo impatto verso opzioni eticamente più solide.",
+    },
+    en: {
+      environment:
+        "Switching can reduce support for models with heavier impact on environment and resources.",
+      labor:
+        "Switching can move your support toward more reliable supply chains and conditions.",
+      conflicts:
+        "Switching can reduce exposure to brands with more controversial signals.",
+      transparency:
+        "Switching can favor brands that are clearer about practices, supply chain, and governance.",
+      animals:
+        "Switching can favor choices that are more careful about materials and animal welfare.",
+      default:
+        "Switching can move your impact toward more ethically solid options.",
+    },
+  };
+
+  return copy[lang]?.[key] || copy[lang]?.default || copy.en.default;
+}
+
 function getAlternativeName(alternative) {
   if (!alternative) return null;
   if (typeof alternative === "string") return alternative;
@@ -523,6 +611,8 @@ export default function MyListPanel({
                     const displayScore = getDisplayScore(b);
                     const issueLabel = getIssueLabel(b, categories, lang);
                     const issueExplanation = getIssueExplanation(b, categories, lang);
+                    const impactCopy = getImpactCopy(b, categories, lang);
+                    const switchBenefitCopy = getSwitchBenefitCopy(b, categories, lang);
                     const topAlternative = getTopAlternative(b);
                     const alternativeName = getAlternativeName(topAlternative);
                     const alternativeDelta = getAlternativeDelta(b);
@@ -595,79 +685,111 @@ export default function MyListPanel({
                             {issueLabel}
                           </div>
                   
-                          <div
-                            style={{
-                              color: "rgba(255,255,255,0.62)",
-                              fontSize: 12,
-                              lineHeight: 1.5,
-                              fontFamily: "'DM Sans', sans-serif",
-                              marginBottom: alternativeName ? 10 : 0,
-                            }}
-                          >
-                            {issueExplanation}
-                          </div>
-                  
-                          {alternativeName && (
                             <div
                               style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 8,
-                                flexWrap: "wrap",
+                                color: "rgba(255,255,255,0.62)",
+                                fontSize: 12,
+                                lineHeight: 1.5,
+                                fontFamily: "'DM Sans', sans-serif",
+                                marginBottom: 8,
                               }}
                             >
-                              <div
-                                style={{
-                                  color: "#63CAB7",
-                                  fontSize: 12,
-                                  fontWeight: 600,
-                                  fontFamily: "'DM Sans', sans-serif",
-                                }}
-                              >
-                                {lang === "it"
-                                  ? `Meglio passare a ${alternativeName}`
-                                  : `Better switch to ${alternativeName}`}
-                              </div>
+                              {issueExplanation}
+                            </div>
+                            
+                            <div
+                              style={{
+                                color: "rgba(255,255,255,0.78)",
+                                fontSize: 12,
+                                lineHeight: 1.5,
+                                fontFamily: "'DM Sans', sans-serif",
+                                marginBottom: 8,
+                              }}
+                            >
+                              <span style={{ color: "rgba(255,255,255,0.45)" }}>
+                                {lang === "it" ? "Il tuo impatto: " : "Your impact: "}
+                              </span>
+                              {impactCopy}
+                            </div>
                   
-                              {alternativeDelta !== null && (
+                            {alternativeName && (
+                              <div>
                                 <div
                                   style={{
-                                    fontSize: 11,
-                                    color: "rgba(99,202,183,0.9)",
-                                    border: "1px solid rgba(99,202,183,0.2)",
-                                    background: "rgba(99,202,183,0.08)",
-                                    padding: "4px 8px",
-                                    borderRadius: 999,
+                                    color: "rgba(255,255,255,0.78)",
+                                    fontSize: 12,
+                                    lineHeight: 1.5,
                                     fontFamily: "'DM Sans', sans-serif",
+                                    marginBottom: 8,
                                   }}
                                 >
-                                  {lang === "it"
-                                    ? `+${alternativeDelta} punti`
-                                    : `+${alternativeDelta} points`}
+                                  <span style={{ color: "rgba(255,255,255,0.45)" }}>
+                                    {lang === "it" ? "Perché cambiare aiuta: " : "Why switching helps: "}
+                                  </span>
+                                  {switchBenefitCopy}
                                 </div>
-                              )}
-                  
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onSelect(b);
-                                }}
-                                style={{
-                                  background: "rgba(99,202,183,0.08)",
-                                  border: "1px solid rgba(99,202,183,0.2)",
-                                  borderRadius: 8,
-                                  padding: "6px 10px",
-                                  color: "#63CAB7",
-                                  cursor: "pointer",
-                                  fontSize: 11,
-                                  fontFamily: "'DM Sans', sans-serif",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {lang === "it" ? "Vedi dettaglio →" : "See details →"}
-                              </button>
-                            </div>
-                          )}
+                            
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 8,
+                                    flexWrap: "wrap",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      color: "#63CAB7",
+                                      fontSize: 12,
+                                      fontWeight: 600,
+                                      fontFamily: "'DM Sans', sans-serif",
+                                    }}
+                                  >
+                                    {lang === "it"
+                                      ? `Meglio passare a ${alternativeName}`
+                                      : `Better switch to ${alternativeName}`}
+                                  </div>
+                            
+                                  {alternativeDelta !== null && (
+                                    <div
+                                      style={{
+                                        fontSize: 11,
+                                        color: "rgba(99,202,183,0.9)",
+                                        border: "1px solid rgba(99,202,183,0.2)",
+                                        background: "rgba(99,202,183,0.08)",
+                                        padding: "4px 8px",
+                                        borderRadius: 999,
+                                        fontFamily: "'DM Sans', sans-serif",
+                                      }}
+                                    >
+                                      {lang === "it"
+                                        ? `+${alternativeDelta} punti`
+                                        : `+${alternativeDelta} points`}
+                                    </div>
+                                  )}
+                            
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onSelect(b);
+                                    }}
+                                    style={{
+                                      background: "rgba(99,202,183,0.08)",
+                                      border: "1px solid rgba(99,202,183,0.2)",
+                                      borderRadius: 8,
+                                      padding: "6px 10px",
+                                      color: "#63CAB7",
+                                      cursor: "pointer",
+                                      fontSize: 11,
+                                      fontFamily: "'DM Sans', sans-serif",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    {lang === "it" ? "Vedi dettaglio →" : "See details →"}
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                         </div>
                   
                         <div
