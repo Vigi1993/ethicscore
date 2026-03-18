@@ -87,6 +87,13 @@ function YourEthicalFootprint({ myBrands, onRemove, onReplace, onClear }) {
       : "No major issues detected."}
   </p>
 </section>
+
+      <input
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+  placeholder="Search a brand..."
+  className="w-full bg-transparent border-b border-white/20 py-4 text-lg text-white outline-none focus:border-white"
+/>
       
             <section className="mb-16">
         <div className="flex items-center justify-between mb-4">
