@@ -231,6 +231,7 @@ export default function MyListPanel({
               </span>
             </div>
       
+          {publicAverage !== null && (
             <div
               style={{
                 fontSize: 12,
@@ -245,11 +246,12 @@ export default function MyListPanel({
               {getDisplayLabel(
                 {
                   public_score: publicAverage,
-                  insufficient_data: publicAverage === null,
+                  insufficient_data: false,
                 },
                 lang
               )}
             </div>
+          )}
           </div>
       
           <div
