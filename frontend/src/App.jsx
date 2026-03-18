@@ -197,21 +197,50 @@ export default function App() {
             </p>
           </div>
 
-            <MyListPanel
-              myBrands={myBrands}
-              db={db}
-              onAdd={addToList}
-              onRemove={(name) =>
-                setMyBrands((prev) => prev.filter((b) => b.name !== name))
-              }
-              onClear={() => setMyBrands([])}
-              onSelect={setSelected}
-              lang={lang}
-              ui={UI}
-              threshold={THRESHOLD}
-            />
-
-          <div style={{ position: "relative", marginBottom: 8 }}>
+              <MyListPanel
+                myBrands={myBrands}
+                db={db}
+                onAdd={addToList}
+                onRemove={(name) =>
+                  setMyBrands((prev) => prev.filter((b) => b.name !== name))
+                }
+                onClear={() => setMyBrands([])}
+                onSelect={setSelected}
+                lang={lang}
+                ui={UI}
+                threshold={THRESHOLD}
+              />
+              
+              <div style={{ marginTop: 28, marginBottom: 10 }}>
+                <div
+                  style={{
+                    fontSize: 12,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    color: "rgba(255,255,255,0.45)",
+                    marginBottom: 8,
+                    fontFamily: "'DM Mono', monospace",
+                  }}
+                >
+                  {lang === "it" ? "Database brand" : "Brand database"}
+                </div>
+              
+                <div
+                  style={{
+                    color: "rgba(255,255,255,0.62)",
+                    fontSize: 14,
+                    marginBottom: 14,
+                    fontFamily: "'DM Sans', sans-serif",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {lang === "it"
+                    ? "Esplora tutti i brand e confrontali per settore."
+                    : "Explore all brands and compare them by sector."}
+                </div>
+              
+                <div style={{ position: "relative", marginBottom: 8 }}>
+                  
             <div
               style={{
                 display: "flex",
@@ -390,6 +419,7 @@ export default function App() {
                 : "Come calcoliamo i punteggi? →"}
             </a>
           </div>
+        </div>
 
           <div style={{ marginTop: 52 }}>
             <div
