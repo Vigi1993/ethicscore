@@ -42,7 +42,16 @@ const adaptBrandsForUI = (brands) => {
   })
 }
 
-function YourEthicalFootprint({ myBrands, onRemove, onReplace, onClear }) {
+function YourEthicalFootprint({
+  myBrands,
+  onRemove,
+  onReplace,
+  onClear,
+  query,
+  setQuery,
+  results,
+  onAdd,
+}) {
   const adapted = adaptBrandsForUI(myBrands)
 
   const problems = adapted.filter(b => b.group === "problem")
@@ -85,6 +94,52 @@ function YourEthicalFootprint({ myBrands, onRemove, onReplace, onClear }) {
             : "Your current selection shows no major issues"}
         </p>
       </section>
+
+<section className="mb-16">
+  <p className="text-sm text-neutral-600 mb-3">
+    Add the brands you actually use
+  </p>
+
+  <div className="border-t border-neutral-300 pt-4">
+    <input
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search a brand..."
+      className="w-full border-b border-neutral-300 py-3 text-base outline-none focus:border-black"
+    />
+  </div>
+
+  {query && results.length > 0 && (
+    <div className="mt-4 space-y-3">
+      {results.slice(0, 6).map((brand) => {
+        const inList = myBrands.some((b) => b.name === brand.name)
+        const score = brand.total_score ?? "—"
+
+        return (
+          <div
+            key={brand.name}
+            className="border-t border-neutral-200 pt-3 flex items-center justify-between gap-4"
+          >
+            <div>
+              <div className="font-medium">{brand.name}</div>
+              <div className="text-sm text-neutral-500">
+                {score === "—" ? "No score available" : `${score} / 100`}
+              </div>
+            </div>
+
+            <button
+              className="text-sm underline underline-offset-2 font-medium"
+              onClick={() => onAdd(brand)}
+              disabled={inList}
+            >
+              {inList ? "Already added" : "Add"}
+            </button>
+          </div>
+        )
+      })}
+    </div>
+  )}
+</section>
       
             <section className="mb-16">
         <div className="flex items-center justify-between mb-4">
@@ -491,7 +546,7 @@ export default function App() {
 
                   <YourEthicalFootprint
                     myBrands={myBrands}
-                    onRemove={(id) =>
+                    onRemove={(name) =>
                       setMyBrands((prev) => prev.filter((b) => b.name !== name))
                     }
                     onReplace={(oldId, newBrand) => {
@@ -502,6 +557,10 @@ export default function App() {
                       })
                     }}
                     onClear={() => setMyBrands([])}
+                    query={query}
+                    setQuery={setQuery}
+                    results={results}
+                    onAdd={addToList}
                   />
               
               <div style={{ marginTop: 28, marginBottom: 10 }}>
