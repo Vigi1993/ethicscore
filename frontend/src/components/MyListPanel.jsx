@@ -996,6 +996,159 @@ function getAlternativeAdvantageCopy(currentBrand, alternativeBrand, categories,
               )}
             </div>
 
+<div>
+  <div
+    style={{
+      fontSize: 11,
+      textTransform: "uppercase",
+      letterSpacing: "0.08em",
+      color: "rgba(255,255,255,0.36)",
+      marginBottom: 8,
+      fontFamily: "'DM Mono', monospace",
+    }}
+  >
+    {lang === "it" ? "Evidenza limitata" : "Not enough evidence"}
+  </div>
+
+  {insufficient.length === 0 ? (
+    <div
+      style={{
+        color: "rgba(255,255,255,0.6)",
+        fontSize: 13,
+        fontFamily: "'DM Sans', sans-serif",
+      }}
+    >
+      {lang === "it"
+        ? "Tutti i brand hanno abbastanza elementi per una valutazione."
+        : "All tracked brands have enough evidence for an assessment."}
+    </div>
+  ) : (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      {insufficient.map((b) => (
+        <div
+          key={b.name}
+          onClick={() => onSelect(b)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            padding: "10px 12px",
+            borderRadius: 10,
+            background: "rgba(255,255,255,0.025)",
+            border: "1px solid rgba(255,255,255,0.05)",
+            cursor: "pointer",
+            transition:
+              "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+            e.currentTarget.style.transform = "translateY(-1px)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.025)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
+            e.currentTarget.style.transform = "translateY(0)";
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              minWidth: 0,
+              flex: 1,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 13,
+                color: "rgba(255,255,255,0.55)",
+                minWidth: 14,
+              }}
+            >
+              ?
+            </div>
+
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div
+                style={{
+                  color: "#fff",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  fontFamily: "'DM Sans', sans-serif",
+                  marginBottom: 2,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {b.name}
+              </div>
+
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.5)",
+                  fontSize: 12,
+                  fontFamily: "'DM Sans', sans-serif",
+                  lineHeight: 1.4,
+                }}
+              >
+                {lang === "it"
+                  ? "Non ci sono ancora abbastanza fonti pubbliche per valutarlo bene."
+                  : "There isn’t enough public evidence yet to assess it properly."}
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexShrink: 0,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 13,
+                color: "rgba(255,255,255,0.3)",
+                fontFamily: "'DM Sans', sans-serif",
+                lineHeight: 1,
+              }}
+            >
+              →
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove(b.name);
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "rgba(255,255,255,0.22)",
+                cursor: "pointer",
+                fontSize: 14,
+                lineHeight: 1,
+                padding: 0,
+              }}
+              aria-label={`Remove ${b.name}`}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+
+
+            
             <div>
                 <div
                   style={{
