@@ -308,7 +308,7 @@ export default function App() {
           letterSpacing: "-0.01em",
         }}
       >
-        Your ethical footprint
+        Open Source   -  Community Driven
       </div>
 
       <div className="section-strip" style={{ padding: "14px 20px" }}>
@@ -325,13 +325,6 @@ export default function App() {
         />
       </div>
 
-      <div className="section-subtitle">
-        {lang === "it" ? "Stai sostenendo alcuni brand " : "You're supporting some "}
-        <span className="accent">
-          {lang === "it" ? "problematici" : "problematic brands"}
-        </span>
-        .
-      </div>
 
 
 
