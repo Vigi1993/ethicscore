@@ -732,16 +732,7 @@ export default function MyListPanel({
       <div className="ep-manifest ep-paper" style={{ padding: 26 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 18 }} className="ep-top-grid">
           <div>
-            <div
-              style={{
-                fontFamily: "Arial, Helvetica, sans-serif",
-                fontWeight: 900,
-                fontSize: 28,
-                marginBottom: 10,
-              }}
-            >
-              EthicPrint
-            </div>
+
 
             <div
               style={{
