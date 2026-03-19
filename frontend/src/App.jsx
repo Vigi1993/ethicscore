@@ -297,39 +297,33 @@ export default function App() {
               }}
             >
 
-       <div>
-      <div
-        style={{
-          fontFamily: "'Bitter', serif",
-          lineHeight: 1.1,
-          marginBottom: 12,
-          fontSize: "clamp(22px, 3.2vw, 30px)",
-          fontWeight: 400,
-          letterSpacing: "-0.01em",
-        }}
-      >
-        Open Source   -  Community Driven
-      </div>
-
-      <div className="section-strip" style={{ padding: "14px 20px" }}>
-        <img
-          src={logoSrc}
-          alt="EthicPrint"
-          style={{
-            display: "block",
-            height: "clamp(52px, 7vw, 72px)",
-            width: "auto",
-            maxWidth: "100%",
-            filter: "grayscale(1) contrast(1.5) brightness(0.08)",
-          }}
-        />
-      </div>
-
-
-
-
-
-              
+               <div>
+              <div
+                style={{
+                  fontFamily: "'Bitter', serif",
+                  lineHeight: 1.1,
+                  marginBottom: 12,
+                  fontSize: "clamp(22px, 3.2vw, 30px)",
+                  fontWeight: 400,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Open Source   -  Community Driven
+              </div>
+        
+              <div className="section-strip" style={{ padding: "14px 20px" }}>
+                <img
+                  src={logoSrc}
+                  alt="EthicPrint"
+                  style={{
+                    display: "block",
+                    height: "clamp(52px, 7vw, 72px)",
+                    width: "auto",
+                    maxWidth: "100%",
+                    filter: "grayscale(1) contrast(1.5) brightness(0.08)",
+                  }}
+                />
+              </div>              
                 <p
                   style={{
                     marginTop: 16,
@@ -339,7 +333,9 @@ export default function App() {
                     lineHeight: 1.45,
                   }}
                 >
-                  {t.subtitle} {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
+                  {t.subtitle} 
+                  <br />
+                  {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
                 </p>
               </div>
             </div>
