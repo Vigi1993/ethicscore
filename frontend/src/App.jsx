@@ -301,10 +301,11 @@ export default function App() {
       <div
         style={{
           fontFamily: "'Bitter', serif",
-          fontSize: "clamp(34px, 5.5vw, 48px)",
           lineHeight: 1.1,
           marginBottom: 12,
-          fontWeight: 600,
+          fontSize: "clamp(22px, 3.2vw, 30px)",
+          fontWeight: 400,
+          letterSpacing: "-0.01em",
         }}
       >
         Your ethical footprint
