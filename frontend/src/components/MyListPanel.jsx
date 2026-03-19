@@ -730,7 +730,7 @@ export default function MyListPanel({
       `}</style>
 
 
-      <div className="ep-manifest ep-paper" style={{ padding: 26 }}>
+      <div className="ep-manifest" style={{ padding: 26 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 18 }} className="ep-top-grid">
           <div>
 
