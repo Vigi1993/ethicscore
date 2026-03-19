@@ -391,7 +391,7 @@ export default function MyListPanel({
 
   const shouldShowResults = localQuery.trim().length > 0 || activeHint !== null;
 
-  const scoreValue = publicAverage ?? 53;
+  const scoreValue = publicAverage ?? "-";
   const headlineText =
     lang === "it"
       ? "LA TUA IMPRONTA\nETICA"
