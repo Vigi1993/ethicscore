@@ -859,10 +859,10 @@ export default function MyListPanel({
           </div>
 
           <div style={sectionStyle}>
-            <div style={bandTitleStyle("#111", "#f4eee3")}>{lang === "it" ? "Alternative più forti" : "Stronger options"}</div>
+            <div style={bandTitleStyle("#2e7d32", "#f4eee3")}>{lang === "it" ? "Alternative migliori" : "Better choices"}</div>
             {positive.length === 0 ? (
               <div style={{ padding: 18, fontFamily: "Arial, Helvetica, sans-serif", fontWeight: 700, color: "#111" }}>
-                {lang === "it" ? "Ancora nessun brand forte in lista." : "No strong brands in the list yet."}
+                {lang === "it" ? "Ancora nessuna alternativa in lista." : "No alternatives in the list yet."}
               </div>
             ) : (
               positive.map((b) => renderBrandRow(b, "positive"))
