@@ -70,23 +70,7 @@ export default function SectorSection({
           background: expanded ? "#e7bb3a" : "#efe7d8",
         }}
       >
-        <div
-          style={{
-            width: 42,
-            height: 42,
-            border: "3px solid #111",
-            background: "#111",
-            color: "#f4eee3",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 18,
-            lineHeight: 1,
-            flexShrink: 0,
-          }}
-        >
-          {sectorIcon}
-        </div>
+<div style={{ width: 0 }} />
 
         <div style={{ minWidth: 0 }}>
           <div
@@ -187,29 +171,13 @@ export default function SectorSection({
               style={{
                 minWidth: 0,
                 display: "grid",
-                gridTemplateColumns: "44px 1fr",
+                gridTemplateColumns: "1fr",
                 gap: 12,
                 alignItems: "start",
               }}
               onClick={() => onSelect(best)}
             >
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  border: "3px solid #111",
-                  background: "#dd4a2f",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 16,
-                  fontWeight: 900,
-                  flexShrink: 0,
-                }}
-              >
-                {best.logo || best.name?.slice(0, 1)?.toUpperCase() || "B"}
-              </div>
+
 
               <div style={{ minWidth: 0 }}>
                 <div
@@ -239,18 +207,7 @@ export default function SectorSection({
                       key={cat.key}
                       style={{ display: "flex", alignItems: "center", gap: 4 }}
                     >
-                      <div
-                        style={{
-                          width: 7,
-                          height: 7,
-                          borderRadius: 99,
-                          background:
-                            best.scores?.[cat.key] !== null &&
-                            best.scores?.[cat.key] !== undefined
-                              ? "#111"
-                              : "rgba(0,0,0,0.18)",
-                        }}
-                      />
+
                       <span
                         style={{
                           fontFamily: "Arial, Helvetica, sans-serif",
