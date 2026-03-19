@@ -920,7 +920,7 @@ export default function MyListPanel({
                 setLocalQuery(e.target.value);
                 if (activeHintKey) setActiveHintKey(null);
               }}
-              placeholder={lang === "it" ? "Cerca un brand, una piataforma, un servizio o un settore intero" : "Search brand, platform, service or an entire sector "}
+              placeholder={lang === "it" ? "Cerca un brand, piattaforme, servizi o un settore intero" : "Search brands, platforms, services or an entire sector "}
               style={{
                 flex: 1,
                 background: "transparent",
