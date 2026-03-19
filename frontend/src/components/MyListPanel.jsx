@@ -898,8 +898,8 @@ export default function MyListPanel({
             }}
           >
             {lang === "it"
-              ? "Inizia dai brand che usi davvero ogni settimana. Il pannello sotto è stato ridisegnato per sembrare un poster stampato: più materico, tipografico e aggressivo."
-              : "Start with the brands you actually use every week. The panel below has been redesigned to feel like a printed activist poster: more tactile, typographic, and bold."}
+              ? "Inizia dai brand che usi davvero ogni settimana. Cliccaci sopra per visualizzare i dettagli e le fonti e poi aggiungili alla tua impronta."
+              : "Start with the brands you actually use every week. Click on them to see details and sources and add them to your footprint."}
           </div>
 
           <div
@@ -920,7 +920,7 @@ export default function MyListPanel({
                 setLocalQuery(e.target.value);
                 if (activeHintKey) setActiveHintKey(null);
               }}
-              placeholder={lang === "it" ? "Cerca un brand" : "Search a brand"}
+              placeholder={lang === "it" ? "Cerca un brand, una piataforma, un servizio o un settore intero" : "Search brand, platform, service or an entire sector "}
               style={{
                 flex: 1,
                 background: "transparent",
