@@ -804,7 +804,7 @@ export default function MyListPanel({
         display: "inline-block",
       }}
     >
-      {lang === "it" ? "Come valutiamo i brand" : "How do we score brands"}
+      {lang === "it" ? "Scopri come valutiamo i brand ->" : "Discover how do we score brands ->"}
     </a>
   </div>
 </div>
