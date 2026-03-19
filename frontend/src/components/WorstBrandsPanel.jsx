@@ -83,16 +83,20 @@ export default function WorstBrandsPanel({
   const categories = useCategories();
   const [expanded, setExpanded] = useState(false);
 
-  const sortedWorst = useMemo(() => {
-    return [...(brands || [])]
-      .filter((brand) => !brand?.insufficient_data)
-      .filter((brand) => typeof getDisplayScore(brand) === "number")
-      .sort((a, b) => (getDisplayScore(a) ?? 999) - (getDisplayScore(b) ?? 999));
-  }, [brands]);
+const sortedWorst = useMemo(() => {
+  return [...(brands || [])]
+    .filter((brand) => !brand?.insufficient_data)
+    .sort((a, b) => {
+      const aScore = Number(getDisplayScore(a));
+      const bScore = Number(getDisplayScore(b));
+      return (isNaN(aScore) ? 999 : aScore) - (isNaN(bScore) ? 999 : bScore);
+    })
+    .slice(0, 20);
+}, [brands]);
 
   const visibleBrands = expanded ? sortedWorst.slice(0, 6) : sortedWorst.slice(0, limit);
 
-  if (!sortedWorst.length) return null;
+  if (!brands?.length) return null;
 
   return (
     <div
