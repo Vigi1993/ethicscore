@@ -227,69 +227,21 @@ export default function App() {
               />
             </div>
 
-<div
-  style={{
-    maxWidth: 560,
-    margin: "0 auto",
-  }}
->
-  <div
-    style={{
-      color: "#fff",
-      fontSize: "clamp(28px, 5vw, 44px)",
-      lineHeight: 1.05,
-      fontWeight: 700,
-      letterSpacing: "-0.03em",
-      marginBottom: 14,
-      fontFamily: "'DM Sans', sans-serif",
-    }}
-  >
-    {lang === "it"
-      ? "Capisci cosa stai sostenendo ogni volta che scegli un brand."
-      : "Understand what you support every time you choose a brand."}
-  </div>
-
-  <div
-    style={{
-      color: "rgba(255,255,255,0.58)",
-      fontSize: 16,
-      lineHeight: 1.65,
-      maxWidth: 520,
-      margin: "0 auto 14px",
-      fontFamily: "'DM Sans', sans-serif",
-    }}
-  >
-    {lang === "it"
-      ? "EthicPrint ti mostra l’impatto etico reale dei brand che usi, dove emergono criticità e quali alternative puoi scegliere per cambiare facilmente."
-      : "EthicPrint shows the real ethical impact of the brands you use, where concerns emerge, and which alternatives can help you change more easily."}
-  </div>
-
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      flexWrap: "wrap",
-      gap: 8,
-    }}
-  >
-    {categories.map((c) => (
-      <div
-        key={c.key}
-        style={{
-          padding: "6px 10px",
-          border: "1px solid rgba(255,255,255,0.1)",
-          color: "rgba(255,255,255,0.42)",
-          fontSize: 11,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          fontFamily: "'DM Mono', monospace",
-        }}
-      >
-        {getCatLabel(c, lang)}
-      </div>
-    ))}
-  </div>
-</div>
+            <p
+              style={{
+                color: "rgba(255,255,255,0.4)",
+                fontSize: 16,
+                maxWidth: 440,
+                margin: "0 auto",
+                lineHeight: 1.6,
+              }}
+            >
+              {t.subtitle}
+              <br />
+              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
+                {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
+              </span>
+            </p>
           </div>
 
               <MyListPanel
@@ -314,42 +266,32 @@ export default function App() {
               />
               
               <div style={{ marginTop: 28, marginBottom: 10 }}>
-
+                <div
+                  style={{
+                    fontSize: 12,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    color: "rgba(255,255,255,0.45)",
+                    marginBottom: 8,
+                    fontFamily: "'DM Mono', monospace",
+                  }}
+                >
+                  {lang === "it" ? "Database brand" : "Brand database"}
+                </div>
               
-<div
-  style={{
-    marginBottom: 16,
-  }}
->
-  <div
-    style={{
-      color: "#fff",
-      fontSize: 22,
-      fontWeight: 700,
-      fontFamily: "'DM Sans', sans-serif",
-      marginBottom: 6,
-      lineHeight: 1.2,
-    }}
-  >
-    {lang === "it"
-      ? "Esplora e confronta i brand"
-      : "Explore and compare brands"}
-  </div>
-
-  <div
-    style={{
-      color: "rgba(255,255,255,0.58)",
-      fontSize: 14,
-      lineHeight: 1.6,
-      fontFamily: "'DM Sans', sans-serif",
-      maxWidth: 520,
-    }}
-  >
-    {lang === "it"
-      ? "Scopri come si comportano nei diversi ambiti etici e trova alternative più solide."
-      : "See how brands perform across ethical areas and find stronger alternatives."}
-  </div>
-</div>
+                <div
+                  style={{
+                    color: "rgba(255,255,255,0.62)",
+                    fontSize: 14,
+                    marginBottom: 14,
+                    fontFamily: "'DM Sans', sans-serif",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {lang === "it"
+                    ? "Esplora tutti i brand e confrontali per settore."
+                    : "Explore all brands and compare them by sector."}
+                </div>
               
                 <div style={{ position: "relative", marginBottom: 8 }}>
                   
@@ -507,9 +449,7 @@ export default function App() {
               paddingLeft: 4,
             }}
           >
-            {lang === "it"
-  ? `${db.length} brand analizzati · ${sourcesCount} fonti`
-  : `${db.length} brands analyzed · ${sourcesCount} sources`}
+            {t.db_info(db.length, sectors.length, sourcesCount)}
           </div>
         </div>
 
