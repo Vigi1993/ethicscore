@@ -1104,122 +1104,119 @@ return (
   ) : (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
       {insufficient.map((b) => (
-        <div
-          key={b.name}
-          onClick={() => onSelect(b)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            padding: "10px 12px",
-            borderRadius: 10,
-            background: "rgba(255,255,255,0.025)",
-            border: "1px solid rgba(255,255,255,0.05)",
-            cursor: "pointer",
-            transition:
-              "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-            e.currentTarget.style.transform = "translateY(-1px)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.025)";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
-            e.currentTarget.style.transform = "translateY(0)";
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              minWidth: 0,
-              flex: 1,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 13,
-                color: "rgba(255,255,255,0.55)",
-                minWidth: 14,
-              }}
-            >
-              ?
-            </div>
+<div
+  key={b.name}
+  onClick={() => onSelect(b)}
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: 14,
+    padding: "14px 14px 13px",
+    borderRadius: 0,
+    background: "rgba(255,255,255,0.02)",
+    borderLeft: "4px solid rgba(214,168,72,0.95)",
+    borderTop: "1px solid rgba(255,255,255,0.08)",
+    borderRight: "1px solid rgba(255,255,255,0.08)",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+    cursor: "pointer",
+  }}
+>
+  <div style={{ minWidth: 0, flex: 1 }}>
+    <div
+      style={{
+        fontSize: 11,
+        textTransform: "uppercase",
+        letterSpacing: "0.08em",
+        color: "rgba(214,168,72,0.95)",
+        fontFamily: "'DM Mono', monospace",
+        marginBottom: 6,
+      }}
+    >
+      {lang === "it" ? "Trasparenza insufficiente" : "Lack of transparency"}
+    </div>
 
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <div
-                style={{
-                  color: "#fff",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  fontFamily: "'DM Sans', sans-serif",
-                  marginBottom: 2,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {b.name}
-              </div>
+    <div
+      style={{
+        color: "#fff",
+        fontSize: 15,
+        fontWeight: 700,
+        fontFamily: "'DM Sans', sans-serif",
+        marginBottom: 4,
+      }}
+    >
+      {b.name}
+    </div>
 
-              <div
-                style={{
-                  color: "rgba(255,255,255,0.5)",
-                  fontSize: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                  lineHeight: 1.4,
-                }}
-              >
-                {lang === "it"
-                  ? "Non ci sono ancora abbastanza fonti pubbliche per valutarlo bene."
-                  : "There isn’t enough public evidence yet to assess it properly."}
-              </div>
-            </div>
-          </div>
+    <div
+      style={{
+        color: "rgba(255,255,255,0.58)",
+        fontSize: 13,
+        lineHeight: 1.55,
+        fontFamily: "'DM Sans', sans-serif",
+      }}
+    >
+      {lang === "it"
+        ? "Non ci sono ancora abbastanza fonti pubbliche per valutare questo brand con fiducia."
+        : "There isn’t enough public evidence yet to assess this brand with confidence."}
+    </div>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              flexShrink: 0,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 13,
-                color: "rgba(255,255,255,0.3)",
-                fontFamily: "'DM Sans', sans-serif",
-                lineHeight: 1,
-              }}
-            >
-              →
-            </div>
+    <div
+      style={{
+        color: "rgba(255,255,255,0.36)",
+        fontSize: 11,
+        lineHeight: 1.5,
+        fontFamily: "'DM Sans', sans-serif",
+        marginTop: 8,
+      }}
+    >
+      {lang === "it"
+        ? "L’assenza di dati non equivale a un giudizio positivo."
+        : "Lack of data does not mean a positive assessment."}
+    </div>
+  </div>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemove(b.name);
-              }}
-              style={{
-                background: "none",
-                border: "none",
-                color: "rgba(255,255,255,0.22)",
-                cursor: "pointer",
-                fontSize: 14,
-                lineHeight: 1,
-                padding: 0,
-              }}
-              aria-label={`Remove ${b.name}`}
-            >
-              ×
-            </button>
-          </div>
-        </div>
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-end",
+      gap: 10,
+      flexShrink: 0,
+    }}
+  >
+    <div
+      style={{
+        fontSize: 11,
+        color: "rgba(255,255,255,0.28)",
+        fontFamily: "'DM Mono', monospace",
+        textTransform: "uppercase",
+        letterSpacing: "0.06em",
+      }}
+    >
+      {lang === "it" ? "Apri dettagli" : "Open details"}
+    </div>
+
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onRemove(b.name);
+      }}
+      style={{
+        background: "none",
+        border: "none",
+        color: "rgba(255,255,255,0.22)",
+        cursor: "pointer",
+        fontSize: 14,
+        lineHeight: 1,
+        padding: 0,
+      }}
+      aria-label={`Remove ${b.name}`}
+    >
+      ×
+    </button>
+  </div>
+</div>
       ))}
     </div>
   )}
