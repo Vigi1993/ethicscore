@@ -18,9 +18,9 @@ function ScoreBar({ value, color, max = 20 }) {
   return (
     <div
       style={{
-        background: "rgba(255,255,255,0.06)",
-        borderRadius: 99,
-        height: 6,
+        background: "rgba(0,0,0,0.08)",
+        border: "2px solid rgba(0,0,0,0.78)",
+        height: 16,
         width: "100%",
         overflow: "hidden",
         position: "relative",
@@ -31,9 +31,9 @@ function ScoreBar({ value, color, max = 20 }) {
           position: "absolute",
           left: "50%",
           top: 0,
-          width: 1,
+          width: 2,
           height: "100%",
-          background: "rgba(255,255,255,0.1)",
+          background: "rgba(0,0,0,0.5)",
         }}
       />
       <div
@@ -43,7 +43,6 @@ function ScoreBar({ value, color, max = 20 }) {
           height: "100%",
           width: `${pct}%`,
           background: color,
-          borderRadius: 99,
           transition: "width 1s cubic-bezier(.4,0,.2,1)",
           left: positive ? "50%" : undefined,
           right: positive ? undefined : "50%",
@@ -56,15 +55,25 @@ function ScoreBar({ value, color, max = 20 }) {
 const UI = {
   en: {
     notes_title: "Notes & Sources",
-    alternatives_label: "✦ More ethical alternatives",
+    alternatives_label: "Better alternatives",
     parent: "Parent company",
     loading: "Loading...",
+    score: "Ethical score",
+    insufficient: "Insufficient data",
+    raw: "raw",
+    criteria: "published criteria",
+    noAlt: "This brand is among the strongest options in its sector.",
   },
   it: {
     notes_title: "Note & Fonti",
-    alternatives_label: "✦ Alternative più etiche",
+    alternatives_label: "Alternative migliori",
     parent: "Casa madre",
     loading: "Caricamento...",
+    score: "Punteggio etico",
+    insufficient: "Dati insufficienti",
+    raw: "raw",
+    criteria: "criteri pubblicati",
+    noAlt: "Questo brand è tra le opzioni più forti del suo settore.",
   },
 };
 
@@ -83,9 +92,7 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
 
     async function loadBrandDetail() {
       const data = await getBrandDetail(brand.id, lang);
-
       if (!isMounted) return;
-
       setFullBrand(data || brand);
     }
 
@@ -102,8 +109,7 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(0,0,0,0.75)",
-          backdropFilter: "blur(6px)",
+          background: "rgba(0,0,0,0.62)",
           zIndex: 100,
           display: "flex",
           alignItems: "center",
@@ -114,22 +120,21 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
       >
         <div
           style={{
-            background: "#0f0f1a",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 20,
-            padding: 48,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            background: "#f4eee3",
+            border: "4px solid #111",
+            boxShadow: "8px 8px 0 #111",
+            padding: 36,
           }}
           onClick={(e) => e.stopPropagation()}
         >
           <div
             style={{
-              color: "rgba(255,255,255,0.3)",
+              color: "#111",
               fontSize: 13,
-              fontFamily: "'DM Sans', sans-serif",
-              letterSpacing: 2,
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontWeight: 800,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
             }}
           >
             {t.loading}
@@ -146,8 +151,7 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,0.75)",
-        backdropFilter: "blur(6px)",
+        background: "rgba(0,0,0,0.62)",
         zIndex: 100,
         display: "flex",
         alignItems: "center",
@@ -158,487 +162,535 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
     >
       <div
         style={{
-          background: "#0f0f1a",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 20,
-          padding: 32,
-          maxWidth: 520,
+          background: "#f4eee3",
+          border: "4px solid #111",
+          boxShadow: "10px 10px 0 #111",
+          maxWidth: 780,
           width: "100%",
-          boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
           maxHeight: "90vh",
           overflowY: "auto",
           position: "relative",
+          color: "#111",
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: 16,
-            right: 16,
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "rgba(255,255,255,0.4)",
-            width: 32,
-            height: 32,
-            borderRadius: 99,
-            cursor: "pointer",
-            fontSize: 18,
-            lineHeight: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transition: "all 0.15s",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.12)";
-            e.currentTarget.style.color = "#fff";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-            e.currentTarget.style.color = "rgba(255,255,255,0.4)";
-          }}
-        >
-          ×
-        </button>
+        <style>{`
+          .brandcard-paper {
+            position: relative;
+            overflow: hidden;
+            background:
+              radial-gradient(circle at 18% 16%, rgba(0,0,0,0.06) 0 1px, transparent 1px),
+              radial-gradient(circle at 82% 32%, rgba(0,0,0,0.05) 0 1px, transparent 1px),
+              radial-gradient(circle at 58% 78%, rgba(0,0,0,0.05) 0 1px, transparent 1px),
+              #f4eee3;
+            background-size: 14px 14px, 16px 16px, 12px 12px, auto;
+          }
+          .brandcard-paper::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.018) 0 1px, transparent 1px 3px);
+            opacity: 0.45;
+          }
+          .brandcard-link:hover {
+            background: rgba(0,0,0,0.05) !important;
+          }
+          @media (max-width: 760px) {
+            .brandcard-top {
+              grid-template-columns: 1fr !important;
+            }
+            .brandcard-score {
+              justify-self: start !important;
+            }
+          }
+        `}</style>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            marginBottom: 24,
-            paddingRight: 40,
-          }}
-        >
-          <div>
+        <div className="brandcard-paper" style={{ padding: 24 }}>
+          <button
+            onClick={onClose}
+            style={{
+              position: "absolute",
+              top: 16,
+              right: 16,
+              background: "#111",
+              border: "3px solid #111",
+              color: "#f4eee3",
+              width: 38,
+              height: 38,
+              cursor: "pointer",
+              fontSize: 26,
+              lineHeight: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 2,
+            }}
+          >
+            ×
+          </button>
+
+          <div
+            style={{
+              borderBottom: "6px solid #111",
+              paddingBottom: 16,
+              marginBottom: 18,
+              paddingRight: 52,
+            }}
+          >
             <div
               style={{
-                color: "rgba(255,255,255,0.4)",
-                fontSize: 12,
-                marginBottom: 4,
-                letterSpacing: 2,
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontSize: 13,
+                fontWeight: 900,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: "rgba(0,0,0,0.7)",
+                marginBottom: 8,
+              }}
+            >
+              {b.sector || "Brand"}
+            </div>
+
+            <div className="brandcard-top" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 20, alignItems: "start" }}>
+              <div>
+                <div
+                  style={{
+                    fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                    fontSize: "clamp(42px, 7vw, 72px)",
+                    lineHeight: 0.9,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.01em",
+                    marginBottom: 10,
+                    maxWidth: 520,
+                  }}
+                >
+                  {b.name}
+                </div>
+
+                <div
+                  style={{
+                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    fontSize: "clamp(18px, 2.5vw, 28px)",
+                    lineHeight: 1.08,
+                    marginBottom: 10,
+                    maxWidth: 520,
+                  }}
+                >
+                  {displayLabel || (lang === "it" ? "Profilo etico del brand" : "Ethical brand profile")}
+                </div>
+
+                <div
+                  style={{
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    fontSize: 13,
+                    color: "rgba(0,0,0,0.72)",
+                    fontWeight: 700,
+                  }}
+                >
+                  {t.parent}: {b.parent || "—"}
+                </div>
+              </div>
+
+              <div
+                className="brandcard-score"
+                style={{
+                  justifySelf: "end",
+                  width: 158,
+                  minHeight: 158,
+                  background: displayScore === null || b.insufficient_data ? "#e7bb3a" : color,
+                  border: "6px solid #111",
+                  boxShadow: "6px 6px 0 #111",
+                  transform: "rotate(-3deg)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 14,
+                  textAlign: "center",
+                }}
+              >
+                {b.insufficient_data || displayScore === null ? (
+                  <>
+                    <div
+                      style={{
+                        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                        fontSize: 28,
+                        lineHeight: 0.95,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      —
+                    </div>
+                    <div
+                      style={{
+                        marginTop: 8,
+                        fontFamily: "Arial, Helvetica, sans-serif",
+                        fontSize: 12,
+                        fontWeight: 800,
+                        textTransform: "uppercase",
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      {t.insufficient}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      style={{
+                        fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                        fontSize: 54,
+                        lineHeight: 0.9,
+                      }}
+                    >
+                      {displayScore}
+                      <span style={{ fontSize: 24 }}>/100</span>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: 8,
+                        fontFamily: "Arial, Helvetica, sans-serif",
+                        fontSize: 11,
+                        fontWeight: 900,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.06em",
+                      }}
+                    >
+                      {t.score}
+                    </div>
+                    {b.criteria_published > 0 && (
+                      <div
+                        style={{
+                          marginTop: 5,
+                          fontFamily: "Arial, Helvetica, sans-serif",
+                          fontSize: 10,
+                          fontWeight: 700,
+                          opacity: 0.8,
+                        }}
+                      >
+                        {b.criteria_published} {t.criteria}
+                      </div>
+                    )}
+                    {total !== null && (
+                      <div
+                        style={{
+                          marginTop: 3,
+                          fontFamily: "Arial, Helvetica, sans-serif",
+                          fontSize: 10,
+                          fontWeight: 700,
+                          opacity: 0.7,
+                        }}
+                      >
+                        {t.raw} {total}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {b.impact_summary && (
+            <div
+              style={{
+                border: "4px solid #111",
+                background: "#111",
+                color: "#f4eee3",
+                padding: "14px 16px",
+                marginBottom: 20,
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                fontSize: 18,
+                lineHeight: 1.35,
+              }}
+            >
+              {b.impact_summary}
+            </div>
+          )}
+
+          <div style={{ marginBottom: 22 }}>
+            <div
+              style={{
+                background: "#dd4a2f",
+                color: "#fff",
+                border: "4px solid #111",
+                borderBottom: "none",
+                padding: "12px 16px 10px",
+                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                fontSize: 26,
+                lineHeight: 1,
                 textTransform: "uppercase",
               }}
             >
-              {b.sector}
+              {lang === "it" ? "Breakdown per categoria" : "Category breakdown"}
             </div>
-            <div
-              style={{
-                fontSize: 26,
-                fontWeight: 700,
-                color: "#fff",
-                fontFamily: "'Playfair Display', serif",
-              }}
-            >
-              {b.name}
-            </div>
-            <div
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.3)",
-                marginTop: 2,
-              }}
-            >
-              {t.parent}: {b.parent}
-            </div>
-          </div>
 
-          <div style={{ textAlign: "right" }}>
-            {b.insufficient_data || displayScore === null ? (
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "#fb923c",
-                  fontWeight: 600,
-                  maxWidth: 140,
-                  lineHeight: 1.4,
-                }}
-              >
-                {lang === "it" ? "⚠️ Dati insufficienti" : "⚠️ Insufficient data"}
-              </div>
-            ) : (
-              <>
-                <div
-                  style={{
-                    fontSize: 40,
-                    fontWeight: 800,
-                    color,
-                    fontFamily: "monospace",
-                    lineHeight: 1,
-                  }}
-                >
-                  {displayScore}
-                </div>
+            <div style={{ border: "4px solid #111", background: "#efe7d8", padding: 16 }}>
+              {categories.map((cat) => {
+                const conf = b.confidence?.[cat.key] || {};
+                const criteria_met = conf.criteria_met;
+                const rawScore = b.scores?.[cat.key];
+                const publicCategoryScore = criteria_met ? rawCategoryScoreToPublic(rawScore) : null;
+                const catColor = criteria_met ? getDisplayScoreColor(publicCategoryScore) : "#b8aa90";
+                const t1 = conf.tier1 ?? conf.t1 ?? 0;
+                const t2 = conf.tier2 ?? conf.t2 ?? 0;
+                const t3 = conf.tier3 ?? conf.t3 ?? 0;
+                const hasAnySources = t1 + t2 + t3 > 0;
 
-                <div
-                  style={{
-                    fontSize: 10,
-                    color: "rgba(255,255,255,0.3)",
-                    marginTop: 2,
-                  }}
-                >
-                  / 100
-                </div>
-
-                {displayLabel && (
-                  <div style={{ fontSize: 13, marginTop: 4 }}>
-                    {displayLabel}
-                  </div>
-                )}
-
-                {b.criteria_published > 0 && (
+                return (
                   <div
+                    key={cat.key}
                     style={{
-                      fontSize: 10,
-                      color: "rgba(255,255,255,0.25)",
-                      marginTop: 6,
+                      marginBottom: 14,
+                      paddingBottom: 14,
+                      borderBottom: "2px solid rgba(0,0,0,0.15)",
+                      opacity: criteria_met ? 1 : 0.72,
                     }}
                   >
-                    {lang === "it"
-                      ? `${b.criteria_published} criteri pubblicati`
-                      : `${b.criteria_published} published criteria`}
-                  </div>
-                )}
-
-                {total !== null && (
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: "rgba(255,255,255,0.18)",
-                      marginTop: 2,
-                    }}
-                  >
-                    raw {total}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-
-        {b.impact_summary && (
-          <div
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.06)",
-              borderRadius: 10,
-              padding: "12px 16px",
-              marginBottom: 20,
-              fontSize: 13,
-              color: "rgba(255,255,255,0.5)",
-              lineHeight: 1.7,
-              fontStyle: "italic",
-            }}
-          >
-            {b.impact_summary}
-          </div>
-        )}
-
-        <div style={{ marginBottom: 28 }}>
-          {categories.map((cat) => {
-            const conf = b.confidence?.[cat.key] || {};
-            const criteria_met = conf.criteria_met;
-           const rawScore = b.scores?.[cat.key];
-            const publicCategoryScore = criteria_met
-              ? rawCategoryScoreToPublic(rawScore)
-              : null;
-            
-            const catColor = criteria_met
-              ? getDisplayScoreColor(publicCategoryScore)
-              : "rgba(255,255,255,0.15)";
-            const t1 = conf.tier1 ?? conf.t1 ?? 0;
-            const t2 = conf.tier2 ?? conf.t2 ?? 0;
-            const t3 = conf.tier3 ?? conf.t3 ?? 0;
-            const hasAnySources = t1 + t2 + t3 > 0;
-
-            return (
-              <div key={cat.key} style={{ marginBottom: 12, opacity: criteria_met ? 1 : 0.45 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span
-                    style={{
-                      fontSize: 12,
-                      color: criteria_met ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)",
-                    }}
-                  >
-                    {cat.icon} {getCatLabel(cat, lang)}
-                  </span>
-
-                  {criteria_met ? (
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: catColor }}>
-                        {publicCategoryScore}
-                      </span>
-                      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>
-                        / 100
-                      </span>
-                    </div>
-                  ) : (
-                    <span
-                      style={{
-                        fontSize: 10,
-                        color: "#fb923c",
-                        fontFamily: "'DM Mono', monospace",
-                      }}
-                    >
-                      {hasAnySources
-                        ? lang === "it"
-                          ? "fonti insufficienti"
-                          : "insufficient sources"
-                        : lang === "it"
-                          ? "nessuna fonte"
-                          : "no sources"}
-                    </span>
-                  )}
-                </div>
-
-                <ScoreBar
-                  value={criteria_met ? (publicCategoryScore ?? 0) - 50 : 0}
-                  color={catColor}
-                  max={50}
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
-          <div
-            style={{
-              fontSize: 11,
-              color: "rgba(255,255,255,0.3)",
-              marginBottom: 14,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-            }}
-          >
-            {t.notes_title}
-          </div>
-
-          {categories.map((cat) => {
-            const catSources = b.sources?.[cat.key] || [];
-            const hasNote = b.notes?.[cat.key];
-            const conf = b.confidence?.[cat.key];
-
-            if (!hasNote && !catSources.length && !conf) return null;
-
-            return (
-              <div
-                key={cat.key}
-                style={{
-                  marginBottom: 18,
-                  paddingBottom: 14,
-                  borderBottom: "1px solid rgba(255,255,255,0.04)",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                  <span style={{ fontSize: 13 }}>{cat.icon}</span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: "rgba(255,255,255,0.5)",
-                      textTransform: "uppercase",
-                      letterSpacing: 1,
-                    }}
-                  >
-                    {getCatLabel(cat, lang)}
-                  </span>
-                </div>
-
-                {hasNote && (
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.45)",
-                      lineHeight: 1.6,
-                      marginBottom: 8,
-                    }}
-                  >
-                    {b.notes?.[cat.key]}
-                  </div>
-                )}
-
-                {conf && (
-                  <div
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 5,
-                      marginBottom: catSources.length ? 8 : 0,
-                    }}
-                  >
-                    <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>
-                      ◆ {conf.count}{" "}
-                      {lang === "it"
-                        ? conf.count === 1
-                          ? "fonte verificata"
-                          : "fonti verificate"
-                        : conf.count === 1
-                          ? "verified source"
-                          : "verified sources"}
-                    </span>
-                  </div>
-                )}
-
-                {catSources.length > 0 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                      paddingLeft: 16,
-                    }}
-                  >
-                    {catSources.map((src, i) => (
-                      <a
-                        key={i}
-                        href={src.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginBottom: 8, alignItems: "baseline" }}>
+                      <span
                         style={{
-                          fontSize: 11,
-                          color: "rgba(99,202,183,0.6)",
-                          textDecoration: "none",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 4,
-                          borderBottom: "1px solid rgba(99,202,183,0.15)",
-                          paddingBottom: 1,
-                          width: "fit-content",
-                          transition: "color 0.15s",
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.color = "#63CAB7";
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.color = "rgba(99,202,183,0.6)";
+                          fontFamily: "Arial, Helvetica, sans-serif",
+                          fontSize: 14,
+                          fontWeight: 900,
+                          textTransform: "uppercase",
+                          color: "#111",
                         }}
                       >
-                        ↗ {src.title || src.publisher || "Source"}
-                        {src.publisher && src.title && (
-                          <span
-                            style={{
-                              color: "rgba(255,255,255,0.2)",
-                              fontSize: 10,
-                            }}
-                          >
-                            — {src.publisher}
-                          </span>
-                        )}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                        {cat.icon} {getCatLabel(cat, lang)}
+                      </span>
 
-        <div
-          style={{
-            marginTop: 20,
-            background:
-              b.alternatives && b.alternatives.length > 0
-                ? "rgba(99,202,183,0.06)"
-                : "rgba(255,255,255,0.02)",
-            border:
-              "1px solid " +
-              (b.alternatives && b.alternatives.length > 0
-                ? "rgba(99,202,183,0.15)"
-                : "rgba(255,255,255,0.06)"),
-            borderRadius: 12,
-            padding: 16,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 11,
-              color: "#63CAB7",
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              marginBottom: 10,
-            }}
-          >
-            {t.alternatives_label}
+                      {criteria_met ? (
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
+                          <span style={{ fontSize: 24, fontWeight: 900, color: "#111", fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif" }}>
+                            {publicCategoryScore}
+                          </span>
+                          <span style={{ fontSize: 11, color: "rgba(0,0,0,0.55)", fontWeight: 800 }}>
+                            /100
+                          </span>
+                        </div>
+                      ) : (
+                        <span style={{ fontSize: 11, color: "#9c4f1f", fontWeight: 800, textTransform: "uppercase" }}>
+                          {hasAnySources
+                            ? lang === "it"
+                              ? "fonti insufficienti"
+                              : "insufficient sources"
+                            : lang === "it"
+                              ? "nessuna fonte"
+                              : "no sources"}
+                        </span>
+                      )}
+                    </div>
+
+                    <ScoreBar
+                      value={criteria_met ? (publicCategoryScore ?? 0) - 50 : 0}
+                      color={catColor}
+                      max={50}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          {b.alternatives && b.alternatives.length > 0 ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {b.alternatives.map((alt) => (
-                <div
-                  key={alt.id}
-                  onClick={() => onSelectAlt(alt)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(99,202,183,0.15)",
-                    borderRadius: 10,
-                    padding: "10px 14px",
-                    cursor: "pointer",
-                    transition: "background 0.15s",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = "rgba(99,202,183,0.1)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 7,
-                      background: getColor(alt.score) + "22",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 13,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {alt.logo}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>
-                      {alt.name}
-                    </div>
-                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
-                      {alt.sector}
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 700,
-                      color: getColor(alt.score),
-                    }}
-                  >
-                    {alt.score}
-                  </div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
-                    →
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
+          <div style={{ marginBottom: 22 }}>
             <div
               style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.35)",
-                fontStyle: "italic",
+                background: "#111",
+                color: "#f4eee3",
+                border: "4px solid #111",
+                borderBottom: "none",
+                padding: "12px 16px 10px",
+                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                fontSize: 24,
+                lineHeight: 1,
+                textTransform: "uppercase",
               }}
             >
-              {lang === "it"
-                ? "🏆 Questo brand è tra i più virtuosi nel suo settore."
-                : "🏆 This brand is among the most ethical in its sector."}
+              {t.notes_title}
             </div>
-          )}
+
+            <div style={{ border: "4px solid #111", background: "#f4eee3", padding: 16 }}>
+              {categories.map((cat) => {
+                const catSources = b.sources?.[cat.key] || [];
+                const hasNote = b.notes?.[cat.key];
+                const conf = b.confidence?.[cat.key];
+
+                if (!hasNote && !catSources.length && !conf) return null;
+
+                return (
+                  <div
+                    key={cat.key}
+                    style={{
+                      marginBottom: 18,
+                      paddingBottom: 14,
+                      borderBottom: "2px solid rgba(0,0,0,0.12)",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                      <span style={{ fontSize: 15 }}>{cat.icon}</span>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 900,
+                          color: "#111",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        {getCatLabel(cat, lang)}
+                      </span>
+                    </div>
+
+                    {hasNote && (
+                      <div
+                        style={{
+                          fontSize: 14,
+                          color: "rgba(0,0,0,0.8)",
+                          lineHeight: 1.5,
+                          marginBottom: 8,
+                          fontFamily: "Georgia, 'Times New Roman', serif",
+                        }}
+                      >
+                        {b.notes?.[cat.key]}
+                      </div>
+                    )}
+
+                    {conf && (
+                      <div style={{ marginBottom: catSources.length ? 10 : 0 }}>
+                        <span style={{ fontSize: 11, color: "rgba(0,0,0,0.6)", fontWeight: 800, textTransform: "uppercase" }}>
+                          ◆ {conf.count} {lang === "it"
+                            ? conf.count === 1
+                              ? "fonte verificata"
+                              : "fonti verificate"
+                            : conf.count === 1
+                              ? "verified source"
+                              : "verified sources"}
+                        </span>
+                      </div>
+                    )}
+
+                    {catSources.length > 0 && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        {catSources.map((src, i) => (
+                          <a
+                            key={i}
+                            href={src.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="brandcard-link"
+                            style={{
+                              fontSize: 12,
+                              color: "#111",
+                              textDecoration: "none",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
+                              border: "2px solid #111",
+                              background: "#efe7d8",
+                              padding: "8px 10px",
+                              width: "fit-content",
+                              fontWeight: 800,
+                            }}
+                          >
+                            ↗ {src.title || src.publisher || "Source"}
+                            {src.publisher && src.title && (
+                              <span style={{ color: "rgba(0,0,0,0.58)", fontSize: 11, fontWeight: 700 }}>
+                                — {src.publisher}
+                              </span>
+                            )}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <div
+              style={{
+                background: "#e7bb3a",
+                color: "#111",
+                border: "4px solid #111",
+                borderBottom: "none",
+                padding: "12px 16px 10px",
+                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                fontSize: 24,
+                lineHeight: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              {t.alternatives_label}
+            </div>
+
+            <div style={{ border: "4px solid #111", background: "#efe7d8", padding: 16 }}>
+              {b.alternatives && b.alternatives.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {b.alternatives.map((alt) => (
+                    <div
+                      key={alt.id}
+                      onClick={() => onSelectAlt(alt)}
+                      className="brandcard-link"
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "auto 1fr auto auto",
+                        alignItems: "center",
+                        gap: 12,
+                        background: "#f4eee3",
+                        border: "3px solid #111",
+                        padding: "10px 12px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 34,
+                          height: 34,
+                          border: "3px solid #111",
+                          background: getColor(alt.score),
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 14,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {alt.logo}
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: 16, fontWeight: 900, color: "#111", lineHeight: 1 }}>
+                          {alt.name}
+                        </div>
+                        <div style={{ fontSize: 12, color: "rgba(0,0,0,0.62)", fontWeight: 700, marginTop: 4 }}>
+                          {alt.sector}
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 24,
+                          fontWeight: 900,
+                          color: "#111",
+                          fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                        }}
+                      >
+                        {alt.score}
+                      </div>
+                      <div style={{ fontSize: 18, color: "#111", fontWeight: 900 }}>
+                        →
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ fontSize: 14, color: "rgba(0,0,0,0.78)", fontFamily: "Georgia, 'Times New Roman', serif" }}>
+                  {t.noAlt}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
