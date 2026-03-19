@@ -58,67 +58,6 @@ function LangToggle({ lang, setLang }) {
   );
 }
 
-function ScoreStamp({ value }) {
-  return (
-    <div
-      style={{
-        width: 142,
-        height: 142,
-        borderRadius: "50%",
-        background:
-          "radial-gradient(circle at 35% 35%, #27211d 0 38%, #0e0b09 38% 58%, #d94724 58% 100%)",
-        border: "6px solid #f7f0e6",
-        boxShadow: "0 0 0 3px #17120f, inset 0 0 0 3px rgba(255,255,255,0.06)",
-        color: "#fff8ef",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        transform: "rotate(-6deg)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0 2px, transparent 2px 5px)",
-          mixBlendMode: "overlay",
-          opacity: 0.35,
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-          fontSize: 56,
-          lineHeight: 0.9,
-          letterSpacing: "-0.06em",
-        }}
-      >
-        {value}
-        <span style={{ fontSize: 26, marginLeft: 4 }}>/100</span>
-      </div>
-      <div
-        style={{
-          position: "relative",
-          marginTop: 6,
-          fontSize: 12,
-          fontWeight: 900,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          textAlign: "center",
-          maxWidth: 90,
-        }}
-      >
-        Brand terroscope
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
   const [lang, setLang] = useState("en");
   const { db, categories, loading } = useInitialData(lang);
