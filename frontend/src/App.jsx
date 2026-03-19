@@ -345,8 +345,6 @@ export default function App() {
               marginBottom: 18,
             }}
           >
-            <span style={{ fontSize: 50, marginRight: 8, verticalAlign: "-2px" }}>A.</span>
-            Activist Manifest
           </div>
 
           <div className="paper-panel" style={{ padding: "26px 26px 30px", marginBottom: 30 }}>
