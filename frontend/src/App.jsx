@@ -227,21 +227,69 @@ export default function App() {
               />
             </div>
 
-            <p
-              style={{
-                color: "rgba(255,255,255,0.4)",
-                fontSize: 16,
-                maxWidth: 440,
-                margin: "0 auto",
-                lineHeight: 1.6,
-              }}
-            >
-              {t.subtitle}
-              <br />
-              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>
-                {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
-              </span>
-            </p>
+<div
+  style={{
+    maxWidth: 560,
+    margin: "0 auto",
+  }}
+>
+  <div
+    style={{
+      color: "#fff",
+      fontSize: "clamp(28px, 5vw, 44px)",
+      lineHeight: 1.05,
+      fontWeight: 700,
+      letterSpacing: "-0.03em",
+      marginBottom: 14,
+      fontFamily: "'DM Sans', sans-serif",
+    }}
+  >
+    {lang === "it"
+      ? "Capisci cosa stai sostenendo ogni volta che scegli un brand."
+      : "Understand what you support every time you choose a brand."}
+  </div>
+
+  <div
+    style={{
+      color: "rgba(255,255,255,0.58)",
+      fontSize: 16,
+      lineHeight: 1.65,
+      maxWidth: 520,
+      margin: "0 auto 14px",
+      fontFamily: "'DM Sans', sans-serif",
+    }}
+  >
+    {lang === "it"
+      ? "EthicPrint ti mostra l’impatto etico reale dei brand che usi, dove emergono criticità e quali alternative puoi scegliere per cambiare facilmente."
+      : "EthicPrint shows the real ethical impact of the brands you use, where concerns emerge, and which alternatives can help you change more easily."}
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      flexWrap: "wrap",
+      gap: 8,
+    }}
+  >
+    {categories.map((c) => (
+      <div
+        key={c.key}
+        style={{
+          padding: "6px 10px",
+          border: "1px solid rgba(255,255,255,0.1)",
+          color: "rgba(255,255,255,0.42)",
+          fontSize: 11,
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          fontFamily: "'DM Mono', monospace",
+        }}
+      >
+        {getCatLabel(c, lang)}
+      </div>
+    ))}
+  </div>
+</div>
           </div>
 
               <MyListPanel
