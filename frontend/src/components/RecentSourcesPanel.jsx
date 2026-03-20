@@ -83,7 +83,7 @@ export default function RecentSourcesPanel({
           <div
             style={{
               display: "inline-block",
-              background: "#2c4a6e",
+              background: "#3570b2",
               color: "#181310",
               border: "3px solid #181310",
               boxShadow: "4px 4px 0 #181310",
