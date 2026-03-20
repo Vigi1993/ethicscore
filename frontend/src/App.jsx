@@ -350,10 +350,10 @@ export default function App() {
       formatted = formatted.replace(regex, "<strong>$1</strong>");
     });
 
-    if (formatted.includes("better alternatives")) {
+if (formatted.includes("better alternatives")) {
   formatted = formatted.replace(
     "better alternatives.",
-    `better alternatives. <a href="/methodology.html" style="text-decoration: underline; font-weight: 700;">Discover how we score brands →</a>`
+    `better alternatives.<br/><a href="/methodology.html" style="font-weight: 700; color: #c63f1d; text-decoration: none;">Discover how we score brands →</a>`
   );
 }
 
@@ -383,7 +383,7 @@ export default function App() {
   }}
 >
   <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
-    ➕ Contribute
+    Contribute
   </a>{" "}
   ·{" "}
   <a href="/contribute.html" style={{ fontWeight: 700, textDecoration: "none", color: "#c63f1d" }}>
