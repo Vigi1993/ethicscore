@@ -1,7 +1,19 @@
 export const UI = {
   en: {
     tagline: "Open Source · Community Driven",
-    subtitle: "Discover the ethical impact of the brands you use every day.",
+       subtitle: [
+      "We don’t always choose the consequences of our actions. But we still create them.",
+    
+      "The companies we support every day use our money, our data, and our time to shape the world around us: conflicts, environment, human rights, taxes.",
+    
+      "EthicPrint collects sources, evaluates behavior, and suggests better alternatives.",
+    
+      "Not to make us feel better — but to make us aware.",
+    
+      "Because awareness is the first step toward change.",
+    
+      "Because people are the engine of the system."
+    ],
     search_placeholder: "Search brand, platform, service...",
     db_info: (n, s, src) => `${n} brands · ${s} sectors · ${src || "–"} sources · open source`,
     my_list_title: "Your ethical footprint",
