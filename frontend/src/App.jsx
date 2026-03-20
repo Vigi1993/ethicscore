@@ -333,42 +333,39 @@ export default function App() {
                   }}
                 />
               </div>              
-                <p
-                  style={{
-                    marginTop: 16,
-                    maxWidth: "100%",
-                    fontFamily: "'Bitter', serif",
-                    fontSize: "clamp(20px, 3vw, 28px)",
-                    lineHeight: 1.3,
-                    fontWeight: 500,
-                  }}
-                >
-                    {t.subtitle.map((line, i) => {
-                    const boldWords = ["consequences", "shape the world", "EthicPrint", "aware", "change", "people"];
-                    
-                      let formatted = line;
-                    
-                      boldWords.forEach((word) => {
-                        const regex = new RegExp(`(${word})`, "gi");
-                        formatted = formatted.replace(regex, "<strong>$1</strong>");
-                      });
-                    
-                      return (
-                      <p
-                        key={i}
-                        style={{
-                          marginTop: i === 0 ? 16 : 10,
-                          maxWidth: "100%",
-                          fontFamily: "'Bitter', serif",
-                          fontSize: "clamp(20px, 3vw, 28px)",
-                          lineHeight: 1.3,
-                          fontWeight: 500,
-                        }}
-                      >
-                        {line}
-                      </p>
-                     })} 
-                </p>
+        <div style={{ marginTop: 16, maxWidth: "100%" }}>
+  {t.subtitle.map((line, i) => {
+    const boldWords = [
+      "consequences",
+      "shape the world",
+      "EthicPrint",
+      "aware",
+      "change",
+      "people",
+    ];
+
+    let formatted = line;
+
+    boldWords.forEach((word) => {
+      const regex = new RegExp(`(${word})`, "gi");
+      formatted = formatted.replace(regex, "<strong>$1</strong>");
+    });
+
+    return (
+      <p
+        key={i}
+        style={{
+          marginTop: i === 0 ? 0 : 10,
+          fontFamily: "'Bitter', serif",
+          fontSize: "clamp(20px, 3vw, 28px)",
+          lineHeight: 1.3,
+          fontWeight: 500,
+        }}
+        dangerouslySetInnerHTML={{ __html: formatted }}
+      />
+    );
+  })}
+</div>
               </div>
             </div>
           </div>
