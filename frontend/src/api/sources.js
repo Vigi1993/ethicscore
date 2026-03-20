@@ -1,6 +1,6 @@
 // src/api/sources.js
 import { apiRequest } from "./http";
-import { API_BASE } from "./config";
+import { API_BASE_URL } from "./config";
 
 export async function getRecentSourceUpdates(limit = 20) {
   try {
