@@ -4,7 +4,7 @@ import { API_BASE_URL } from "./config";
 
 export async function getRecentSourceUpdates(limit = 20) {
   try {
-    const res = await fetch(`${API_BASE_URL}/meta/recent-source-updates?limit=${limit}`);
+    const res = await fetch(`${API_BASE_URL}/recent-source-updates?limit=${limit}`);
     if (!res.ok) return [];
     return await res.json();
   } catch {
