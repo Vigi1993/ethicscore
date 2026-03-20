@@ -39,7 +39,7 @@ export const UI = {
       "Perché la consapevolezza è il primo passo verso il cambiamento.",
     
       "Perché le persone sono il motore del sistema."
-    ]
+    ],
     search_placeholder: "Cerca brand, piattaforma, fornitore...",
     db_info: (n, s, src) => `${n} brand · ${s} settori · ${src || "–"} fonti · open source`,
     my_list_title: "La tua impronta etica",
