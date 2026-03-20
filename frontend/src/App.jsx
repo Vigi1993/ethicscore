@@ -321,7 +321,7 @@ const recentSourceUpdates = useRecentSourceUpdates();
                   opacity: 0.7,
                 }}
               >
-                Open Source   -  Community Driven
+                Open Source   -  Community Driven  -  No Profit
               </div>
         
               <div className="section-strip" style={{ padding: "14px 20px" }}>
@@ -513,20 +513,6 @@ if (formatted.includes("better alternatives")) {
             {t.footer.split("\n").map((line, i) => (
               <div key={i}>{line}</div>
             ))}
-            <div style={{ marginTop: 10 }}>
-              <a
-                href="/contribute.html"
-                style={{
-                  color: "#c63f1d",
-                  textDecoration: "none",
-                  fontWeight: 700,
-                }}
-              >
-                {lang === "it"
-                  ? "➕ Contribuisci · Segnala un errore · Aggiungi un brand"
-                  : "➕ Contribute · Report an error · Add a brand"}
-              </a>
-            </div>
           </div>
         </div>
 
