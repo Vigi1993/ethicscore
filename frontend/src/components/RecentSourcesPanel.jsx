@@ -9,27 +9,23 @@ const CAT_LABELS = {
 
 function getImpactMeta(item, lang) {
   const value = Number(item?.value);
-  const judgment = item?.judgment || "";
   const isPositive = value > 0;
 
   const label =
     lang === "it"
       ? isPositive
-        ? `Impatto positivo ${value > 0 ? `+${value}` : value}`
-        : `Impatto negativo ${value}`
+        ? "Impatto positivo"
+        : "Impatto negativo"
       : isPositive
-      ? `Positive impact ${value > 0 ? `+${value}` : value}`
-      : `Negative impact ${value}`;
+      ? "Positive impact"
+      : "Negative impact";
 
   const tone = isPositive ? "#2f6a3b" : "#c63f1d";
+  const bg = isPositive ? "#d4edda" : "#fde8e4";
+  const border = isPositive ? "#2f6a3b" : "#c63f1d";
   const arrow = isPositive ? "↑" : "↓";
 
-  return {
-    label,
-    tone,
-    arrow,
-    judgment,
-  };
+  return { label, tone, bg, border, arrow };
 }
 
 function getCategoryLabel(categoryKey, lang) {
@@ -81,32 +77,38 @@ export default function RecentSourcesPanel({
       />
 
       <div style={{ position: "relative", zIndex: 1, padding: 22 }}>
-        <div
-          style={{
-            fontFamily: "'Bitter', serif",
-            fontSize: "clamp(22px, 3.2vw, 30px)",
-            lineHeight: 1.1,
-            marginBottom: 12,
-            fontWeight: 400,
-            letterSpacing: "-0.01em",
-          }}
-        >
-          {lang === "it" ? "Latest source updates" : "Latest source updates"}
-        </div>
 
-        <div
-          style={{
-            fontFamily: "'Bitter', serif",
-            fontSize: 17,
-            lineHeight: 1.4,
-            color: "rgba(0,0,0,0.76)",
-            maxWidth: 760,
-            marginBottom: 18,
-          }}
-        >
-          {lang === "it"
-            ? "Le fonti aggiunte più di recente, con il loro effetto diretto sulla valutazione dei brand."
-            : "The most recently added sources, together with their direct effect on brand evaluations."}
+        {/* Titolo stile "Ranking by sector" */}
+        <div style={{ marginBottom: 18 }}>
+          <div
+            style={{
+              display: "inline-block",
+              background: "#efc640",
+              color: "#181310",
+              border: "3px solid #181310",
+              boxShadow: "4px 4px 0 #181310",
+              padding: "10px 14px",
+              fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
+              fontSize: 20,
+              textTransform: "uppercase",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            {lang === "it" ? "Ultime fonti aggiunte" : "Latest source updates"}
+          </div>
+          <div
+            style={{
+              fontFamily: "'Bitter', serif",
+              fontSize: 15,
+              lineHeight: 1.4,
+              color: "rgba(0,0,0,0.65)",
+              marginTop: 10,
+            }}
+          >
+            {lang === "it"
+              ? "Le fonti aggiunte più di recente, con il loro effetto diretto sulla valutazione dei brand."
+              : "The most recently added sources, together with their direct effect on brand evaluations."}
+          </div>
         </div>
 
         <div
@@ -135,72 +137,46 @@ export default function RecentSourcesPanel({
                   scrollSnapAlign: "start",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
-                    gap: 10,
-                    marginBottom: 10,
-                  }}
-                >
-                  <div style={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontFamily: "Arial, Helvetica, sans-serif",
-                        fontSize: 22,
-                        fontWeight: 900,
-                        color: "#111",
-                        lineHeight: 1,
-                        marginBottom: 5,
-                        cursor: onSelectBrand ? "pointer" : "default",
-                      }}
-                      onClick={() => {
-                        if (onSelectBrand && item.brand_name) {
-                          // cerca il brand nel db passato come prop, oppure apri per nome
-                          onSelectBrand({ name: item.brand_name, id: item.brand_id });
-                        }
-                      }}
-                    >
-                      {item.brand_name}
-                    </div>
-
-                    <div
-                      style={{
-                        fontFamily: "Arial, Helvetica, sans-serif",
-                        fontSize: 12,
-                        color: "rgba(0,0,0,0.62)",
-                        fontWeight: 800,
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {categoryLabel}
-                    </div>
+                {/* Brand name + categoria */}
+                <div style={{ marginBottom: 10 }}>
+                  <div
+                    style={{
+                      fontFamily: "Arial, Helvetica, sans-serif",
+                      fontSize: 22,
+                      fontWeight: 900,
+                      color: "#111",
+                      lineHeight: 1,
+                      marginBottom: 5,
+                      cursor: onSelectBrand ? "pointer" : "default",
+                    }}
+                    onClick={() => {
+                      if (onSelectBrand && item.brand_name) {
+                        onSelectBrand({ name: item.brand_name, id: item.brand_id });
+                      }
+                    }}
+                  >
+                    {item.brand_name}
                   </div>
 
-                  {typeof item.value === "number" && (
-                    <div
-                      style={{
-                        border: "2px solid #181310",
-                        background: "#181310",
-                        color: "#fff5ea",
-                        padding: "6px 8px 5px",
-                        fontFamily: "'Archivo Black', 'Arial Black', sans-serif",
-                        fontSize: 15,
-                        lineHeight: 1,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {item.value > 0 ? `+${item.value}` : item.value}
-                    </div>
-                  )}
+                  <div
+                    style={{
+                      fontFamily: "Arial, Helvetica, sans-serif",
+                      fontSize: 12,
+                      color: "rgba(0,0,0,0.62)",
+                      fontWeight: 800,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {categoryLabel}
+                  </div>
                 </div>
 
+                {/* Label impatto colorata, senza numero */}
                 <div
                   style={{
                     display: "inline-block",
-                    border: "2px solid #181310",
-                    background: "#fff5ea",
+                    border: `2px solid ${impact.border}`,
+                    background: impact.bg,
                     color: impact.tone,
                     padding: "5px 8px 4px",
                     marginBottom: 10,
@@ -213,6 +189,7 @@ export default function RecentSourcesPanel({
                   {impact.arrow} {impact.label}
                 </div>
 
+                {/* Titolo fonte */}
                 <div
                   style={{
                     fontFamily: "'Bitter', serif",
@@ -226,6 +203,7 @@ export default function RecentSourcesPanel({
                   {item.title || item.publisher || item.url}
                 </div>
 
+                {/* Link + data */}
                 <div
                   style={{
                     display: "flex",
