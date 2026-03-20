@@ -341,7 +341,6 @@ export default function App() {
       "EthicPrint",
       "aware",
       "change",
-      "people",
     ];
 
     let formatted = line;
