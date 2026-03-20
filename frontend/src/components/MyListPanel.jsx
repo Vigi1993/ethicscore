@@ -869,9 +869,6 @@ export default function MyListPanel({
               maxWidth: 680,
             }}
           >
-            {lang === "it"
-              ? "Inizia dai brand che usi davvero ogni settimana. Cliccaci sopra per visualizzare i dettagli e le fonti e poi aggiungili alla tua impronta."
-              : "Start with the brands you actually use every week. Click on them to see details and sources and add them to your footprint."}
           </div>
 
           {/* Barra di ricerca */}
@@ -940,8 +937,8 @@ export default function MyListPanel({
             }}
           >
             {lang === "it"
-              ? "Ecco alcune categorie per aiutarti. Clicca e scegli il brand"
-              : "Here some hint categories to help you. Click and choose your brand"}
+              ? "Ecco alcune categorie per aiutarti. Clicca e scegli qualche brand"
+              : "Here some hint categories to help you. Click and choose some brand"}
           </div>
 
           {/* Bottoni categoria + clear */}
