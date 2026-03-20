@@ -336,10 +336,10 @@ export default function App() {
                 <p
                   style={{
                     marginTop: 16,
-                    maxWidth: 540,
+                    maxWidth: "100%",
                     fontFamily: "'Bitter', serif",
                     fontSize: "clamp(20px, 3vw, 28px)",
-                    lineHeight: 1.25,
+                    lineHeight: 1.3,
                     fontWeight: 500,
                   }}
                 >
