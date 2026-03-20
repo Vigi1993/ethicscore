@@ -344,6 +344,16 @@ export default function App() {
                   }}
                 >
                     {t.subtitle.map((line, i) => (
+                    const boldWords = ["consequences", "shape the world", "EthicPrint", "aware", "change", "people"];
+                    
+                      let formatted = line;
+                    
+                      boldWords.forEach((word) => {
+                        const regex = new RegExp(`(${word})`, "gi");
+                        formatted = formatted.replace(regex, "<strong>$1</strong>");
+                      });
+                    
+                      return (
                       <p
                         key={i}
                         style={{
@@ -358,8 +368,6 @@ export default function App() {
                         {line}
                       </p>
                     ))} 
-                  <br />
-                  {categories.map((c) => getCatLabel(c, lang).split(" ")[0]).join(" · ")}
                 </p>
               </div>
             </div>
