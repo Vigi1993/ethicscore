@@ -156,7 +156,10 @@ export default function RecentSourcesPanel({
                         cursor: onSelectBrand ? "pointer" : "default",
                       }}
                       onClick={() => {
-                        if (onSelectBrand && item.brand) onSelectBrand(item.brand);
+                        if (onSelectBrand && item.brand_name) {
+                          // cerca il brand nel db passato come prop, oppure apri per nome
+                          onSelectBrand({ name: item.brand_name, id: item.brand_id });
+                        }
                       }}
                     >
                       {item.brand_name}
