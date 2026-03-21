@@ -252,7 +252,7 @@ export default function SectorSection({
               className="add-btn"
               onClick={() => onAdd(best)}
               style={{
-                background: bestInList ? "#111" : "#3570b2",
+                background: bestInList ? "#111" : "#5d9fd4",
                 color: bestInList ? "#f4eee3" : "#111",
                 border: "3px solid #111",
                 padding: "10px 12px 9px",
