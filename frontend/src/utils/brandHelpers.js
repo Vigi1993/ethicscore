@@ -78,11 +78,9 @@ export function getDisplayLabel(brand, lang = "en") {
 
 export function getDisplayScoreColor(score) {
   if (score === null || score === undefined) return "rgba(255,255,255,0.2)";
-  if (score >= 80) return "#6dbb7a";
-  if (score >= 60) return "#a8c5a0";
-  if (score >= 40) return "#facc15";
-  if (score >= 20) return "#fb923c";
-  return "#ef4444";
+  if (score >= 70) return "#4a9e5c";
+  if (score >= 50) return "#e7bb3a";
+  return "#c4432c";
 }
 
 export function getSectorAvgDisplayScore(brands) {
