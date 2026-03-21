@@ -298,7 +298,16 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                   justifySelf: "end",
                   width: 158,
                   minHeight: 158,
-                  background: displayScore === null || b.insufficient_data ? "#e7bb3a" : color,
+                  background: displayScore === null || b.insufficient_data
+                  ? "#e7bb3a"
+                  : displayScore >= 70
+                  ? "#4a9e5c"
+                  : displayScore >= 50
+                  ? "#e7bb3a"
+                  : "#c4432c",
+                color: displayScore !== null && !b.insufficient_data && displayScore >= 50 && displayScore < 70
+                  ? "#111"
+                  : "#fff",
                   border: "6px solid #111",
                   boxShadow: "6px 6px 0 #111",
                   transform: "rotate(-3deg)",
@@ -372,19 +381,7 @@ export default function BrandCard({ brand, onClose, lang, onSelectAlt }) {
                         {b.criteria_published} {t.criteria}
                       </div>
                     )}
-                    {total !== null && (
-                      <div
-                        style={{
-                          marginTop: 3,
-                          fontFamily: "Arial, Helvetica, sans-serif",
-                          fontSize: 10,
-                          fontWeight: 700,
-                          opacity: 0.7,
-                        }}
-                      >
-                        {t.raw} {total}
-                      </div>
-                    )}
+   
                   </>
                 )}
               </div>
