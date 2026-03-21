@@ -193,35 +193,19 @@ export default function SectorSection({
                   {best.name}
                 </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    marginTop: 2,
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  {categories.map((cat) => (
-                    <div
-                      key={cat.key}
-                      style={{ display: "flex", alignItems: "center", gap: 4 }}
-                    >
-
-                      <span
-                        style={{
-                          fontFamily: "Arial, Helvetica, sans-serif",
-                          fontSize: 10,
-                          color: "rgba(0,0,0,0.66)",
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        {getCatLabel(cat, lang).split(" ")[0]}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+<div
+  style={{
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: 12,
+    color: "rgba(0,0,0,0.55)",
+    fontWeight: 700,
+    marginTop: 4,
+    fontStyle: "italic",
+  }}
+>
+  {lang === "it" ? "Clicca per vedere dettagli e fonti" : "Click to see details and sources"}
+</div>
+                
               </div>
             </div>
 
