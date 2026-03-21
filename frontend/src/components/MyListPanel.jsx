@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useCategories } from "../context/categoriesContext";
+import { API_BASE_URL } from "../api/config";
 import {
   getScore,
   getCatLabel,
@@ -404,19 +405,25 @@ export default function MyListPanel({
 
   const headlineText =
     lang === "it"
-      ? "I TUOI BRAND, IL LORO IMPATTO"
-      : "YOUR BRANDS, THEIR IMPACT";
+      ? "LA TUA IMPRONTA\nETICA"
+      : "YOUR ETHICAL\nFOOTPRINT";
 
-  const subtitle = 
-    lang === "it"
-      ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
-      : "Learn the ethical impact of the brands you use and switch to better options."
-    ;
+  const subtitle = isEmpty
+    ? lang === "it"
+      ? "Aggiungi i brand che usi per vedere la tua impronta etica."
+      : "Add the brands you use to see your ethical footprint."
+    : problematic.length > 0
+    ? lang === "it"
+      ? "Stai ancora sostenendo alcuni brand problematici."
+      : "You're supporting some problematic brands."
+    : lang === "it"
+    ? "La tua lista appare più solida, ma puoi migliorarla ancora."
+    : "Your list looks stronger, but there is still room to improve.";
 
   const deckLine =
     lang === "it"
-      ? "Cerca un brand nella barra oppure sfoglia per categoria in fondo alla pagina. Clicca su un brand per vederne i dettagli e leggere direttamente le fonti — poi aggiungilo per vedere il quadro d'insieme."
-      : "Search for a brand using the bar or browse by sector at the end of the page. Click on any brand to explore its details and read the sources yourself — then add it to see the bigger picture.";
+      ? "Scopri l'impatto etico dei brand che usi e passa ad alternative migliori."
+      : "Learn the ethical impact of the brands you use and switch to better options.";
 
   const sectionStyle = {
     border: "4px solid #111",
@@ -440,208 +447,223 @@ export default function MyListPanel({
   });
 
   const renderBrandRow = (b, mode = "harm") => {
+    return <BrandRow key={b.name} b={b} mode={mode} lang={lang} categories={categories} db={db} onSelect={onSelect} onReplace={onReplace} onRemove={onRemove} />;
+  };
+
+  function BrandRow({ b, mode, lang, categories, db, onSelect, onReplace, onRemove }) {
     const displayScore = getDisplayScore(b);
-    const issueLabel = getIssueLabel(b, categories, lang);
     const issueExplanation = getIssueExplanation(b, categories, lang);
     const topAlternative = getTopAlternative(b);
     const alternativeName = getAlternativeName(topAlternative);
     const alternativeDelta = getAlternativeDelta(b);
     const replaceBrand = findAlternativeInDb(b, db);
-    const sectorText = b?.sector || issueLabel;
+    const verdict = getDisplayLabel(b, lang);
 
-    const accent =
-      mode === "harm" ? "#e34b2f" : mode === "positive" ? "#111" : "#d6aa2d";
+    const [abandonCount, setAbandonCount] = useState(null);
+    const [abandoned, setAbandoned] = useState(false);
+
+    useEffect(() => {
+      if (!b.id) return;
+      fetch(`${API_BASE_URL}/brands/${b.id}/abandon-count`)
+        .then((r) => r.json())
+        .then((data) => setAbandonCount(data.count ?? 0))
+        .catch(() => setAbandonCount(0));
+    }, [b.id]);
+
+    const handleAbandon = useCallback(async (e) => {
+      e.stopPropagation();
+      if (abandoned) return;
+      try {
+        const res = await fetch(`${API_BASE_URL}/brands/${b.id}/abandon`, { method: "POST" });
+        const data = await res.json();
+        setAbandonCount(data.count ?? (abandonCount ?? 0) + 1);
+        setAbandoned(true);
+        onRemove(b.name);
+      } catch {
+        onRemove(b.name);
+      }
+    }, [abandoned, abandonCount, b.id, b.name, onRemove]);
+
     const buttonBg = mode === "harm" ? "#f2b11c" : "#111";
     const buttonColor = mode === "harm" ? "#111" : "#f6f0e5";
 
     return (
       <div
-        key={b.name}
         onClick={() => onSelect(b)}
         className="ep-row"
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr auto",
-          gap: 14,
           padding: "16px 18px",
           borderBottom: "2px solid rgba(0,0,0,0.22)",
           cursor: "pointer",
           background: "rgba(255,255,255,0.16)",
         }}
       >
-        <div style={{ minWidth: 0 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              flexWrap: "wrap",
-              marginBottom: 8,
-            }}
-          >
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: "50%",
-                border: "2px solid rgba(0,0,0,0.2)",
-                background: accent,
-                color: mode === "transparency" ? "#111" : "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                fontFamily: "Impact, sans-serif",
-                flexShrink: 0,
-              }}
-            >
-              {b.name?.slice(0, 1)?.toUpperCase() || "B"}
-            </div>
-
-            <div>
-              <div
-                style={{
-                  fontFamily: "Arial, Helvetica, sans-serif",
-                  fontWeight: 900,
-                  fontSize: 22,
-                  lineHeight: 1,
-                  color: "#101010",
-                  marginBottom: 3,
-                }}
-              >
-                {b.name}
-              </div>
-              <div
-                style={{
-                  fontFamily: "Arial, Helvetica, sans-serif",
-                  fontSize: 13,
-                  color: "rgba(0,0,0,0.68)",
-                  fontWeight: 700,
-                }}
-              >
-                {sectorText}
-              </div>
-            </div>
-          </div>
-
+        {/* Nome + settore */}
+        <div style={{ marginBottom: 8 }}>
           <div
             style={{
               fontFamily: "Arial, Helvetica, sans-serif",
-              fontSize: 13.5,
-              lineHeight: 1.45,
-              color: "rgba(0,0,0,0.8)",
-              maxWidth: 520,
+              fontWeight: 900,
+              fontSize: 22,
+              lineHeight: 1,
+              color: "#101010",
+              marginBottom: 3,
             }}
           >
-            {issueExplanation}
+            {b.name}
+          </div>
+          <div
+            style={{
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: 13,
+              color: "rgba(0,0,0,0.68)",
+              fontWeight: 700,
+            }}
+          >
+            {b?.sector || ""}
           </div>
         </div>
 
+        {/* Verdict timbro — solo per active harm */}
+        {mode === "harm" && verdict && (
+          <div style={{ marginBottom: 10 }}>
+            <div
+              style={{
+                display: "inline-block",
+                border: "3px solid #c4432c",
+                color: "#c4432c",
+                background: "transparent",
+                padding: "5px 10px 4px",
+                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                fontSize: 18,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                lineHeight: 1,
+                transform: "rotate(-1.5deg)",
+                transformOrigin: "left center",
+                boxShadow: "2px 2px 0 rgba(196,67,44,0.18)",
+              }}
+            >
+              {verdict}
+            </div>
+          </div>
+        )}
+
+        {/* Spiegazione */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "stretch",
-            justifyContent: "center",
-            gap: 8,
-            minWidth: 178,
+            fontFamily: "Arial, Helvetica, sans-serif",
+            fontSize: 13.5,
+            lineHeight: 1.45,
+            color: "rgba(0,0,0,0.8)",
+            marginBottom: 12,
           }}
         >
+          {issueExplanation}
+        </div>
+
+        {/* Contatore abbandoni — solo active harm */}
+        {mode === "harm" && abandonCount !== null && abandonCount > 0 && (
           <div
+            onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#111",
-              color: "#fff",
-              border: "3px solid #111",
-              padding: "8px 10px",
-              textAlign: "center",
-              fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
-              fontSize: 22,
-              lineHeight: 1,
-              letterSpacing: "0.02em",
+              marginBottom: 12,
+              border: "2px solid rgba(0,0,0,0.18)",
+              background: "#fff8f0",
+              padding: "10px 12px",
+              fontFamily: "Arial, Helvetica, sans-serif",
+              fontSize: 13,
+              lineHeight: 1.4,
+              color: "#111",
             }}
           >
-            {displayScore ?? "—"}
-            <span style={{ fontSize: 14, marginLeft: 3 }}>/100</span>
+            <span style={{ fontWeight: 900 }}>
+              {lang === "it"
+                ? `${abandonCount.toLocaleString()} persone`
+                : `${abandonCount.toLocaleString()} people`}
+            </span>{" "}
+            {lang === "it"
+              ? "hanno abbandonato questo brand questo mese — unisciti a loro e scegli un'alternativa migliore."
+              : "abandoned this brand this month — join them and switch to a better alternative."}
           </div>
+        )}
 
+        {/* Azioni */}
+        <div
+          style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Bottone switch */}
           {(alternativeName || replaceBrand) && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                if (replaceBrand) {
-                  onReplace(b, replaceBrand);
-                } else {
-                  onSelect(b);
-                }
+                if (replaceBrand) onReplace(b, replaceBrand);
+                else onSelect(b);
               }}
               style={{
                 background: buttonBg,
                 color: buttonColor,
                 border: "3px solid rgba(0,0,0,0.85)",
-                padding: "10px 10px 9px",
-                textAlign: "center",
+                padding: "10px 12px 9px",
                 fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
                 fontSize: 14,
-                lineHeight: 1.05,
+                lineHeight: 1,
                 textTransform: "uppercase",
                 cursor: "pointer",
               }}
             >
-              {lang === "it" ? "Passa a\nun'opzione migliore" : "Switch to a\nbetter option"}
+              {lang === "it" ? "Passa a un'alternativa" : "Switch to an alternative"}
             </button>
           )}
 
+          {/* Bottone dettagli */}
           {!alternativeName && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelect(b);
-              }}
+              onClick={(e) => { e.stopPropagation(); onSelect(b); }}
               style={{
                 background: buttonBg,
                 color: buttonColor,
                 border: "3px solid rgba(0,0,0,0.85)",
-                padding: "10px 10px 9px",
-                textAlign: "center",
+                padding: "10px 12px 9px",
                 fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
                 fontSize: 14,
-                lineHeight: 1.05,
+                lineHeight: 1,
                 textTransform: "uppercase",
                 cursor: "pointer",
               }}
             >
-              {lang === "it" ? "Apri\ndettagli" : "Open\ndetails"}
+              {lang === "it" ? "Apri dettagli" : "Open details"}
             </button>
           )}
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 8,
-            }}
-          >
-            <div
+          {/* Bottone Abbandona */}
+          {mode === "harm" && (
+            <button
+              onClick={handleAbandon}
               style={{
-                fontFamily: "Arial, Helvetica, sans-serif",
-                fontSize: 11,
-                color: "rgba(0,0,0,0.65)",
-                fontWeight: 700,
+                background: abandoned ? "#2e7d32" : "#c4432c",
+                color: "#fff",
+                border: "3px solid rgba(0,0,0,0.85)",
+                padding: "10px 12px 9px",
+                fontFamily: "Impact, Haettenschweiler, 'Arial Black', sans-serif",
+                fontSize: 14,
+                lineHeight: 1,
+                textTransform: "uppercase",
+                cursor: abandoned ? "default" : "pointer",
+                marginLeft: "auto",
               }}
             >
-              {alternativeDelta !== null
-                ? lang === "it"
-                  ? `+${alternativeDelta} meglio`
-                  : `+${alternativeDelta} better`
-                : getDisplayLabel(b, lang)}
-            </div>
+              {abandoned
+                ? lang === "it" ? "✓ Abbandonato" : "✓ Abandoned"
+                : lang === "it" ? "Abbandona" : "Abandon"}
+            </button>
+          )}
+
+          {/* X per non-harm */}
+          {mode !== "harm" && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemove(b.name);
-              }}
+              onClick={(e) => { e.stopPropagation(); onRemove(b.name); }}
               style={{
                 background: "transparent",
                 border: "none",
@@ -650,16 +672,17 @@ export default function MyListPanel({
                 lineHeight: 1,
                 cursor: "pointer",
                 padding: 0,
+                marginLeft: "auto",
               }}
               aria-label={`Remove ${b.name}`}
             >
               ×
             </button>
-          </div>
+          )}
         </div>
       </div>
     );
-  };
+  }
 
   return (
     <div
@@ -863,6 +886,9 @@ export default function MyListPanel({
               maxWidth: 680,
             }}
           >
+            {lang === "it"
+              ? "Inizia dai brand che usi davvero ogni settimana. Cliccaci sopra per visualizzare i dettagli e le fonti e poi aggiungili alla tua impronta."
+              : "Start with the brands you actually use every week. Click on them to see details and sources and add them to your footprint."}
           </div>
 
           {/* Barra di ricerca */}
@@ -931,8 +957,8 @@ export default function MyListPanel({
             }}
           >
             {lang === "it"
-              ? "Ecco alcune categorie per aiutarti. Clicca e scegli qualche brand"
-              : "Here some hint categories to help you. Click and choose some brand"}
+              ? "Oppure parti da una categoria"
+              : "Or start from a category"}
           </div>
 
           {/* Bottoni categoria + clear */}
